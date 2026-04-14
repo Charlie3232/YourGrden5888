@@ -418,7 +418,7 @@
 </div>
 
 <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxEENpHlc5SmMTNyW99mB4IbxX3fwcgZyw4YK-rfrtc8NtxVlyghELF9ypyxfeqx295/exec";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxQe9AHSogPG0av7AF1HugOQ_K__pNdWhNQCEgmxzk8kTIebNzi9JPu2kf8OSTHjAQ4/exec";
 
     let lists = { plants: [], potSize: [], payments: [], progress: [], box: [], plantStatus: [], regions: [] };
     let isListLoaded = false;
@@ -613,7 +613,7 @@
     async function submitDailyReport() {
         const dateStr = document.getElementById('dailyDate').value;
         if (!dateStr) { alert("請選擇日期！"); return; }
-        const date = new Date(dateStr.replace(/-/g, "/"));
+        const date = new Date(dateStr);
         const month = date.getMonth() + 1;
         const values = [];
         values.push(document.getElementById('daily-0').checked);
