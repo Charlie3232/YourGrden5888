@@ -617,7 +617,6 @@
         const month = date.getMonth() + 1;
         const values = [];
         values.push(document.getElementById('daily-0').checked);
-        values.push(document.getElementById('daily-1').checked);
         for (let i = 2; i <= 7; i++) {
             values.push(parseInt(document.getElementById('daily-' + i).value) || 0);
         }
