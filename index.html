@@ -38,7 +38,7 @@
         .item-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-weight: bold; color: var(--primary); }
         .remove-btn { background: transparent; color: var(--accent); border: 1px solid var(--accent); padding: 4px 10px; border-radius: 4px; font-size: 12px; cursor: pointer; }
 
-        .add-btn { width: 100%; background: white; color: var(--primary); border: 2px dashed var(--primary); padding: 15px; border-radius: 8px; font-weight: bold; font-size: 16px; cursor: pointer; margin-top: 10px; margin-bottom: 30px; display: block; }
+        .add-btn { width: 100%; background: white; color: var(--primary); border: 2px dashed var(--primary); padding: 15px; border-radius: 8px; font-weight: bold; font-size: 16px; cursor: pointer; margin-top: 10px; margin-bottom: 20px; display: block; }
         .add-btn:active { background: var(--light-green); }
 
         .total-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: white; padding: 15px 20px; box-shadow: 0 -4px 15px rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center; z-index: 100; }
@@ -97,7 +97,6 @@
         .success-subtitle { font-size: 16px; color: #666; text-align: center; padding: 0 20px; }
         .success-btn { margin-top: 10px; background: var(--primary); color: white; border: none; padding: 15px 40px; border-radius: 50px; font-size: 18px; font-weight: bold; cursor: pointer; }
 
-        /* 工作區 */
         .plant-list-manage { max-height: 300px; overflow-y: auto; border: 1px solid #e0ebd4; border-radius: 8px; margin-bottom: 10px; }
         .plant-manage-item { display: flex; align-items: center; padding: 12px 15px; border-bottom: 1px solid #f0f0f0; font-size: 15px; }
         .plant-manage-item:last-child { border-bottom: none; }
@@ -111,13 +110,19 @@
         .supplement-info-box strong { color: var(--primary); }
         .workspace-action-btn { width: 100%; background: var(--primary); color: white; border: none; padding: 15px; border-radius: 10px; font-weight: bold; font-size: 17px; cursor: pointer; margin-top: 5px; box-shadow: 0 4px 10px rgba(45,106,79,0.3); }
         .tag { display: inline-block; background: var(--light-green); color: var(--primary); border-radius: 20px; padding: 3px 10px; font-size: 12px; font-weight: bold; margin-left: 8px; }
+
+        .lookup-group { display: flex; gap: 10px; margin-bottom: 15px; }
+        .lookup-group input { flex: 1; }
+        .lookup-btn { background: var(--primary); color: white; border: none; padding: 12px 20px; border-radius: 8px; font-weight: bold; font-size: 15px; cursor: pointer; white-space: nowrap; }
+        .edit-order-form { display: none; }
+        .edit-order-id-badge { background: var(--light-green); color: var(--primary); border-radius: 8px; padding: 10px 15px; font-weight: bold; margin-bottom: 15px; text-align: center; font-size: 16px; }
     </style>
 </head>
 <body>
 
 <div class="loading-overlay" id="loading-overlay">
     <div class="spinner"></div>
-    <div style="color: var(--primary); font-weight: bold;">載入清單中...</div>
+    <div style="color: var(--primary); font-weight: bold;" id="loading-text">載入清單中...</div>
 </div>
 
 <div class="success-overlay" id="success-overlay">
@@ -139,30 +144,27 @@
             <h1 class="main-title">🌱 小樣兒園藝 - 訂單管理 🌱</h1>
             <div class="author-text">Author. Charlie</div>
         </div>
-
         <div class="card">
             <div class="section-title">訂單基本資料</div>
             <div class="form-group">
                 <label>訂單日期 <span style="color:red">*</span></label>
                 <input type="date" id="orderDate">
             </div>
-            <div class="form-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+            <div class="form-group" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
                 <div>
                     <label>購買人 IG <span style="color:red">*</span></label>
                     <input type="text" id="buyerIG" placeholder="例如: shan1101">
                 </div>
                 <div>
                     <label>地區 <span style="color:red">*</span></label>
-                    <select id="region">
-                        <option value="" disabled selected>請選擇地區</option>
-                    </select>
+                    <select id="region"><option value="" disabled selected>請選擇地區</option></select>
                 </div>
             </div>
             <div class="form-group">
-                <label>配送資訊 (地址/電話/姓名) <span style="color:red">*</span></label>
+                <label>配送資訊 <span style="color:red">*</span></label>
                 <textarea id="deliveryInfo" rows="5" placeholder="例如: 詹小美 0912345678 台中市..."></textarea>
             </div>
-            <div class="form-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+            <div class="form-group" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
                 <div>
                     <label>付款狀況</label>
                     <select id="paymentStatus"></select>
@@ -181,11 +183,9 @@
                 <textarea id="note" rows="3" placeholder="例如: 12/26以後送到"></textarea>
             </div>
         </div>
-
         <div id="items-container"></div>
-        <button class="add-btn" onclick="addNewItem()">＋ 新增商品 (植物/盆器/其他)</button>
+        <button class="add-btn" onclick="addNewItem('items-container')">＋ 新增商品</button>
     </div>
-
     <div class="total-bar">
         <div class="total-display">總金額: <span class="total-amount" id="totalDisplay">0</span></div>
         <button class="submit-btn" id="submitBtn" onclick="submitOrder()">送出訂單</button>
@@ -197,25 +197,78 @@
     <div class="container">
         <div class="app-header-container">
             <h1 class="main-title">⚙️ 工作區</h1>
-            <div class="author-text">管理清單與補單</div>
+            <div class="author-text">管理清單與訂單</div>
         </div>
 
         <!-- 補單 -->
         <div class="card">
             <div class="section-title">📋 補單</div>
-            <div class="supplement-info-box">
-                <strong>補單模式：</strong>輸入已有的訂單編號，在該訂單下新增品項。
-            </div>
+            <div class="supplement-info-box"><strong>補單模式：</strong>輸入已有的訂單編號，在該訂單下新增品項。</div>
             <div class="form-group">
                 <label>訂單編號 <span style="color:red">*</span></label>
                 <input type="text" id="supplementOrderId" placeholder="例如：20260414-1">
             </div>
             <div id="supplement-items-container"></div>
-            <button class="add-btn" onclick="addSupplementItem()">＋ 新增品項</button>
+            <button class="add-btn" onclick="addNewItem('supplement-items-container', 'sup-')">＋ 新增品項</button>
             <button class="workspace-action-btn" onclick="submitSupplement()">送出補單</button>
         </div>
 
-        <!-- 新增植物種類 -->
+        <!-- 編輯訂單 -->
+        <div class="card">
+            <div class="section-title">✏️ 編輯訂單</div>
+            <div class="supplement-info-box"><strong>編輯模式：</strong>輸入訂單編號載入資料，修改後送出更新。</div>
+            <div class="lookup-group">
+                <input type="text" id="editOrderId" placeholder="輸入訂單編號，例如：20260414-1">
+                <button class="lookup-btn" onclick="loadOrderForEdit()">載入</button>
+            </div>
+            <div class="edit-order-form" id="edit-order-form">
+                <div class="edit-order-id-badge" id="edit-order-badge"></div>
+                <div class="card" style="margin-bottom:15px;border-color:#ffe082;background:#fffde7;">
+                    <div class="section-title" style="font-size:15px;">基本資料</div>
+                    <div class="form-group">
+                        <label>訂單日期</label>
+                        <input type="date" id="editOrderDate">
+                    </div>
+                    <div class="form-group" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                        <div>
+                            <label>購買人 IG</label>
+                            <input type="text" id="editBuyerIG">
+                        </div>
+                        <div>
+                            <label>地區</label>
+                            <select id="editRegion"><option value="" disabled selected>請選擇</option></select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>配送資訊</label>
+                        <textarea id="editDeliveryInfo" rows="4"></textarea>
+                    </div>
+                    <div class="form-group" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                        <div>
+                            <label>付款狀況</label>
+                            <select id="editPaymentStatus"></select>
+                        </div>
+                        <div>
+                            <label>訂單進度</label>
+                            <select id="editOrderProgress"></select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>紙箱狀態</label>
+                        <select id="editBoxStatus"></select>
+                    </div>
+                    <div class="form-group">
+                        <label>備註</label>
+                        <textarea id="editNote" rows="2"></textarea>
+                    </div>
+                </div>
+                <div id="edit-items-container"></div>
+                <button class="add-btn" onclick="addNewItem('edit-items-container', 'edit-')">＋ 新增品項</button>
+                <button class="workspace-action-btn" onclick="submitEditOrder()">更新訂單</button>
+            </div>
+        </div>
+
+        <!-- 植物清單 -->
         <div class="card">
             <div class="section-title">🌿 植物種類清單 <span class="tag" id="plant-count-tag">載入中</span></div>
             <div class="plant-list-manage" id="plant-manage-list">
@@ -229,20 +282,19 @@
     </div>
 </div>
 
-<!-- Modals -->
 <div class="overlay" id="overlay" onclick="closeAllModals()"></div>
 
 <div id="password-modal" class="center-modal">
-    <div style="font-size: 18px; font-weight: bold; margin-bottom: 10px; color: var(--primary);">🔒 請輸入管理密碼</div>
+    <div style="font-size:18px;font-weight:bold;margin-bottom:10px;color:var(--primary);">🔒 請輸入管理密碼</div>
     <input type="tel" id="admin-password" class="password-input" maxlength="4" placeholder="****">
-    <div id="password-error" style="color: #e53935; font-size: 14px; margin-bottom: 10px; display: none;">密碼錯誤！</div>
+    <div id="password-error" style="color:#e53935;font-size:14px;margin-bottom:10px;display:none;">密碼錯誤！</div>
     <div class="modal-btn-group">
         <button class="modal-btn btn-cancel" onclick="closeAllModals()">取消</button>
         <button class="modal-btn btn-confirm" onclick="verifyPassword()">確定</button>
     </div>
 </div>
 
-<div id="keypad-modal" class="bottom-modal" style="display: none;">
+<div id="keypad-modal" class="bottom-modal" style="display:none;">
     <div id="keypad-screen" class="keypad-display-screen">0</div>
     <div class="keypad-grid">
         <button class="key-btn" onclick="pressKey(7)">7</button>
@@ -261,7 +313,7 @@
     </div>
 </div>
 
-<div id="plant-picker-modal" class="bottom-modal" style="display: none;">
+<div id="plant-picker-modal" class="bottom-modal" style="display:none;">
     <div class="plant-picker-header">
         <span class="picker-title">選擇植物</span>
         <button class="close-picker" onclick="closeAllModals()">✕</button>
@@ -271,29 +323,24 @@
 </div>
 
 <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw3zRNcqkBv-yDmBKPYtiRg8VzYQsQzN8-x2Y37zHCRwbMjWuUCPEDab95h9vZGrRHR/exec";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyJOhAVSSKRNesVBQqv7MY2NaeHjJ40V4rCxlhjEOFRcBkjc52nrS3W3pSWWpfcglmW/exec";
 
     let lists = { plants: [], potSize: [], payments: [], progress: [], box: [], plantStatus: [], regions: [] };
     let isListLoaded = false;
     let activePlantInput = null;
     let activePriceInput = null;
     let pendingAction = null;
+    let currentEditOrderId = null;
 
-    // ==========================================
-    // 初始化
-    // ==========================================
     window.onload = async function() {
         document.getElementById('orderDate').valueAsDate = new Date();
         document.getElementById('loading-overlay').classList.add('show');
         await fetchAllLists();
         document.getElementById('loading-overlay').classList.remove('show');
-        addNewItem();
-        addSupplementItem();
+        addNewItem('items-container');
+        addNewItem('supplement-items-container', 'sup-');
     };
 
-    // ==========================================
-    // 頁面切換
-    // ==========================================
     function switchPage(page) {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
@@ -302,9 +349,6 @@
         if (page === 'workspace' && isListLoaded) renderPlantManageList();
     }
 
-    // ==========================================
-    // 載入所有清單
-    // ==========================================
     async function fetchAllLists() {
         try {
             const response = await fetch(SCRIPT_URL);
@@ -313,14 +357,15 @@
             if (data.error) throw new Error(data.error);
             lists = data;
             isListLoaded = true;
-
             fillSelect('region', lists.regions, '');
             fillSelect('paymentStatus', lists.payments, '未付款');
             fillSelect('orderProgress', lists.progress, '未完成');
             fillSelect('boxStatus', lists.box, '未完成');
-            updateItemSelects();
+            fillSelect('editRegion', lists.regions, '');
+            fillSelect('editPaymentStatus', lists.payments, '未付款');
+            fillSelect('editOrderProgress', lists.progress, '未完成');
+            fillSelect('editBoxStatus', lists.box, '未完成');
         } catch (err) {
-            console.error("載入清單失敗:", err);
             alert("⚠️ 載入清單失敗\n" + err.message);
         }
     }
@@ -339,27 +384,59 @@
         if (defaultValue) select.value = defaultValue;
     }
 
-    function updateItemSelects() {
-        document.querySelectorAll('.item-row, .supplement-item-row').forEach(row => {
-            const plantStatusSel = row.querySelector('[name="plantStatus"], [name="sup-plantStatus"]');
-            const potSizeSel = row.querySelector('[name="potSize"], [name="sup-potSize"]');
-            if (plantStatusSel && lists.plantStatus.length > 0) {
-                const cur = plantStatusSel.value;
-                plantStatusSel.innerHTML = '<option value="" disabled selected>請選擇</option>' +
-                    lists.plantStatus.map(s => `<option value="${s}">${s}</option>`).join('');
-                if (cur) plantStatusSel.value = cur;
-            }
-            if (potSizeSel && lists.potSize.length > 0) {
-                const cur = potSizeSel.value;
-                potSizeSel.innerHTML = '<option value="" disabled selected>請選擇</option>' +
-                    lists.potSize.map(s => `<option value="${s}">${s}</option>`).join('');
-                if (cur) potSizeSel.value = cur;
-            }
-        });
+    // ==========================================
+    // 通用品項新增
+    // ==========================================
+    function addNewItem(containerId, prefix) {
+        prefix = prefix || '';
+        const container = document.getElementById(containerId);
+        const itemCount = container.children.length + 1;
+        const plantStatusOptions = '<option value="" disabled selected>請選擇</option>' +
+            (lists.plantStatus.length > 0 ? lists.plantStatus.map(s => `<option value="${s}">${s}</option>`).join('') : '');
+        const potSizeOptions = '<option value="" disabled selected>請選擇</option>' +
+            (lists.potSize.length > 0 ? lists.potSize.map(s => `<option value="${s}">${s}</option>`).join('') : '');
+
+        const div = document.createElement('div');
+        div.className = 'item-row';
+        div.dataset.prefix = prefix;
+        div.innerHTML = `
+            <div class="item-header">
+                <span>#${itemCount} 品項</span>
+                ${itemCount > 1 ? `<button class="remove-btn" onclick="this.closest('.item-row').remove(); calcTotal()">移除</button>` : ''}
+            </div>
+            <div class="form-group">
+                <label>植物種類 <span style="color:red">*</span></label>
+                <input type="text" class="clickable-input" name="${prefix}plantType" placeholder="點擊選擇植物..." readonly onclick="openPlantPicker(this)">
+            </div>
+            <div class="form-group" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                <div>
+                    <label>植物狀態</label>
+                    <select name="${prefix}plantStatus">${plantStatusOptions}</select>
+                </div>
+                <div>
+                    <label>水泥盆/其他</label>
+                    <select name="${prefix}potSize">${potSizeOptions}</select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>品項價格 <span style="color:red">*</span></label>
+                <div class="price-input-group">
+                    <input type="number" class="clickable-input" name="${prefix}itemPrice" value="" placeholder="點擊輸入" readonly onclick="openKeypad(this)">
+                </div>
+            </div>
+        `;
+        container.appendChild(div);
+    }
+
+    function calcTotal() {
+        let total = 0;
+        document.getElementsByName('itemPrice').forEach(input => { total += parseInt(input.value) || 0; });
+        document.getElementById('totalDisplay').innerText = total;
+        return total;
     }
 
     // ==========================================
-    // 工作區 - 植物清單管理
+    // 植物清單管理
     // ==========================================
     function renderPlantManageList() {
         const container = document.getElementById('plant-manage-list');
@@ -406,57 +483,18 @@
     }
 
     // ==========================================
-    // 工作區 - 補單
+    // 補單
     // ==========================================
-    function addSupplementItem() {
-        const container = document.getElementById('supplement-items-container');
-        const itemCount = container.children.length + 1;
-        const plantStatusOptions = '<option value="" disabled selected>請選擇</option>' +
-            (lists.plantStatus.length > 0 ? lists.plantStatus.map(s => `<option value="${s}">${s}</option>`).join('') : '');
-        const potSizeOptions = '<option value="" disabled selected>請選擇</option>' +
-            (lists.potSize.length > 0 ? lists.potSize.map(s => `<option value="${s}">${s}</option>`).join('') : '');
-
-        const div = document.createElement('div');
-        div.className = 'item-row supplement-item-row';
-        div.innerHTML = `
-            <div class="item-header">
-                <span>#${itemCount} 補單品項</span>
-                ${itemCount > 1 ? `<button class="remove-btn" onclick="this.closest('.supplement-item-row').remove()">移除</button>` : ''}
-            </div>
-            <div class="form-group">
-                <label>植物種類 (點擊選擇) <span style="color:red">*</span></label>
-                <input type="text" class="clickable-input" name="sup-plantType" placeholder="點擊選擇植物..." readonly onclick="openPlantPicker(this)">
-            </div>
-            <div class="form-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                <div>
-                    <label>植物狀態</label>
-                    <select name="sup-plantStatus">${plantStatusOptions}</select>
-                </div>
-                <div>
-                    <label>水泥盆/其他尺寸</label>
-                    <select name="sup-potSize">${potSizeOptions}</select>
-                </div>
-            </div>
-            <div class="form-group">
-                <label>品項價格 (點擊輸入) <span style="color:red">*</span></label>
-                <div class="price-input-group">
-                    <input type="number" class="clickable-input" name="sup-itemPrice" value="" placeholder="點擊輸入" readonly onclick="openKeypad(this)">
-                </div>
-            </div>
-        `;
-        container.appendChild(div);
-    }
-
     function submitSupplement() {
         let isValid = true;
         document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
         const supId = document.getElementById('supplementOrderId');
         if (!supId.value.trim()) { supId.classList.add('input-error'); isValid = false; }
-        document.querySelectorAll('.supplement-item-row').forEach(row => {
-            const plantInput = row.querySelector('[name="sup-plantType"]');
-            const priceInput = row.querySelector('[name="sup-itemPrice"]');
-            if (!plantInput.value.trim()) { plantInput.classList.add('input-error'); isValid = false; }
-            if (!priceInput.value.trim()) { priceInput.classList.add('input-error'); isValid = false; }
+        document.querySelectorAll('#supplement-items-container .item-row').forEach(row => {
+            const p = row.querySelector('[name="sup-plantType"]');
+            const pr = row.querySelector('[name="sup-itemPrice"]');
+            if (!p.value.trim()) { p.classList.add('input-error'); isValid = false; }
+            if (!pr.value.trim()) { pr.classList.add('input-error'); isValid = false; }
         });
         if (!isValid) { alert("尚有必填欄位未完成！"); return; }
         pendingAction = () => finalizeSubmission('supplement');
@@ -464,56 +502,92 @@
     }
 
     // ==========================================
+    // 編輯訂單
+    // ==========================================
+    async function loadOrderForEdit() {
+        const orderId = document.getElementById('editOrderId').value.trim();
+        if (!orderId) { alert("請輸入訂單編號！"); return; }
+
+        document.getElementById('loading-text').textContent = '載入訂單資料...';
+        document.getElementById('loading-overlay').classList.add('show');
+
+        try {
+            const response = await fetch(SCRIPT_URL + '?action=getOrder&orderId=' + encodeURIComponent(orderId));
+            const data = await response.json();
+
+            if (data.error || !data.header) {
+                alert("找不到訂單：" + orderId);
+                return;
+            }
+
+            currentEditOrderId = orderId;
+
+            // 填入基本資料
+            const h = data.header;
+            const dateStr = h.date instanceof Date ? h.date.toISOString().split('T')[0] :
+                           (typeof h.date === 'string' ? h.date : new Date(h.date).toISOString().split('T')[0]);
+            document.getElementById('editOrderDate').value = dateStr;
+            document.getElementById('editBuyerIG').value = h.ig || '';
+            document.getElementById('editDeliveryInfo').value = h.delivery || '';
+            document.getElementById('editNote').value = h.note || '';
+
+            fillSelect('editRegion', lists.regions, '');
+            fillSelect('editPaymentStatus', lists.payments, '未付款');
+            fillSelect('editOrderProgress', lists.progress, '未完成');
+            fillSelect('editBoxStatus', lists.box, '未完成');
+
+            setTimeout(() => {
+                if (h.region) document.getElementById('editRegion').value = h.region;
+                if (h.payment) document.getElementById('editPaymentStatus').value = h.payment;
+                if (h.progress) document.getElementById('editOrderProgress').value = h.progress;
+                if (h.box) document.getElementById('editBoxStatus').value = h.box;
+            }, 100);
+
+            // 填入品項
+            const editContainer = document.getElementById('edit-items-container');
+            editContainer.innerHTML = '';
+            data.items.forEach((item, idx) => {
+                addNewItem('edit-items-container', 'edit-');
+                const rows = editContainer.querySelectorAll('.item-row');
+                const row = rows[rows.length - 1];
+                row.querySelector('[name="edit-plantType"]').value = item.plantType || '';
+                setTimeout(() => {
+                    const ps = row.querySelector('[name="edit-plantStatus"]');
+                    const pot = row.querySelector('[name="edit-potSize"]');
+                    if (ps && item.plantStatus) ps.value = item.plantStatus;
+                    if (pot && item.potSize) pot.value = item.potSize;
+                }, 150);
+                row.querySelector('[name="edit-itemPrice"]').value = item.price || '';
+            });
+
+            document.getElementById('edit-order-badge').textContent = '編輯中：' + orderId;
+            document.getElementById('edit-order-form').style.display = 'block';
+
+        } catch (err) {
+            alert("❌ 載入失敗：" + err.message);
+        } finally {
+            document.getElementById('loading-text').textContent = '載入清單中...';
+            document.getElementById('loading-overlay').classList.remove('show');
+        }
+    }
+
+    function submitEditOrder() {
+        if (!currentEditOrderId) { alert("請先載入訂單！"); return; }
+        let isValid = true;
+        document.querySelectorAll('#edit-items-container .item-row').forEach(row => {
+            const p = row.querySelector('[name="edit-plantType"]');
+            const pr = row.querySelector('[name="edit-itemPrice"]');
+            if (!p.value.trim()) { p.classList.add('input-error'); isValid = false; }
+            if (!pr.value.trim()) { pr.classList.add('input-error'); isValid = false; }
+        });
+        if (!isValid) { alert("尚有必填欄位未完成！"); return; }
+        pendingAction = () => finalizeSubmission('edit');
+        openPasswordModal();
+    }
+
+    // ==========================================
     // 新訂單
     // ==========================================
-    function addNewItem() {
-        const container = document.getElementById('items-container');
-        const itemCount = container.children.length + 1;
-        const plantStatusOptions = '<option value="" disabled selected>請選擇</option>' +
-            (lists.plantStatus.length > 0 ? lists.plantStatus.map(s => `<option value="${s}">${s}</option>`).join('') : '');
-        const potSizeOptions = '<option value="" disabled selected>請選擇</option>' +
-            (lists.potSize.length > 0 ? lists.potSize.map(s => `<option value="${s}">${s}</option>`).join('') : '');
-
-        const div = document.createElement('div');
-        div.className = 'item-row';
-        div.innerHTML = `
-            <div class="item-header">
-                <span>#${itemCount} 商品資訊</span>
-                ${itemCount > 1 ? `<button class="remove-btn" onclick="removeItem(this)">移除</button>` : ''}
-            </div>
-            <div class="form-group">
-                <label>植物種類 (點擊選擇) <span style="color:red">*</span></label>
-                <input type="text" class="clickable-input" name="plantType" placeholder="點擊選擇植物..." readonly onclick="openPlantPicker(this)">
-            </div>
-            <div class="form-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                <div>
-                    <label>植物狀態</label>
-                    <select name="plantStatus">${plantStatusOptions}</select>
-                </div>
-                <div>
-                    <label>水泥盆/其他尺寸</label>
-                    <select name="potSize">${potSizeOptions}</select>
-                </div>
-            </div>
-            <div class="form-group">
-                <label>品項價格 (點擊輸入) <span style="color:red">*</span></label>
-                <div class="price-input-group">
-                    <input type="number" class="clickable-input" name="itemPrice" value="" placeholder="點擊輸入" readonly onclick="openKeypad(this)">
-                </div>
-            </div>
-        `;
-        container.appendChild(div);
-    }
-
-    function removeItem(btn) { btn.closest('.item-row').remove(); calcTotal(); }
-
-    function calcTotal() {
-        let total = 0;
-        document.getElementsByName('itemPrice').forEach(input => { total += parseInt(input.value) || 0; });
-        document.getElementById('totalDisplay').innerText = total;
-        return total;
-    }
-
     function submitOrder() {
         let isValid = true;
         document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
@@ -521,11 +595,11 @@
             const el = document.getElementById(id);
             if (!el.value.trim()) { el.classList.add('input-error'); isValid = false; }
         });
-        document.querySelectorAll('#page-order .item-row').forEach(row => {
-            const plantInput = row.querySelector('[name="plantType"]');
-            const priceInput = row.querySelector('[name="itemPrice"]');
-            if (!plantInput.value.trim()) { plantInput.classList.add('input-error'); isValid = false; }
-            if (!priceInput.value.trim()) { priceInput.classList.add('input-error'); isValid = false; }
+        document.querySelectorAll('#items-container .item-row').forEach(row => {
+            const p = row.querySelector('[name="plantType"]');
+            const pr = row.querySelector('[name="itemPrice"]');
+            if (!p.value.trim()) { p.classList.add('input-error'); isValid = false; }
+            if (!pr.value.trim()) { pr.classList.add('input-error'); isValid = false; }
         });
         if (!isValid) { alert("尚有必填欄位未完成！"); return; }
         pendingAction = () => finalizeSubmission('new');
@@ -537,9 +611,10 @@
         if (mode === 'new') { btn.disabled = true; btn.innerText = "傳送中..."; }
 
         let orderData;
+
         if (mode === 'new') {
             const items = [];
-            document.querySelectorAll('#page-order .item-row').forEach(row => {
+            document.querySelectorAll('#items-container .item-row').forEach(row => {
                 items.push({
                     plantType: row.querySelector('[name="plantType"]').value,
                     plantStatus: row.querySelector('[name="plantStatus"]').value,
@@ -561,9 +636,9 @@
                 },
                 items: items
             };
-        } else {
+        } else if (mode === 'supplement') {
             const items = [];
-            document.querySelectorAll('.supplement-item-row').forEach(row => {
+            document.querySelectorAll('#supplement-items-container .item-row').forEach(row => {
                 items.push({
                     plantType: row.querySelector('[name="sup-plantType"]').value,
                     plantStatus: row.querySelector('[name="sup-plantStatus"]').value,
@@ -574,6 +649,31 @@
             orderData = {
                 mode: 'supplement',
                 supplementOrderId: document.getElementById('supplementOrderId').value.trim(),
+                items: items
+            };
+        } else if (mode === 'edit') {
+            const items = [];
+            document.querySelectorAll('#edit-items-container .item-row').forEach(row => {
+                items.push({
+                    plantType: row.querySelector('[name="edit-plantType"]').value,
+                    plantStatus: row.querySelector('[name="edit-plantStatus"]').value,
+                    potSize: row.querySelector('[name="edit-potSize"]').value,
+                    price: row.querySelector('[name="edit-itemPrice"]').value
+                });
+            });
+            orderData = {
+                mode: 'editOrder',
+                orderId: currentEditOrderId,
+                header: {
+                    date: document.getElementById('editOrderDate').value,
+                    ig: document.getElementById('editBuyerIG').value,
+                    region: document.getElementById('editRegion').value,
+                    delivery: document.getElementById('editDeliveryInfo').value,
+                    payment: document.getElementById('editPaymentStatus').value,
+                    progress: document.getElementById('editOrderProgress').value,
+                    box: document.getElementById('editBoxStatus').value,
+                    note: document.getElementById('editNote').value
+                },
                 items: items
             };
         }
@@ -587,9 +687,12 @@
             if (mode === 'new') {
                 showSuccess('訂單送出成功！', `訂單日期：${orderData.header.date}`);
                 resetOrderForm();
-            } else {
+            } else if (mode === 'supplement') {
                 showSuccess('補單成功！', `已補單至訂單 ${orderData.supplementOrderId}`);
                 resetSupplementForm();
+            } else if (mode === 'edit') {
+                showSuccess('訂單更新成功！', `訂單編號：${currentEditOrderId}`);
+                resetEditForm();
             }
         } catch (err) {
             alert("❌ 傳送失敗：" + err.message);
@@ -670,9 +773,6 @@
     function clearKey() { if (activePriceInput) { activePriceInput.value = ''; updateScreen(); calcTotal(); } }
     function updateScreen() { document.getElementById('keypad-screen').innerText = activePriceInput?.value || '0'; }
 
-    // ==========================================
-    // Modal 控制
-    // ==========================================
     function closeAllModals() {
         document.getElementById('overlay').style.display = 'none';
         document.getElementById('keypad-modal').style.display = 'none';
@@ -682,9 +782,6 @@
         activePlantInput = null;
     }
 
-    // ==========================================
-    // 成功畫面
-    // ==========================================
     function showSuccess(title, subtitle) {
         document.getElementById('success-title').textContent = title;
         document.getElementById('success-subtitle').textContent = subtitle;
@@ -692,9 +789,6 @@
     }
     function hideSuccess() { document.getElementById('success-overlay').classList.remove('show'); }
 
-    // ==========================================
-    // Reset
-    // ==========================================
     function resetOrderForm() {
         document.getElementById('buyerIG').value = '';
         document.getElementById('deliveryInfo').value = '';
@@ -705,7 +799,7 @@
         fillSelect('orderProgress', lists.progress, '未完成');
         fillSelect('boxStatus', lists.box, '未完成');
         document.getElementById('items-container').innerHTML = '';
-        addNewItem();
+        addNewItem('items-container');
         calcTotal();
         window.scrollTo(0, 0);
     }
@@ -713,7 +807,14 @@
     function resetSupplementForm() {
         document.getElementById('supplementOrderId').value = '';
         document.getElementById('supplement-items-container').innerHTML = '';
-        addSupplementItem();
+        addNewItem('supplement-items-container', 'sup-');
+    }
+
+    function resetEditForm() {
+        document.getElementById('editOrderId').value = '';
+        document.getElementById('edit-order-form').style.display = 'none';
+        document.getElementById('edit-items-container').innerHTML = '';
+        currentEditOrderId = null;
     }
 </script>
 </body>
