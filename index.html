@@ -82,7 +82,7 @@
         .success-subtitle { font-size: 16px; color: #666; text-align: center; padding: 0 20px; }
         .success-btn { margin-top: 10px; background: var(--primary); color: white; border: none; padding: 15px 40px; border-radius: 50px; font-size: 18px; font-weight: bold; cursor: pointer; }
         .workspace-menu { display: grid; grid-template-columns: 1fr; gap: 15px; }
-        .menu-card { background: white; border-radius: 16px; padding: 25px 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); border: 1px solid #e0ebd4; cursor: pointer; display: flex; align-items: center; gap: 18px; transition: transform 0.15s, box-shadow 0.15s; }
+        .menu-card { background: white; border-radius: 16px; padding: 25px 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); border: 1px solid #e0ebd4; cursor: pointer; display: flex; align-items: center; gap: 18px; transition: transform 0.15s; }
         .menu-card:active { transform: scale(0.98); }
         .menu-card-icon { font-size: 36px; min-width: 48px; text-align: center; }
         .menu-card-text h3 { margin: 0 0 4px 0; font-size: 18px; color: var(--primary); }
@@ -129,8 +129,6 @@
         .total-summary-label { font-size: 14px; opacity: 0.85; }
         .total-summary-amount { font-size: 24px; font-weight: bold; }
         .edit-order-id-badge { background: var(--light-green); color: var(--primary); border-radius: 8px; padding: 10px 15px; font-weight: bold; margin-bottom: 15px; text-align: center; font-size: 16px; }
-
-        /* 日報樣式 */
         .daily-field { display: flex; justify-content: space-between; align-items: center; padding: 14px 0; border-bottom: 1px solid #f0f0f0; }
         .daily-field:last-child { border-bottom: none; }
         .daily-field-label { font-size: 15px; font-weight: 600; color: var(--text); }
@@ -138,7 +136,6 @@
         .daily-checkbox { width: 28px; height: 28px; cursor: pointer; accent-color: var(--primary); }
         .daily-select { width: 80px; padding: 8px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; font-weight: bold; text-align: center; background: white; }
         .daily-select:focus { border-color: var(--primary); outline: none; }
-        .daily-date-badge { background: var(--light-green); color: var(--primary); border-radius: 8px; padding: 8px 15px; font-weight: bold; text-align: center; font-size: 14px; margin-bottom: 15px; }
     </style>
 </head>
 <body>
@@ -326,7 +323,6 @@
                     <input type="date" id="dailyDate">
                 </div>
                 <div id="daily-fields">
-                    <!-- 勾選項目 -->
                     <div class="daily-field">
                         <div class="daily-field-label">肉咖選品</div>
                         <div class="daily-field-input"><input type="checkbox" class="daily-checkbox" id="daily-0"></div>
@@ -335,36 +331,30 @@
                         <div class="daily-field-label">百慕達選品</div>
                         <div class="daily-field-input"><input type="checkbox" class="daily-checkbox" id="daily-1"></div>
                     </div>
-                    <!-- 數字項目 -->
                     <div class="daily-field">
                         <div class="daily-field-label">北部訂單</div>
-                        <div class="daily-field-input">
-                            <select class="daily-select" id="daily-2">
-                                ${Array.from({length:16},(_,i)=>`<option value="${i}">${i}</option>`).join('')}
-                            </select>
-                        </div>
+                        <div class="daily-field-input"><select class="daily-select" id="daily-2"></select></div>
                     </div>
                     <div class="daily-field">
                         <div class="daily-field-label">中部訂單</div>
-                        <div class="daily-field-input"><select class="daily-select" id="daily-3">${Array.from({length:16},(_,i)=>`<option value="${i}">${i}</option>`).join('')}</select></div>
+                        <div class="daily-field-input"><select class="daily-select" id="daily-3"></select></div>
                     </div>
                     <div class="daily-field">
                         <div class="daily-field-label">南部訂單</div>
-                        <div class="daily-field-input"><select class="daily-select" id="daily-4">${Array.from({length:16},(_,i)=>`<option value="${i}">${i}</option>`).join('')}</select></div>
+                        <div class="daily-field-input"><select class="daily-select" id="daily-4"></select></div>
                     </div>
                     <div class="daily-field">
                         <div class="daily-field-label">自取訂單</div>
-                        <div class="daily-field-input"><select class="daily-select" id="daily-5">${Array.from({length:16},(_,i)=>`<option value="${i}">${i}</option>`).join('')}</select></div>
+                        <div class="daily-field-input"><select class="daily-select" id="daily-5"></select></div>
                     </div>
                     <div class="daily-field">
                         <div class="daily-field-label">現場客</div>
-                        <div class="daily-field-input"><select class="daily-select" id="daily-6">${Array.from({length:16},(_,i)=>`<option value="${i}">${i}</option>`).join('')}</select></div>
+                        <div class="daily-field-input"><select class="daily-select" id="daily-6"></select></div>
                     </div>
                     <div class="daily-field">
                         <div class="daily-field-label">新品</div>
-                        <div class="daily-field-input"><select class="daily-select" id="daily-7">${Array.from({length:16},(_,i)=>`<option value="${i}">${i}</option>`).join('')}</select></div>
+                        <div class="daily-field-input"><select class="daily-select" id="daily-7"></select></div>
                     </div>
-                    <!-- 勾選項目 -->
                     <div class="daily-field">
                         <div class="daily-field-label">裝箱</div>
                         <div class="daily-field-input"><input type="checkbox" class="daily-checkbox" id="daily-8"></div>
@@ -445,6 +435,14 @@
         await fetchAllLists();
         document.getElementById('loading-overlay').classList.remove('show');
         addNewItem('items-container', '');
+        [2,3,4,5,6,7].forEach(idx => {
+            const sel = document.getElementById('daily-' + idx);
+            if (sel) {
+                sel.innerHTML = Array.from({length:16}, (_,i) =>
+                    `<option value="${i}">${i}</option>`
+                ).join('');
+            }
+        });
     };
 
     function switchPage(page) {
@@ -536,9 +534,6 @@
         return total;
     }
 
-    // ==========================================
-    // 植物清單管理（含搜尋和刪除）
-    // ==========================================
     function renderPlantManageList(filter) {
         const container = document.getElementById('plant-manage-list');
         const tag = document.getElementById('plant-count-tag');
@@ -550,7 +545,7 @@
             container.innerHTML = '<div style="padding:20px;text-align:center;color:#999;">沒有找到植物</div>';
             return;
         }
-        container.innerHTML = filtered.map((p, i) => `
+        container.innerHTML = filtered.map((p) => `
             <div class="plant-manage-item">
                 <span class="plant-index">${lists.plants.indexOf(p) + 1}</span>
                 <span style="flex:1;">${p}</span>
@@ -560,8 +555,7 @@
     }
 
     function filterPlantManageList() {
-        const query = document.getElementById('plant-search-manage').value;
-        renderPlantManageList(query);
+        renderPlantManageList(document.getElementById('plant-search-manage').value);
     }
 
     function confirmDeletePlant(name) {
@@ -616,29 +610,20 @@
         }
     }
 
-    // ==========================================
-    // 日報填寫
-    // ==========================================
     async function submitDailyReport() {
         const dateStr = document.getElementById('dailyDate').value;
         if (!dateStr) { alert("請選擇日期！"); return; }
-
         const date = new Date(dateStr);
         const month = date.getMonth() + 1;
-
         const values = [];
-        // 0,1: 勾選
         values.push(document.getElementById('daily-0').checked);
         values.push(document.getElementById('daily-1').checked);
-        // 2-7: 數字
         for (let i = 2; i <= 7; i++) {
             values.push(parseInt(document.getElementById('daily-' + i).value) || 0);
         }
-        // 8-13: 勾選
         for (let i = 8; i <= 13; i++) {
             values.push(document.getElementById('daily-' + i).checked);
         }
-
         pendingAction = async () => {
             document.getElementById('loading-overlay').classList.add('show');
             try {
@@ -665,9 +650,6 @@
         for (let i = 8; i <= 13; i++) document.getElementById('daily-' + i).checked = false;
     }
 
-    // ==========================================
-    // 訂單查詢
-    // ==========================================
     async function queryOrdersByIG() {
         const ig = document.getElementById('queryIG').value.trim();
         if (!ig) { alert("請輸入購買人 IG！"); return; }
@@ -772,9 +754,6 @@
         window.scrollTo(0, 0);
     }
 
-    // ==========================================
-    // 編輯訂單
-    // ==========================================
     async function loadOrderForEdit() {
         const orderId = document.getElementById('editOrderId').value.trim();
         if (!orderId) { alert("請輸入訂單編號！"); return; }
@@ -844,9 +823,6 @@
         openPasswordModal();
     }
 
-    // ==========================================
-    // 新訂單
-    // ==========================================
     function submitOrder() {
         let isValid = true;
         document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
@@ -934,9 +910,6 @@
         }
     }
 
-    // ==========================================
-    // 密碼 Modal
-    // ==========================================
     function openPasswordModal() {
         document.getElementById('admin-password').value = '';
         document.getElementById('password-error').style.display = 'none';
