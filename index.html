@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>小樣兒園藝 - 訂單管理系統</title>
+    <style>
+        :root { --primary: #2d6a4f; --light-green: #d8f3dc; --accent: #d00000; --bg: #f4f9f5; --text: #1b4332; }
+        * { box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--bg); color: var(--text); margin: 0; padding: 0; padding-bottom: 80px; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+
+        /* 導航列 */
+        .nav-bar { background: var(--primary); padding: 0; display: flex; position: sticky; top: 0; z-index: 500; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+        .nav-tab { flex: 1; padding: 14px; text-align: center; color: rgba(255,255,255,0.7); font-weight: bold; font-size: 15px; cursor: pointer; border-bottom: 3px solid transparent; transition: 0.2s; }
+        .nav-tab.active { color: white; border-bottom-color: #95d5b2; }
+        .nav-tab:active { background: rgba(255,255,255,0.1); }
+
+        /* 頁面 */
+        .page { display: none; }
+        .page.active { display: block; }
+
+        .app-header-container { text-align: center; color: var(--primary); margin-bottom: 20px; border-bottom: 3px solid var(--primary); padding-bottom: 10px; position: relative; }
+        h1.main-title { font-size: 22px; margin: 0; }
+        .author-text { font-size: 11px; color: #999; margin-top: 4px; }
+
+        .card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 20px; border: 1px solid #e0ebd4; }
+        .section-title { font-size: 18px; font-weight: bold; margin-bottom: 15px; color: var(--primary); display: flex; align-items: center; }
+        .section-title::before { content: ''; display: inline-block; width: 6px; height: 20px; background: var(--primary); margin-right: 8px; border-radius: 3px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 14px; }
+        input, select, textarea { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; background: #fafafa; transition: 0.2s; }
+        input:focus, select:focus, textarea:focus { border-color: var(--primary); background: white; outline: none; }
+
+        .input-error { border: 2px solid #e53935 !important; background-color: #ffebee !important; animation: shake 0.4s; }
+        @keyframes shake { 0%,100% { transform: translateX(0); } 20%,60% { transform: translateX(-5px); } 40%,80% { transform: translateX(5px); } }
+
+        .item-row { background: var(--light-green); padding: 15px; border-radius: 10px; margin-bottom: 15px; border: 1px solid #95d5b2; animation: slideDown 0.3s ease; }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        .item-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-weight: bold; color: var(--primary); }
+        .remove-btn { background: transparent; color: var(--accent); border: 1px solid var(--accent); padding: 4px 10px; border-radius: 4px; font-size: 12px; cursor: pointer; }
+
+        .add-btn { width: 100%; background: white; color: var(--primary); border: 2px dashed var(--primary); padding: 15px; border-radius: 8px; font-weight: bold; font-size: 16px; cursor: pointer; margin-top: 10px; margin-bottom: 30px; display: block; }
+        .add-btn:active { background: var(--light-green); }
+
+        .total-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: white; padding: 15px 20px; box-shadow: 0 -4px 15px rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center; z-index: 100; }
+        .total-display { font-size: 16px; font-weight: bold; }
+        .total-amount { color: var(--accent); font-size: 22px; }
+        .submit-btn { background: var(--primary); color: white; border: none; padding: 12px 25px; border-radius: 50px; font-size: 18px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 10px rgba(45,106,79,0.4); }
+        .submit-btn:disabled { background: #ccc; cursor: not-allowed; }
+
+        .clickable-input { cursor: pointer; background-color: white !important; }
+        .price-input-group { position: relative; }
+        .price-input-group::before { content: '$'; position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: #666; z-index: 1; }
+        .price-input-group input { padding-left: 25px; font-weight: bold; color: var(--accent); cursor: pointer; }
+
+        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9998; backdrop-filter: blur(2px); }
+
+        .bottom-modal { display: none; position: fixed; bottom: 0; left: 0; width: 100%; background: white; box-shadow: 0 -5px 20px rgba(0,0,0,0.2); z-index: 9999; border-top-left-radius: 20px; border-top-right-radius: 20px; padding: 20px; padding-bottom: 30px; max-height: 80vh; flex-direction: column; }
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+
+        .center-modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 80%; max-width: 300px; background: white; border-radius: 15px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); z-index: 10000; text-align: center; }
+        .password-input { width: 100%; padding: 12px; font-size: 20px; text-align: center; border: 2px solid #ddd; border-radius: 8px; margin: 15px 0; letter-spacing: 5px; }
+        .password-input:focus { border-color: var(--primary); outline: none; }
+        .modal-btn-group { display: flex; gap: 10px; }
+        .modal-btn { flex: 1; padding: 10px; border-radius: 8px; font-weight: bold; cursor: pointer; border: none; font-size: 16px; }
+        .btn-cancel { background: #f0f0f0; color: #666; }
+        .btn-confirm { background: var(--primary); color: white; }
+
+        .keypad-display-screen { background: #f8f9fa; border: 2px solid #e9ecef; border-radius: 12px; padding: 15px; margin-bottom: 20px; text-align: right; font-size: 36px; font-weight: bold; color: var(--primary); font-family: Consolas, monospace; height: 50px; line-height: 50px; }
+        .keypad-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        .key-btn { background: #ffffff; border: 1px solid #e0e0e0; padding: 15px; font-size: 24px; font-weight: bold; border-radius: 12px; color: #333; cursor: pointer; box-shadow: 0 3px 0 #dcdcdc; transition: transform 0.1s; }
+        .key-btn:active { transform: translateY(3px); box-shadow: none; }
+        .key-btn.confirm { background: var(--primary); color: white; grid-column: span 3; border: none; box-shadow: 0 4px 0 #1b4332; }
+        .key-btn.confirm:active { transform: translateY(4px); box-shadow: none; }
+        .key-btn.clear { background: #ffebee; color: var(--accent); border-color: #ffcdd2; box-shadow: 0 3px 0 #ffcdd2; }
+        .key-btn.backspace { background: #f1f3f5; box-shadow: 0 3px 0 #dee2e6; }
+
+        .plant-picker-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .picker-title { font-size: 18px; font-weight: bold; color: var(--primary); }
+        .close-picker { color: #999; font-size: 24px; cursor: pointer; background: none; border: none; padding: 0 10px; }
+        .plant-search-box { width: 100%; padding: 12px 12px 12px 35px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; margin-bottom: 10px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23999' viewBox='0 0 16 16'%3E%3Cpath d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: 10px center; }
+        .plant-search-box:focus { border-color: var(--primary); outline: none; }
+        .plant-list-container { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; border-top: 1px solid #eee; min-height: 200px; }
+        .plant-option { padding: 15px; border-bottom: 1px solid #f0f0f0; font-size: 16px; color: #333; cursor: pointer; display: flex; align-items: center; }
+        .plant-option:active { background: #f0f9f4; color: var(--primary); font-weight: bold; }
+        .plant-option:last-child { border-bottom: none; }
+        .plant-icon { margin-right: 10px; font-size: 18px; }
+
+        .loading-message, .error-message { padding: 30px 20px; text-align: center; color: #666; font-size: 16px; display: flex; flex-direction: column; align-items: center; }
+        .error-message { color: var(--accent); }
+        .retry-btn { margin-top: 15px; padding: 8px 15px; background: var(--primary); color: white; border: none; border-radius: 5px; cursor: pointer; }
+
+        .loading-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.9); z-index: 99999; justify-content: center; align-items: center; flex-direction: column; gap: 15px; }
+        .loading-overlay.show { display: flex; }
+        .spinner { width: 40px; height: 40px; border: 4px solid #e0ebd4; border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .success-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 99999; justify-content: center; align-items: center; flex-direction: column; gap: 15px; }
+        .success-overlay.show { display: flex; }
+        .success-icon { font-size: 80px; animation: bounce 0.5s ease; }
+        @keyframes bounce { 0%,100% { transform: scale(1); } 50% { transform: scale(1.2); } }
+        .success-title { font-size: 24px; font-weight: bold; color: var(--primary); }
+        .success-subtitle { font-size: 16px; color: #666; text-align: center; padding: 0 20px; }
+        .success-btn { margin-top: 10px; background: var(--primary); color: white; border: none; padding: 15px 40px; border-radius: 50px; font-size: 18px; font-weight: bold; cursor: pointer; }
+
+        /* 工作區樣式 */
+        .workspace-section { margin-bottom: 25px; }
+        .plant-list-manage { max-height: 300px; overflow-y: auto; border: 1px solid #e0ebd4; border-radius: 8px; margin-bottom: 10px; }
+        .plant-manage-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 15px; border-bottom: 1px solid #f0f0f0; font-size: 15px; }
+        .plant-manage-item:last-child { border-bottom: none; }
+        .plant-manage-item:nth-child(even) { background: #f9fff9; }
+        .plant-index { color: #999; font-size: 12px; margin-right: 8px; min-width: 24px; }
+        .plant-name { flex: 1; }
+        .add-plant-group { display: flex; gap: 10px; }
+        .add-plant-group input { flex: 1; }
+        .add-plant-btn { background: var(--primary); color: white; border: none; padding: 12px 20px; border-radius: 8px; font-weight: bold; font-size: 15px; cursor: pointer; white-space: nowrap; }
+        .add-plant-btn:active { opacity: 0.8; }
+
+        .supplement-info-box { background: #fff8e1; border: 1px solid #ffe082; border-radius: 10px; padding: 15px; margin-bottom: 15px; font-size: 14px; color: #795548; }
+        .supplement-info-box strong { color: var(--primary); }
+
+        .workspace-action-btn { width: 100%; background: var(--primary); color: white; border: none; padding: 15px; border-radius: 10px; font-weight: bold; font-size: 17px; cursor: pointer; margin-top: 5px; box-shadow: 0 4px 10px rgba(45,106,79,0.3); }
+        .workspace-action-btn:active { opacity: 0.85; }
+        .workspace-action-btn.secondary { background: white; color: var(--primary); border: 2px solid var(--primary); box-shadow: none; }
+
+        .tag { display: inline-block; background: var(--light-green); color: var(--primary); border-radius: 20px; padding: 3px 10px; font-size: 12px; font-weight: bold; margin-left: 8px; }
+    </style>
+</head>
+<body>
+
+<div class="loading-overlay" id="loading-overlay">
+    <div class="spinner"></div>
+    <div style="color: var(--primary); font-weight: bold;">載入清單中...</div>
+</div>
+
+<div class="success-overlay" id="success-overlay">
+    <div class="success-icon">✅</div>
+    <div class="success-title" id="success-title">送出成功！</div>
+    <div class="success-subtitle" id="success-subtitle"></div>
+    <button class="success-btn" onclick="hideSuccess()">繼續</button>
+</div>
+
+<!-- 導航列 -->
+<div class="nav-bar">
+    <div class="nav-tab active" id="nav-order" onclick="switchPage('order')">🌿 新訂單</div>
+    <div class="nav-tab" id="nav-workspace" onclick="switchPage('workspace')">⚙️ 工作區</div>
+</div>
+
+<!-- 新訂單頁面 -->
+<div class="page active" id="page-order">
+    <div class="container">
+        <div class="app-header-container">
+            <h1 class="main-title">🌱 小樣兒園藝 - 訂單管理 🌱</h1>
+            <div class="author-text">Author. Charlie</div>
+        </div>
+
+        <div class="card">
+            <div class="section-title">訂單基本資料</div>
+            <div class="form-group">
+                <label>訂單日期 <span style="color:red">*</span></label>
+                <input type="date" id="orderDate">
+            </div>
+            <div class="form-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <div>
+                    <label>購買人 IG <span style="color:red">*</span></label>
+                    <input type="text" id="buyerIG" placeholder="例如: shan1101">
+                </div>
+                <div>
+                    <label>地區 <span style="color:red">*</span></label>
+                    <select id="region">
+                        <option value="" disabled selected>請選擇地區</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>配送資訊 (地址/電話/姓名) <span style="color:red">*</span></label>
+                <textarea id="deliveryInfo" rows="5" placeholder="例如: 詹小美 0912345678 台中市..."></textarea>
+            </div>
+            <div class="form-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <div>
+                    <label>付款狀況</label>
+                    <select id="paymentStatus"></select>
+                </div>
+                <div>
+                    <label>訂單進度</label>
+                    <select id="orderProgress"></select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>紙箱狀態</label>
+                <select id="boxStatus"></select>
+            </div>
+            <div class="form-group">
+                <label>備註 (紅字)</label>
+                <textarea id="note" rows="3" placeholder="例如: 12/26以後送到"></textarea>
+            </div>
+        </div>
+
+        <div id="items-container"></div>
+        <button class="add-btn" onclick="addNewItem()">＋ 新增商品 (植物/盆器/其他)</button>
+    </div>
+
+    <div class="total-bar">
+        <div class="total-display">總金額: <span class="total-amount" id="totalDisplay">0</span></div>
+        <button class="submit-btn" id="submitBtn" onclick="submitOrder()">送出訂單</button>
+    </div>
+</div>
+
+<!-- 工作區頁面 -->
+<div class="page" id="page-workspace">
+    <div class="container">
+        <div class="app-header-container">
+            <h1 class="main-title">⚙️ 工作區</h1>
+            <div class="author-text">管理清單與補單</div>
+        </div>
+
+        <!-- 補單 -->
+        <div class="card workspace-section">
+            <div class="section-title">📋 補單</div>
+            <div class="supplement-info-box">
+                <strong>補單模式：</strong>輸入已有的訂單編號，在該訂單下新增品項。
+            </div>
+            <div class="form-group">
+                <label>訂單編號 <span style="color:red">*</span></label>
+                <input type="text" id="supplementOrderId" placeholder="例如：20260414-1">
+            </div>
+            <div id="supplement-items-container"></div>
+            <button class="add-btn" onclick="addSupplementItem()">＋ 新增品項</button>
+            <button class="workspace-action-btn" onclick="submitSupplement()">送出補單</button>
+        </div>
+
+        <!-- 新增植物種類 -->
+        <div class="card workspace-section">
+            <div class="section-title">🌿 植物種類清單 <span class="tag" id="plant-count-tag">載入中</span></div>
+            <div class="plant-list-manage" id="plant-manage-list">
+                <div class="loading-message">載入中...</div>
+            </div>
+            <div class="add-plant-group">
+                <input type="text" id="new-plant-input" placeholder="輸入新植物名稱">
+                <button class="add-plant-btn" onclick="addNewPlant()">新增</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Modals -->
+<div class="overlay" id="overlay" onclick="closeAllModals()"></div>
+
+<div id="password-modal" class="center-modal">
+    <div style="font-size: 18px; font-weight: bold; margin-bottom: 10px; color: var(--primary);">🔒 請輸入管理密碼</div>
+    <input type="tel" id="admin-password" class="password-input" maxlength="4" placeholder="****">
+    <div id="password-error" style="color: #e53935; font-size: 14px; margin-bottom: 10px; display: none;">密碼錯誤！</div>
+    <div class="modal-btn-group">
+        <button class="modal-btn btn-cancel" onclick="closeAllModals()">取消</button>
+        <button class="modal-btn btn-confirm" onclick="verifyPassword()">確定</button>
+    </div>
+</div>
+
+<div id="keypad-modal" class="bottom-modal" style="display: none;">
+    <div id="keypad-screen" class="keypad-display-screen">0</div>
+    <div class="keypad-grid">
+        <button class="key-btn" onclick="pressKey(7)">7</button>
+        <button class="key-btn" onclick="pressKey(8)">8</button>
+        <button class="key-btn" onclick="pressKey(9)">9</button>
+        <button class="key-btn" onclick="pressKey(4)">4</button>
+        <button class="key-btn" onclick="pressKey(5)">5</button>
+        <button class="key-btn" onclick="pressKey(6)">6</button>
+        <button class="key-btn" onclick="pressKey(1)">1</button>
+        <button class="key-btn" onclick="pressKey(2)">2</button>
+        <button class="key-btn" onclick="pressKey(3)">3</button>
+        <button class="key-btn clear" onclick="clearKey()">C</button>
+        <button class="key-btn" onclick="pressKey(0)">0</button>
+        <button class="key-btn backspace" onclick="backspaceKey()">⌫</button>
+        <button class="key-btn confirm" onclick="closeAllModals()">確 定</button>
+    </div>
+</div>
+
+<div id="plant-picker-modal" class="bottom-modal" style="display: none;">
+    <div class="plant-picker-header">
+        <span class="picker-title">選擇植物</span>
+        <button class="close-picker" onclick="closeAllModals()">✕</button>
+    </div>
+    <input type="text" id="plant-search" class="plant-search-box" placeholder="搜尋植物名稱..." oninput="filterPickerList()">
+    <div id="plant-list-container" class="plant-list-container"></div>
+</div>
+
+<script>
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw6-Sadzv8R-2_DKLZ2h1SkPmOPoeEgaKBgus65nZfZDGtv1RCGvJNOpK0Yk27LB4Pr/exec";
+
+    let lists = { plants: [], potSize: [], payments: [], progress: [], box: [], plantStatus: [], regions: [] };
+    let isListLoaded = false;
+    let activePlantInput = null;
+    let activePriceInput = null;
+    let pendingAction = null; // 密碼驗證後要執行的動作
+
+    // ==========================================
+    // 初始化
+    // ==========================================
+    window.onload = async function() {
+        document.getElementById('orderDate').valueAsDate = new Date();
+        document.getElementById('loading-overlay').classList.add('show');
+        await fetchAllLists();
+        document.getElementById('loading-overlay').classList.remove('show');
+        addNewItem();
+        addSupplementItem();
+    };
+
+    // ==========================================
+    // 頁面切換
+    // ==========================================
+    function switchPage(page) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+        document.getElementById('page-' + page).classList.add('active');
+        document.getElementById('nav-' + page).classList.add('active');
+        
+        // 工作區植物清單
+        if (page === 'workspace' && isListLoaded) {
+            renderPlantManageList();
+        }
+    }
+
+    // ==========================================
+    // 載入所有清單
+    // ==========================================
+    async function fetchAllLists() {
+        try {
+            const response = await fetch(SCRIPT_URL);
+            if (!response.ok) throw new Error("網路請求失敗");
+            const data = await response.json();
+            if (data.error) throw new Error(data.error);
+            lists = data;
+            isListLoaded = true;
+            fillSelect('region', lists.regions);
+            fillSelect('paymentStatus', lists.payments);
+            fillSelect('orderProgress', lists.progress);
+            fillSelect('boxStatus', lists.box);
+            updateItemSelects();
+        } catch (err) {
+            console.error("載入清單失敗:", err);
+            alert("⚠️ 載入清單失敗\n" + err.message);
+        }
+    }
+
+    function fillSelect(id, options) {
+        const select = document.getElementById(id);
+        if (!select || !options) return;
+        const hasPlaceholder = select.options[0] && select.options[0].disabled;
+        if (!hasPlaceholder) select.innerHTML = '';
+        else { while (select.options.length > 1) select.remove(1); }
+        options.forEach(opt => {
+            const o = document.createElement('option');
+            o.value = opt; o.text = opt;
+            select.appendChild(o);
+        });
+    }
+
+    function updateItemSelects() {
+        document.querySelectorAll('.item-row').forEach(row => {
+            refreshItemSelects(row);
+        });
+        document.querySelectorAll('.supplement-item-row').forEach(row => {
+            refreshItemSelects(row);
+        });
+    }
+
+    function refreshItemSelects(row) {
+        const plantStatusSel = row.querySelector('[name="plantStatus"]');
+        const potSizeSel = row.querySelector('[name="potSize"]');
+        if (plantStatusSel && lists.plantStatus.length > 0) {
+            const cur = plantStatusSel.value;
+            plantStatusSel.innerHTML = lists.plantStatus.map(s => `<option value="${s}">${s}</option>`).join('');
+            if (cur) plantStatusSel.value = cur;
+        }
+        if (potSizeSel && lists.potSize.length > 0) {
+            const cur = potSizeSel.value;
+            potSizeSel.innerHTML = lists.potSize.map(s => `<option value="${s}">${s}</option>`).join('');
+            if (cur) potSizeSel.value = cur;
+        }
+    }
+
+    // ==========================================
+    // 工作區 - 植物清單管理
+    // ==========================================
+    function renderPlantManageList() {
+        const container = document.getElementById('plant-manage-list');
+        const tag = document.getElementById('plant-count-tag');
+        if (!lists.plants || lists.plants.length === 0) {
+            container.innerHTML = '<div class="loading-message">尚無植物資料</div>';
+            tag.textContent = '0';
+            return;
+        }
+        tag.textContent = lists.plants.length;
+        container.innerHTML = lists.plants.map((p, i) => `
+            <div class="plant-manage-item">
+                <span class="plant-index">${i + 1}</span>
+                <span class="plant-name">${p}</span>
+            </div>
+        `).join('');
+    }
+
+    function addNewPlant() {
+        const input = document.getElementById('new-plant-input');
+        const name = input.value.trim();
+        if (!name) { input.classList.add('input-error'); setTimeout(() => input.classList.remove('input-error'), 1000); return; }
+        if (lists.plants.includes(name)) { alert(`「${name}」已經在清單中了！`); return; }
+        
+        pendingAction = () => finalizeAddPlant(name, input);
+        openPasswordModal();
+    }
+
+    async function finalizeAddPlant(name, input) {
+        document.getElementById('loading-overlay').classList.add('show');
+        try {
+            await fetch(SCRIPT_URL, {
+                method: "POST",
+                mode: "no-cors",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ mode: 'addPlant', plantName: name })
+            });
+            lists.plants.push(name);
+            renderPlantManageList();
+            input.value = '';
+            showSuccess('新增成功！', `「${name}」已加入植物清單`);
+        } catch (err) {
+            alert("❌ 新增失敗：" + err.message);
+        } finally {
+            document.getElementById('loading-overlay').classList.remove('show');
+        }
+    }
+
+    // ==========================================
+    // 工作區 - 補單
+    // ==========================================
+    function addSupplementItem() {
+        const container = document.getElementById('supplement-items-container');
+        const itemCount = container.children.length + 1;
+        const plantStatusOptions = lists.plantStatus.length > 0
+            ? lists.plantStatus.map(s => `<option value="${s}">${s}</option>`).join('')
+            : '<option value="已換盆">已換盆</option>';
+        const potSizeOptions = lists.potSize.length > 0
+            ? lists.potSize.map(s => `<option value="${s}">${s}</option>`).join('')
+            : '<option value="不搭配水泥盆">不搭配水泥盆</option>';
+
+        const div = document.createElement('div');
+        div.className = 'item-row supplement-item-row';
+        div.innerHTML = `
+            <div class="item-header">
+                <span>#${itemCount} 補單品項</span>
+                ${itemCount > 1 ? `<button class="remove-btn" onclick="this.closest('.supplement-item-row').remove()">移除</button>` : ''}
+            </div>
+            <div class="form-group">
+                <label>植物種類 (點擊選擇) <span style="color:red">*</span></label>
+                <input type="text" class="clickable-input" name="sup-plantType" placeholder="點擊選擇植物..." readonly onclick="openPlantPicker(this)">
+            </div>
+            <div class="form-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <div>
+                    <label>植物狀態</label>
+                    <select name="sup-plantStatus">${plantStatusOptions}</select>
+                </div>
+                <div>
+                    <label>水泥盆/其他尺寸</label>
+                    <select name="sup-potSize">${potSizeOptions}</select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>品項價格 (點擊輸入) <span style="color:red">*</span></label>
+                <div class="price-input-group">
+                    <input type="number" class="clickable-input" name="sup-itemPrice" value="" placeholder="點擊輸入" readonly onclick="openKeypad(this)">
+                </div>
+            </div>
+        `;
+        container.appendChild(div);
+    }
+
+    function submitSupplement() {
+        let isValid = true;
+        document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
+
+        const supId = document.getElementById('supplementOrderId');
+        if (!supId.value.trim()) { supId.classList.add('input-error'); isValid = false; }
+
+        document.querySelectorAll('.supplement-item-row').forEach(row => {
+            const plantInput = row.querySelector('[name="sup-plantType"]');
+            const priceInput = row.querySelector('[name="sup-itemPrice"]');
+            if (!plantInput.value.trim()) { plantInput.classList.add('input-error'); isValid = false; }
+            if (!priceInput.value.trim()) { priceInput.classList.add('input-error'); isValid = false; }
+        });
+
+        if (!isValid) { alert("尚有必填欄位未完成！"); return; }
+
+        pendingAction = () => finalizeSubmission('supplement');
+        openPasswordModal();
+    }
+
+    // ==========================================
+    // 新訂單送出
+    // ==========================================
+    function submitOrder() {
+        let isValid = true;
+        document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
+
+        ['orderDate', 'buyerIG', 'region', 'deliveryInfo'].forEach(id => {
+            const el = document.getElementById(id);
+            if (!el.value.trim()) { el.classList.add('input-error'); isValid = false; }
+        });
+
+        document.querySelectorAll('#page-order .item-row').forEach(row => {
+            const plantInput = row.querySelector('[name="plantType"]');
+            const priceInput = row.querySelector('[name="itemPrice"]');
+            if (!plantInput.value.trim()) { plantInput.classList.add('input-error'); isValid = false; }
+            if (!priceInput.value.trim()) { priceInput.classList.add('input-error'); isValid = false; }
+        });
+
+        if (!isValid) { alert("尚有必填欄位未完成！"); return; }
+
+        pendingAction = () => finalizeSubmission('new');
+        openPasswordModal();
+    }
+
+    async function finalizeSubmission(mode) {
+        const btn = document.getElementById('submitBtn');
+        if (mode === 'new') { btn.disabled = true; btn.innerText = "傳送中..."; }
+
+        let orderData;
+
+        if (mode === 'new') {
+            const items = [];
+            document.querySelectorAll('#page-order .item-row').forEach(row => {
+                items.push({
+                    plantType: row.querySelector('[name="plantType"]').value,
+                    plantStatus: row.querySelector('[name="plantStatus"]').value,
+                    potSize: row.querySelector('[name="potSize"]').value,
+                    price: row.querySelector('[name="itemPrice"]').value
+                });
+            });
+            orderData = {
+                mode: 'new',
+                header: {
+                    date: document.getElementById('orderDate').value,
+                    ig: document.getElementById('buyerIG').value,
+                    region: document.getElementById('region').value,
+                    delivery: document.getElementById('deliveryInfo').value,
+                    payment: document.getElementById('paymentStatus').value,
+                    progress: document.getElementById('orderProgress').value,
+                    box: document.getElementById('boxStatus').value,
+                    note: document.getElementById('note').value
+                },
+                items: items
+            };
+        } else {
+            const items = [];
+            document.querySelectorAll('.supplement-item-row').forEach(row => {
+                items.push({
+                    plantType: row.querySelector('[name="sup-plantType"]').value,
+                    plantStatus: row.querySelector('[name="sup-plantStatus"]').value,
+                    potSize: row.querySelector('[name="sup-potSize"]').value,
+                    price: row.querySelector('[name="sup-itemPrice"]').value
+                });
+            });
+            orderData = {
+                mode: 'supplement',
+                supplementOrderId: document.getElementById('supplementOrderId').value.trim(),
+                items: items
+            };
+        }
+
+        try {
+            await fetch(SCRIPT_URL, {
+                method: "POST",
+                mode: "no-cors",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(orderData)
+            });
+
+            if (mode === 'new') {
+                showSuccess('訂單送出成功！', `訂單日期：${orderData.header.date}`);
+                resetOrderForm();
+            } else {
+                showSuccess('補單成功！', `已補單至訂單 ${orderData.supplementOrderId}`);
+                resetSupplementForm();
+            }
+        } catch (err) {
+            alert("❌ 傳送失敗：" + err.message);
+        } finally {
+            if (mode === 'new') { btn.disabled = false; btn.innerText = "送出訂單"; }
+        }
+    }
+
+    // ==========================================
+    // 密碼 Modal
+    // ==========================================
+    function openPasswordModal() {
+        document.getElementById('admin-password').value = '';
+        document.getElementById('password-error').style.display = 'none';
+        document.getElementById('admin-password').classList.remove('input-error');
+        document.getElementById('overlay').style.display = 'block';
+        document.getElementById('password-modal').style.display = 'block';
+        setTimeout(() => document.getElementById('admin-password').focus(), 100);
+    }
+
+    function verifyPassword() {
+        const input = document.getElementById('admin-password').value;
+        if (input === '1332') {
+            closeAllModals();
+            if (pendingAction) { pendingAction(); pendingAction = null; }
+        } else {
+            document.getElementById('password-error').style.display = 'block';
+            document.getElementById('admin-password').classList.add('input-error');
+        }
+    }
+
+    // ==========================================
+    // 選擇器
+    // ==========================================
+    function openPlantPicker(inputElement) {
+        activePlantInput = inputElement;
+        inputElement.classList.remove('input-error');
+        document.getElementById('plant-search').value = '';
+        renderPickerList(lists.plants);
+        document.getElementById('overlay').style.display = 'block';
+        document.getElementById('plant-picker-modal').style.display = 'flex';
+        document.getElementById('plant-picker-modal').style.animation = 'slideUp 0.25s cubic-bezier(0.1, 0.7, 0.1, 1)';
+    }
+
+    function renderPickerList(items) {
+        const container = document.getElementById('plant-list-container');
+        container.innerHTML = '';
+        if (!items || items.length === 0) {
+            container.innerHTML = '<div style="padding:20px;text-align:center;color:#999;">沒有找到相關項目</div>';
+            return;
+        }
+        items.forEach(item => {
+            const div = document.createElement('div');
+            div.className = 'plant-option';
+            div.innerHTML = `<span class="plant-icon">🌿</span> ${item}`;
+            div.onclick = () => { if (activePlantInput) activePlantInput.value = item; closeAllModals(); };
+            container.appendChild(div);
+        });
+    }
+
+    function filterPickerList() {
+        const query = document.getElementById('plant-search').value.toLowerCase();
+        renderPickerList(lists.plants.filter(p => p.toLowerCase().includes(query)));
+    }
+
+    // ==========================================
+    // 數字鍵盤
+    // ==========================================
+    function openKeypad(inputElement) {
+        activePriceInput = inputElement;
+        inputElement.classList.remove('input-error');
+        if (activePriceInput.value === '0') activePriceInput.value = '';
+        updateScreen();
+        document.getElementById('overlay').style.display = 'block';
+        document.getElementById('keypad-modal').style.display = 'block';
+    }
+    function pressKey(num) { if (activePriceInput) { activePriceInput.value += num; updateScreen(); calcTotal(); } }
+    function backspaceKey() { if (activePriceInput) { activePriceInput.value = activePriceInput.value.slice(0,-1); updateScreen(); calcTotal(); } }
+    function clearKey() { if (activePriceInput) { activePriceInput.value = ''; updateScreen(); calcTotal(); } }
+    function updateScreen() { document.getElementById('keypad-screen').innerText = activePriceInput?.value || '0'; }
+
+    // ==========================================
+    // Modal 控制
+    // ==========================================
+    function closeAllModals() {
+        document.getElementById('overlay').style.display = 'none';
+        document.getElementById('keypad-modal').style.display = 'none';
+        document.getElementById('plant-picker-modal').style.display = 'none';
+        document.getElementById('password-modal').style.display = 'none';
+        if (activePriceInput) { activePriceInput = null; calcTotal(); }
+        activePlantInput = null;
+    }
+
+    // ==========================================
+    // 訂單商品列表
+    // ==========================================
+    function addNewItem() {
+        const container = document.getElementById('items-container');
+        const itemCount = container.children.length + 1;
+        const plantStatusOptions = lists.plantStatus.length > 0
+            ? lists.plantStatus.map(s => `<option value="${s}">${s}</option>`).join('')
+            : '<option value="已換盆">已換盆</option>';
+        const potSizeOptions = lists.potSize.length > 0
+            ? lists.potSize.map(s => `<option value="${s}">${s}</option>`).join('')
+            : '<option value="不搭配水泥盆">不搭配水泥盆</option>';
+
+        const div = document.createElement('div');
+        div.className = 'item-row';
+        div.innerHTML = `
+            <div class="item-header">
+                <span>#${itemCount} 商品資訊</span>
+                ${itemCount > 1 ? `<button class="remove-btn" onclick="removeItem(this)">移除</button>` : ''}
+            </div>
+            <div class="form-group">
+                <label>植物種類 (點擊選擇) <span style="color:red">*</span></label>
+                <input type="text" class="clickable-input" name="plantType" placeholder="點擊選擇植物..." readonly onclick="openPlantPicker(this)">
+            </div>
+            <div class="form-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <div>
+                    <label>植物狀態</label>
+                    <select name="plantStatus">${plantStatusOptions}</select>
+                </div>
+                <div>
+                    <label>水泥盆/其他尺寸</label>
+                    <select name="potSize">${potSizeOptions}</select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>品項價格 (點擊輸入) <span style="color:red">*</span></label>
+                <div class="price-input-group">
+                    <input type="number" class="clickable-input" name="itemPrice" value="" placeholder="點擊輸入" readonly onclick="openKeypad(this)">
+                </div>
+            </div>
+        `;
+        container.appendChild(div);
+    }
+
+    function removeItem(btn) { btn.closest('.item-row').remove(); calcTotal(); }
+
+    function calcTotal() {
+        const prices = document.getElementsByName('itemPrice');
+        let total = 0;
+        prices.forEach(input => { total += parseInt(input.value) || 0; });
+        document.getElementById('totalDisplay').innerText = total;
+        return total;
+    }
+
+    // ==========================================
+    // 成功畫面
+    // ==========================================
+    function showSuccess(title, subtitle) {
+        document.getElementById('success-title').textContent = title;
+        document.getElementById('success-subtitle').textContent = subtitle;
+        document.getElementById('success-overlay').classList.add('show');
+    }
+
+    function hideSuccess() {
+        document.getElementById('success-overlay').classList.remove('show');
+    }
+
+    // ==========================================
+    // Reset
+    // ==========================================
+    function resetOrderForm() {
+        document.getElementById('buyerIG').value = '';
+        document.getElementById('deliveryInfo').value = '';
+        document.getElementById('note').value = '';
+        document.getElementById('orderDate').valueAsDate = new Date();
+        document.getElementById('region').value = '';
+        if (lists.payments.length > 0) document.getElementById('paymentStatus').selectedIndex = 0;
+        if (lists.progress.length > 0) document.getElementById('orderProgress').selectedIndex = 0;
+        if (lists.box.length > 0) document.getElementById('boxStatus').selectedIndex = 0;
+        document.getElementById('items-container').innerHTML = '';
+        addNewItem();
+        calcTotal();
+        window.scrollTo(0, 0);
+    }
+
+    function resetSupplementForm() {
+        document.getElementById('supplementOrderId').value = '';
+        document.getElementById('supplement-items-container').innerHTML = '';
+        addSupplementItem();
+    }
+</script>
+</body>
+</html>
