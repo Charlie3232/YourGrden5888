@@ -613,7 +613,7 @@
     async function submitDailyReport() {
         const dateStr = document.getElementById('dailyDate').value;
         if (!dateStr) { alert("請選擇日期！"); return; }
-        const date = new Date(dateStr);
+        const date = new Date(dateStr.replace(/-/g, "/"));
         const month = date.getMonth() + 1;
         const values = [];
         values.push(document.getElementById('daily-0').checked);
