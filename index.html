@@ -13,10 +13,11 @@
         .nav-bar { background: var(--primary); padding: 0; display: flex; position: sticky; top: 0; z-index: 500; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
         .nav-tab { flex: 1; padding: 14px; text-align: center; color: rgba(255,255,255,0.7); font-weight: bold; font-size: 15px; cursor: pointer; border-bottom: 3px solid transparent; transition: 0.2s; }
         .nav-tab.active { color: white; border-bottom-color: #95d5b2; }
-        .nav-tab:active { background: rgba(255,255,255,0.1); }
 
         .page { display: none; }
         .page.active { display: block; }
+        .sub-page { display: none; }
+        .sub-page.active { display: block; }
 
         .app-header-container { text-align: center; color: var(--primary); margin-bottom: 20px; border-bottom: 3px solid var(--primary); padding-bottom: 10px; }
         h1.main-title { font-size: 22px; margin: 0; }
@@ -53,9 +54,7 @@
         .price-input-group input { padding-left: 25px; font-weight: bold; color: var(--accent); cursor: pointer; }
 
         .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9998; backdrop-filter: blur(2px); }
-
         .bottom-modal { display: none; position: fixed; bottom: 0; left: 0; width: 100%; background: white; box-shadow: 0 -5px 20px rgba(0,0,0,0.2); z-index: 9999; border-top-left-radius: 20px; border-top-right-radius: 20px; padding: 20px; padding-bottom: 30px; max-height: 80vh; flex-direction: column; }
-
         .center-modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 80%; max-width: 300px; background: white; border-radius: 15px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); z-index: 10000; text-align: center; }
         .password-input { width: 100%; padding: 12px; font-size: 20px; text-align: center; border: 2px solid #ddd; border-radius: 8px; margin: 15px 0; letter-spacing: 5px; }
         .password-input:focus { border-color: var(--primary); outline: none; }
@@ -97,24 +96,62 @@
         .success-subtitle { font-size: 16px; color: #666; text-align: center; padding: 0 20px; }
         .success-btn { margin-top: 10px; background: var(--primary); color: white; border: none; padding: 15px 40px; border-radius: 50px; font-size: 18px; font-weight: bold; cursor: pointer; }
 
+        /* 工作區菜單 */
+        .workspace-menu { display: grid; grid-template-columns: 1fr; gap: 15px; }
+        .menu-card { background: white; border-radius: 16px; padding: 25px 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); border: 1px solid #e0ebd4; cursor: pointer; display: flex; align-items: center; gap: 18px; transition: transform 0.15s, box-shadow 0.15s; }
+        .menu-card:active { transform: scale(0.98); box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        .menu-card-icon { font-size: 36px; min-width: 48px; text-align: center; }
+        .menu-card-text h3 { margin: 0 0 4px 0; font-size: 18px; color: var(--primary); }
+        .menu-card-text p { margin: 0; font-size: 13px; color: #888; }
+        .menu-card-arrow { margin-left: auto; font-size: 20px; color: #ccc; }
+
+        /* 返回按鈕 */
+        .back-btn { display: flex; align-items: center; gap: 8px; background: none; border: none; color: var(--primary); font-size: 16px; font-weight: bold; cursor: pointer; padding: 0; margin-bottom: 20px; }
+        .back-btn:active { opacity: 0.7; }
+
+        /* 植物清單 */
         .plant-list-manage { max-height: 300px; overflow-y: auto; border: 1px solid #e0ebd4; border-radius: 8px; margin-bottom: 10px; }
         .plant-manage-item { display: flex; align-items: center; padding: 12px 15px; border-bottom: 1px solid #f0f0f0; font-size: 15px; }
         .plant-manage-item:last-child { border-bottom: none; }
         .plant-manage-item:nth-child(even) { background: #f9fff9; }
         .plant-index { color: #999; font-size: 12px; margin-right: 8px; min-width: 28px; }
-        .plant-name { flex: 1; }
         .add-plant-group { display: flex; gap: 10px; }
         .add-plant-group input { flex: 1; }
         .add-plant-btn { background: var(--primary); color: white; border: none; padding: 12px 20px; border-radius: 8px; font-weight: bold; font-size: 15px; cursor: pointer; white-space: nowrap; }
-        .supplement-info-box { background: #fff8e1; border: 1px solid #ffe082; border-radius: 10px; padding: 15px; margin-bottom: 15px; font-size: 14px; color: #795548; }
-        .supplement-info-box strong { color: var(--primary); }
-        .workspace-action-btn { width: 100%; background: var(--primary); color: white; border: none; padding: 15px; border-radius: 10px; font-weight: bold; font-size: 17px; cursor: pointer; margin-top: 5px; box-shadow: 0 4px 10px rgba(45,106,79,0.3); }
         .tag { display: inline-block; background: var(--light-green); color: var(--primary); border-radius: 20px; padding: 3px 10px; font-size: 12px; font-weight: bold; margin-left: 8px; }
+        .workspace-action-btn { width: 100%; background: var(--primary); color: white; border: none; padding: 15px; border-radius: 10px; font-weight: bold; font-size: 17px; cursor: pointer; margin-top: 5px; box-shadow: 0 4px 10px rgba(45,106,79,0.3); }
 
+        /* 查詢結果 */
         .lookup-group { display: flex; gap: 10px; margin-bottom: 15px; }
         .lookup-group input { flex: 1; }
         .lookup-btn { background: var(--primary); color: white; border: none; padding: 12px 20px; border-radius: 8px; font-weight: bold; font-size: 15px; cursor: pointer; white-space: nowrap; }
-        .edit-order-form { display: none; }
+        .order-list { display: flex; flex-direction: column; gap: 10px; }
+        .order-list-item { background: var(--light-green); border: 1px solid #95d5b2; border-radius: 10px; padding: 15px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: 0.15s; }
+        .order-list-item:active { background: #b7e4c7; }
+        .order-list-item-left { display: flex; flex-direction: column; gap: 4px; }
+        .order-id { font-weight: bold; color: var(--primary); font-size: 15px; }
+        .order-meta { font-size: 12px; color: #666; }
+        .order-list-arrow { color: var(--primary); font-size: 18px; }
+
+        /* 訂單詳情 */
+        .order-detail-card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 15px; border: 1px solid #e0ebd4; }
+        .detail-section-title { font-size: 14px; font-weight: bold; color: #888; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; padding-bottom: 6px; border-bottom: 1px solid #eee; }
+        .detail-row { display: flex; justify-content: space-between; align-items: flex-start; padding: 8px 0; border-bottom: 1px solid #f5f5f5; }
+        .detail-row:last-child { border-bottom: none; }
+        .detail-label { font-size: 13px; color: #888; min-width: 80px; }
+        .detail-value { font-size: 14px; color: var(--text); font-weight: 500; text-align: right; flex: 1; margin-left: 10px; }
+        .detail-badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: bold; }
+        .badge-red { background: #f4cccc; color: #cc0000; }
+        .badge-gray { background: #e0e0e0; color: #555; }
+        .badge-green { background: #b6d7a8; color: #2d6a4f; }
+        .item-detail-card { background: #f9fff9; border: 1px solid #d8f3dc; border-radius: 8px; padding: 12px 15px; margin-bottom: 8px; }
+        .item-detail-name { font-weight: bold; color: var(--primary); font-size: 15px; margin-bottom: 4px; }
+        .item-detail-meta { font-size: 12px; color: #666; display: flex; gap: 12px; flex-wrap: wrap; }
+        .item-detail-price { font-size: 16px; font-weight: bold; color: var(--accent); margin-top: 6px; }
+        .total-summary { background: var(--primary); color: white; border-radius: 10px; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; margin-top: 5px; }
+        .total-summary-label { font-size: 14px; opacity: 0.85; }
+        .total-summary-amount { font-size: 24px; font-weight: bold; }
+
         .edit-order-id-badge { background: var(--light-green); color: var(--primary); border-radius: 8px; padding: 10px 15px; font-weight: bold; margin-bottom: 15px; text-align: center; font-size: 16px; }
     </style>
 </head>
@@ -122,7 +159,7 @@
 
 <div class="loading-overlay" id="loading-overlay">
     <div class="spinner"></div>
-    <div style="color: var(--primary); font-weight: bold;" id="loading-text">載入清單中...</div>
+    <div style="color:var(--primary);font-weight:bold;" id="loading-text">載入清單中...</div>
 </div>
 
 <div class="success-overlay" id="success-overlay">
@@ -157,34 +194,34 @@
                 </div>
                 <div>
                     <label>地區 <span style="color:red">*</span></label>
-                    <select id="region"><option value="" disabled selected>請選擇地區</option></select>
+                    <select id="region"><option value="" disabled selected>請選擇</option></select>
                 </div>
             </div>
             <div class="form-group">
                 <label>配送資訊 <span style="color:red">*</span></label>
-                <textarea id="deliveryInfo" rows="5" placeholder="例如: 詹小美 0912345678 台中市..."></textarea>
+                <textarea id="deliveryInfo" rows="4" placeholder="例如: 詹小美 0912345678 台中市..."></textarea>
             </div>
             <div class="form-group" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
                 <div>
-                    <label>付款狀況</label>
+                    <label>付款狀況 <span style="color:red">*</span></label>
                     <select id="paymentStatus"></select>
                 </div>
                 <div>
-                    <label>訂單進度</label>
+                    <label>訂單進度 <span style="color:red">*</span></label>
                     <select id="orderProgress"></select>
                 </div>
             </div>
             <div class="form-group">
-                <label>紙箱狀態</label>
+                <label>紙箱狀態 <span style="color:red">*</span></label>
                 <select id="boxStatus"></select>
             </div>
             <div class="form-group">
-                <label>備註 (紅字)</label>
+                <label>備註</label>
                 <textarea id="note" rows="3" placeholder="例如: 12/26以後送到"></textarea>
             </div>
         </div>
         <div id="items-container"></div>
-        <button class="add-btn" onclick="addNewItem('items-container')">＋ 新增商品</button>
+        <button class="add-btn" onclick="addNewItem('items-container','')">＋ 新增商品</button>
     </div>
     <div class="total-bar">
         <div class="total-display">總金額: <span class="total-amount" id="totalDisplay">0</span></div>
@@ -195,66 +232,110 @@
 <!-- 工作區頁面 -->
 <div class="page" id="page-workspace">
     <div class="container">
-        <div class="app-header-container">
-            <h1 class="main-title">⚙️ 工作區</h1>
-            <div class="author-text">管理清單與訂單</div>
+
+        <!-- 菜單 -->
+        <div class="sub-page active" id="sub-menu">
+            <div class="app-header-container">
+                <h1 class="main-title">⚙️ 工作區</h1>
+                <div class="author-text">選擇功能</div>
+            </div>
+            <div class="workspace-menu">
+                <div class="menu-card" onclick="switchSub('sub-query')">
+                    <div class="menu-card-icon">🔍</div>
+                    <div class="menu-card-text">
+                        <h3>訂單查詢</h3>
+                        <p>輸入購買人 IG 查詢所有訂單</p>
+                    </div>
+                    <div class="menu-card-arrow">›</div>
+                </div>
+                <div class="menu-card" onclick="switchSub('sub-edit')">
+                    <div class="menu-card-icon">✏️</div>
+                    <div class="menu-card-text">
+                        <h3>編輯訂單</h3>
+                        <p>輸入訂單編號載入並修改</p>
+                    </div>
+                    <div class="menu-card-arrow">›</div>
+                </div>
+                <div class="menu-card" onclick="switchSub('sub-plant')">
+                    <div class="menu-card-icon">🌿</div>
+                    <div class="menu-card-text">
+                        <h3>新增植物</h3>
+                        <p>管理植物種類清單</p>
+                    </div>
+                    <div class="menu-card-arrow">›</div>
+                </div>
+            </div>
         </div>
 
-        <!-- 補單 -->
-        <div class="card">
-            <div class="section-title">📋 補單</div>
-            <div class="supplement-info-box"><strong>補單模式：</strong>輸入已有的訂單編號，在該訂單下新增品項。</div>
-            <div class="form-group">
-                <label>訂單編號 <span style="color:red">*</span></label>
-                <input type="text" id="supplementOrderId" placeholder="例如：20260414-1">
+        <!-- 訂單查詢 -->
+        <div class="sub-page" id="sub-query">
+            <button class="back-btn" onclick="switchSub('sub-menu')">‹ 返回工作區</button>
+            <div class="app-header-container">
+                <h1 class="main-title">🔍 訂單查詢</h1>
             </div>
-            <div id="supplement-items-container"></div>
-            <button class="add-btn" onclick="addNewItem('supplement-items-container', 'sup-')">＋ 新增品項</button>
-            <button class="workspace-action-btn" onclick="submitSupplement()">送出補單</button>
+
+            <!-- 查詢輸入 -->
+            <div class="card" id="query-input-card">
+                <div class="lookup-group">
+                    <input type="text" id="queryIG" placeholder="輸入購買人 IG...">
+                    <button class="lookup-btn" onclick="queryOrdersByIG()">查詢</button>
+                </div>
+                <div id="query-results"></div>
+            </div>
+
+            <!-- 訂單詳情 -->
+            <div id="order-detail-view" style="display:none;">
+                <button class="back-btn" onclick="backToQueryList()">‹ 返回查詢結果</button>
+                <div id="order-detail-content"></div>
+            </div>
         </div>
 
         <!-- 編輯訂單 -->
-        <div class="card">
-            <div class="section-title">✏️ 編輯訂單</div>
-            <div class="supplement-info-box"><strong>編輯模式：</strong>輸入訂單編號載入資料，修改後送出更新。</div>
-            <div class="lookup-group">
-                <input type="text" id="editOrderId" placeholder="輸入訂單編號，例如：20260414-1">
-                <button class="lookup-btn" onclick="loadOrderForEdit()">載入</button>
+        <div class="sub-page" id="sub-edit">
+            <button class="back-btn" onclick="switchSub('sub-menu')">‹ 返回工作區</button>
+            <div class="app-header-container">
+                <h1 class="main-title">✏️ 編輯訂單</h1>
             </div>
-            <div class="edit-order-form" id="edit-order-form">
+            <div class="card">
+                <div class="lookup-group">
+                    <input type="text" id="editOrderId" placeholder="輸入訂單編號，例如：20260414-1">
+                    <button class="lookup-btn" onclick="loadOrderForEdit()">載入</button>
+                </div>
+            </div>
+            <div id="edit-order-form" style="display:none;">
                 <div class="edit-order-id-badge" id="edit-order-badge"></div>
-                <div class="card" style="margin-bottom:15px;border-color:#ffe082;background:#fffde7;">
+                <div class="card" style="border-color:#ffe082;background:#fffde7;">
                     <div class="section-title" style="font-size:15px;">基本資料</div>
                     <div class="form-group">
-                        <label>訂單日期</label>
+                        <label>訂單日期 <span style="color:red">*</span></label>
                         <input type="date" id="editOrderDate">
                     </div>
                     <div class="form-group" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
                         <div>
-                            <label>購買人 IG</label>
+                            <label>購買人 IG <span style="color:red">*</span></label>
                             <input type="text" id="editBuyerIG">
                         </div>
                         <div>
-                            <label>地區</label>
+                            <label>地區 <span style="color:red">*</span></label>
                             <select id="editRegion"><option value="" disabled selected>請選擇</option></select>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label>配送資訊</label>
+                        <label>配送資訊 <span style="color:red">*</span></label>
                         <textarea id="editDeliveryInfo" rows="4"></textarea>
                     </div>
                     <div class="form-group" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
                         <div>
-                            <label>付款狀況</label>
+                            <label>付款狀況 <span style="color:red">*</span></label>
                             <select id="editPaymentStatus"></select>
                         </div>
                         <div>
-                            <label>訂單進度</label>
+                            <label>訂單進度 <span style="color:red">*</span></label>
                             <select id="editOrderProgress"></select>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label>紙箱狀態</label>
+                        <label>紙箱狀態 <span style="color:red">*</span></label>
                         <select id="editBoxStatus"></select>
                     </div>
                     <div class="form-group">
@@ -263,27 +344,34 @@
                     </div>
                 </div>
                 <div id="edit-items-container"></div>
-                <button class="add-btn" onclick="addNewItem('edit-items-container', 'edit-')">＋ 新增品項</button>
+                <button class="add-btn" onclick="addNewItem('edit-items-container','edit-')">＋ 新增品項</button>
                 <button class="workspace-action-btn" onclick="submitEditOrder()">更新訂單</button>
             </div>
         </div>
 
-        <!-- 植物清單 -->
-        <div class="card">
-            <div class="section-title">🌿 植物種類清單 <span class="tag" id="plant-count-tag">載入中</span></div>
-            <div class="plant-list-manage" id="plant-manage-list">
-                <div style="padding:20px;text-align:center;color:#999;">載入中...</div>
+        <!-- 新增植物 -->
+        <div class="sub-page" id="sub-plant">
+            <button class="back-btn" onclick="switchSub('sub-menu')">‹ 返回工作區</button>
+            <div class="app-header-container">
+                <h1 class="main-title">🌿 新增植物</h1>
             </div>
-            <div class="add-plant-group">
-                <input type="text" id="new-plant-input" placeholder="輸入新植物名稱">
-                <button class="add-plant-btn" onclick="addNewPlant()">新增</button>
+            <div class="card">
+                <div class="section-title">植物種類清單 <span class="tag" id="plant-count-tag">載入中</span></div>
+                <div class="plant-list-manage" id="plant-manage-list">
+                    <div style="padding:20px;text-align:center;color:#999;">載入中...</div>
+                </div>
+                <div class="add-plant-group">
+                    <input type="text" id="new-plant-input" placeholder="輸入新植物名稱">
+                    <button class="add-plant-btn" onclick="addNewPlant()">新增</button>
+                </div>
             </div>
         </div>
+
     </div>
 </div>
 
+<!-- Modals -->
 <div class="overlay" id="overlay" onclick="closeAllModals()"></div>
-
 <div id="password-modal" class="center-modal">
     <div style="font-size:18px;font-weight:bold;margin-bottom:10px;color:var(--primary);">🔒 請輸入管理密碼</div>
     <input type="tel" id="admin-password" class="password-input" maxlength="4" placeholder="****">
@@ -293,7 +381,6 @@
         <button class="modal-btn btn-confirm" onclick="verifyPassword()">確定</button>
     </div>
 </div>
-
 <div id="keypad-modal" class="bottom-modal" style="display:none;">
     <div id="keypad-screen" class="keypad-display-screen">0</div>
     <div class="keypad-grid">
@@ -312,7 +399,6 @@
         <button class="key-btn confirm" onclick="closeAllModals()">確 定</button>
     </div>
 </div>
-
 <div id="plant-picker-modal" class="bottom-modal" style="display:none;">
     <div class="plant-picker-header">
         <span class="picker-title">選擇植物</span>
@@ -323,7 +409,7 @@
 </div>
 
 <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyJOhAVSSKRNesVBQqv7MY2NaeHjJ40V4rCxlhjEOFRcBkjc52nrS3W3pSWWpfcglmW/exec";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyCbyjZJJbBgsdtjDjT4MhpqmYZoOSzgmDJdLDQSnV0whmKNDqXiwWqhnDVsVbJ0WFe/exec";
 
     let lists = { plants: [], potSize: [], payments: [], progress: [], box: [], plantStatus: [], regions: [] };
     let isListLoaded = false;
@@ -331,24 +417,40 @@
     let activePriceInput = null;
     let pendingAction = null;
     let currentEditOrderId = null;
+    let lastQueryResults = [];
 
+    // ==========================================
+    // 初始化
+    // ==========================================
     window.onload = async function() {
         document.getElementById('orderDate').valueAsDate = new Date();
         document.getElementById('loading-overlay').classList.add('show');
         await fetchAllLists();
         document.getElementById('loading-overlay').classList.remove('show');
-        addNewItem('items-container');
-        addNewItem('supplement-items-container', 'sup-');
+        addNewItem('items-container', '');
     };
 
+    // ==========================================
+    // 頁面 / 子頁面切換
+    // ==========================================
     function switchPage(page) {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
         document.getElementById('page-' + page).classList.add('active');
         document.getElementById('nav-' + page).classList.add('active');
-        if (page === 'workspace' && isListLoaded) renderPlantManageList();
+        if (page === 'workspace') switchSub('sub-menu');
     }
 
+    function switchSub(subId) {
+        document.querySelectorAll('.sub-page').forEach(p => p.classList.remove('active'));
+        document.getElementById(subId).classList.add('active');
+        if (subId === 'sub-plant' && isListLoaded) renderPlantManageList();
+        window.scrollTo(0, 0);
+    }
+
+    // ==========================================
+    // 載入所有清單
+    // ==========================================
     async function fetchAllLists() {
         try {
             const response = await fetch(SCRIPT_URL);
@@ -388,7 +490,6 @@
     // 通用品項新增
     // ==========================================
     function addNewItem(containerId, prefix) {
-        prefix = prefix || '';
         const container = document.getElementById(containerId);
         const itemCount = container.children.length + 1;
         const plantStatusOptions = '<option value="" disabled selected>請選擇</option>' +
@@ -398,11 +499,10 @@
 
         const div = document.createElement('div');
         div.className = 'item-row';
-        div.dataset.prefix = prefix;
         div.innerHTML = `
             <div class="item-header">
                 <span>#${itemCount} 品項</span>
-                ${itemCount > 1 ? `<button class="remove-btn" onclick="this.closest('.item-row').remove(); calcTotal()">移除</button>` : ''}
+                ${itemCount > 1 ? `<button class="remove-btn" onclick="this.closest('.item-row').remove();calcTotal()">移除</button>` : ''}
             </div>
             <div class="form-group">
                 <label>植物種類 <span style="color:red">*</span></label>
@@ -410,11 +510,11 @@
             </div>
             <div class="form-group" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
                 <div>
-                    <label>植物狀態</label>
+                    <label>植物狀態 <span style="color:red">*</span></label>
                     <select name="${prefix}plantStatus">${plantStatusOptions}</select>
                 </div>
                 <div>
-                    <label>水泥盆/其他</label>
+                    <label>水泥盆/其他 <span style="color:red">*</span></label>
                     <select name="${prefix}potSize">${potSizeOptions}</select>
                 </div>
             </div>
@@ -430,9 +530,160 @@
 
     function calcTotal() {
         let total = 0;
-        document.getElementsByName('itemPrice').forEach(input => { total += parseInt(input.value) || 0; });
+        document.getElementsByName('itemPrice').forEach(i => { total += parseInt(i.value) || 0; });
         document.getElementById('totalDisplay').innerText = total;
         return total;
+    }
+
+    // ==========================================
+    // 訂單查詢
+    // ==========================================
+    async function queryOrdersByIG() {
+        const ig = document.getElementById('queryIG').value.trim();
+        if (!ig) { alert("請輸入購買人 IG！"); return; }
+
+        document.getElementById('loading-text').textContent = '查詢中...';
+        document.getElementById('loading-overlay').classList.add('show');
+
+        try {
+            const response = await fetch(SCRIPT_URL + '?action=queryByIG&ig=' + encodeURIComponent(ig));
+            const data = await response.json();
+
+            if (data.error) { alert("查詢失敗：" + data.error); return; }
+
+            lastQueryResults = data.orders || [];
+            renderQueryResults(ig, lastQueryResults);
+
+        } catch (err) {
+            alert("❌ 查詢失敗：" + err.message);
+        } finally {
+            document.getElementById('loading-text').textContent = '載入清單中...';
+            document.getElementById('loading-overlay').classList.remove('show');
+        }
+    }
+
+    function renderQueryResults(ig, orders) {
+        const container = document.getElementById('query-results');
+        if (!orders || orders.length === 0) {
+            container.innerHTML = `<div style="text-align:center;color:#999;padding:20px;">找不到「${ig}」的訂單</div>`;
+            return;
+        }
+        container.innerHTML = `
+            <div style="font-size:13px;color:#888;margin-bottom:10px;">找到 ${orders.length} 筆訂單</div>
+            <div class="order-list">
+                ${orders.map(o => `
+                    <div class="order-list-item" onclick="showOrderDetail('${o.orderId}')">
+                        <div class="order-list-item-left">
+                            <div class="order-id">${o.orderId}</div>
+                            <div class="order-meta">${o.date} ｜ ${o.progress} ｜ $${o.total}</div>
+                        </div>
+                        <div class="order-list-arrow">›</div>
+                    </div>
+                `).join('')}
+            </div>
+        `;
+    }
+
+    async function showOrderDetail(orderId) {
+        document.getElementById('loading-text').textContent = '載入訂單...';
+        document.getElementById('loading-overlay').classList.add('show');
+
+        try {
+            const response = await fetch(SCRIPT_URL + '?action=getOrder&orderId=' + encodeURIComponent(orderId));
+            const data = await response.json();
+
+            if (data.error || !data.header) { alert("找不到訂單：" + orderId); return; }
+
+            document.getElementById('query-input-card').style.display = 'none';
+            document.getElementById('order-detail-view').style.display = 'block';
+            document.getElementById('order-detail-content').innerHTML = renderOrderDetail(orderId, data);
+            window.scrollTo(0, 0);
+
+        } catch (err) {
+            alert("❌ 載入失敗：" + err.message);
+        } finally {
+            document.getElementById('loading-text').textContent = '載入清單中...';
+            document.getElementById('loading-overlay').classList.remove('show');
+        }
+    }
+
+    function renderOrderDetail(orderId, data) {
+        const h = data.header;
+        const items = data.items;
+        const total = items.reduce((s, i) => s + (parseInt(i.price) || 0), 0);
+
+        function getBadgeClass(val) {
+            if (val === '未付款' || val === '未完成') return 'badge-red';
+            if (val === '裝箱完成') return 'badge-green';
+            return 'badge-gray';
+        }
+
+        const itemsHtml = items.map((item, idx) => `
+            <div class="item-detail-card">
+                <div class="item-detail-name">🌿 ${item.plantType || '-'}</div>
+                <div class="item-detail-meta">
+                    <span>狀態：${item.plantStatus || '-'}</span>
+                    <span>盆器：${item.potSize || '-'}</span>
+                </div>
+                <div class="item-detail-price">$${item.price || 0}</div>
+            </div>
+        `).join('');
+
+        return `
+            <div class="order-detail-card">
+                <div class="detail-section-title">訂單資訊</div>
+                <div class="detail-row">
+                    <div class="detail-label">訂單編號</div>
+                    <div class="detail-value" style="color:var(--primary);font-weight:bold;">${orderId}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">日期</div>
+                    <div class="detail-value">${h.date || '-'}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">購買人</div>
+                    <div class="detail-value">${h.ig || '-'}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">地區</div>
+                    <div class="detail-value">${h.region || '-'}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">付款狀況</div>
+                    <div class="detail-value"><span class="detail-badge ${getBadgeClass(h.payment)}">${h.payment || '-'}</span></div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">訂單進度</div>
+                    <div class="detail-value"><span class="detail-badge ${getBadgeClass(h.progress)}">${h.progress || '-'}</span></div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">紙箱狀態</div>
+                    <div class="detail-value"><span class="detail-badge ${getBadgeClass(h.box)}">${h.box || '-'}</span></div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">配送資訊</div>
+                    <div class="detail-value">${(h.delivery || '-').replace(/\n/g, '<br>')}</div>
+                </div>
+                ${h.note ? `<div class="detail-row">
+                    <div class="detail-label">備註</div>
+                    <div class="detail-value" style="color:#cc0000;">${h.note}</div>
+                </div>` : ''}
+            </div>
+            <div class="order-detail-card">
+                <div class="detail-section-title">品項 (${items.length} 項)</div>
+                ${itemsHtml}
+                <div class="total-summary">
+                    <div class="total-summary-label">訂單總額</div>
+                    <div class="total-summary-amount">$${total}</div>
+                </div>
+            </div>
+        `;
+    }
+
+    function backToQueryList() {
+        document.getElementById('query-input-card').style.display = 'block';
+        document.getElementById('order-detail-view').style.display = 'none';
+        window.scrollTo(0, 0);
     }
 
     // ==========================================
@@ -449,7 +700,7 @@
         container.innerHTML = lists.plants.map((p, i) => `
             <div class="plant-manage-item">
                 <span class="plant-index">${i + 1}</span>
-                <span class="plant-name">${p}</span>
+                <span>${p}</span>
             </div>
         `).join('');
     }
@@ -458,7 +709,7 @@
         const input = document.getElementById('new-plant-input');
         const name = input.value.trim();
         if (!name) { input.classList.add('input-error'); setTimeout(() => input.classList.remove('input-error'), 1000); return; }
-        if (lists.plants.includes(name)) { alert(`「${name}」已經在清單中了！`); return; }
+        if (lists.plants.includes(name)) { alert(`「${name}」已在清單中！`); return; }
         pendingAction = () => finalizeAddPlant(name, input);
         openPasswordModal();
     }
@@ -483,25 +734,6 @@
     }
 
     // ==========================================
-    // 補單
-    // ==========================================
-    function submitSupplement() {
-        let isValid = true;
-        document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
-        const supId = document.getElementById('supplementOrderId');
-        if (!supId.value.trim()) { supId.classList.add('input-error'); isValid = false; }
-        document.querySelectorAll('#supplement-items-container .item-row').forEach(row => {
-            const p = row.querySelector('[name="sup-plantType"]');
-            const pr = row.querySelector('[name="sup-itemPrice"]');
-            if (!p.value.trim()) { p.classList.add('input-error'); isValid = false; }
-            if (!pr.value.trim()) { pr.classList.add('input-error'); isValid = false; }
-        });
-        if (!isValid) { alert("尚有必填欄位未完成！"); return; }
-        pendingAction = () => finalizeSubmission('supplement');
-        openPasswordModal();
-    }
-
-    // ==========================================
     // 編輯訂單
     // ==========================================
     async function loadOrderForEdit() {
@@ -514,19 +746,12 @@
         try {
             const response = await fetch(SCRIPT_URL + '?action=getOrder&orderId=' + encodeURIComponent(orderId));
             const data = await response.json();
-
-            if (data.error || !data.header) {
-                alert("找不到訂單：" + orderId);
-                return;
-            }
+            if (data.error || !data.header) { alert("找不到訂單：" + orderId); return; }
 
             currentEditOrderId = orderId;
-
-            // 填入基本資料
             const h = data.header;
-            const dateStr = h.date instanceof Date ? h.date.toISOString().split('T')[0] :
-                           (typeof h.date === 'string' ? h.date : new Date(h.date).toISOString().split('T')[0]);
-            document.getElementById('editOrderDate').value = dateStr;
+
+            document.getElementById('editOrderDate').value = h.date || '';
             document.getElementById('editBuyerIG').value = h.ig || '';
             document.getElementById('editDeliveryInfo').value = h.delivery || '';
             document.getElementById('editNote').value = h.note || '';
@@ -543,25 +768,25 @@
                 if (h.box) document.getElementById('editBoxStatus').value = h.box;
             }, 100);
 
-            // 填入品項
             const editContainer = document.getElementById('edit-items-container');
             editContainer.innerHTML = '';
-            data.items.forEach((item, idx) => {
+            data.items.forEach(item => {
                 addNewItem('edit-items-container', 'edit-');
                 const rows = editContainer.querySelectorAll('.item-row');
                 const row = rows[rows.length - 1];
                 row.querySelector('[name="edit-plantType"]').value = item.plantType || '';
+                row.querySelector('[name="edit-itemPrice"]').value = item.price || '';
                 setTimeout(() => {
                     const ps = row.querySelector('[name="edit-plantStatus"]');
                     const pot = row.querySelector('[name="edit-potSize"]');
                     if (ps && item.plantStatus) ps.value = item.plantStatus;
                     if (pot && item.potSize) pot.value = item.potSize;
                 }, 150);
-                row.querySelector('[name="edit-itemPrice"]').value = item.price || '';
             });
 
             document.getElementById('edit-order-badge').textContent = '編輯中：' + orderId;
             document.getElementById('edit-order-form').style.display = 'block';
+            window.scrollTo(0, 0);
 
         } catch (err) {
             alert("❌ 載入失敗：" + err.message);
@@ -574,11 +799,15 @@
     function submitEditOrder() {
         if (!currentEditOrderId) { alert("請先載入訂單！"); return; }
         let isValid = true;
+        ['editOrderDate','editBuyerIG','editRegion','editDeliveryInfo'].forEach(id => {
+            const el = document.getElementById(id);
+            if (!el.value.trim()) { el.classList.add('input-error'); isValid = false; }
+        });
         document.querySelectorAll('#edit-items-container .item-row').forEach(row => {
-            const p = row.querySelector('[name="edit-plantType"]');
-            const pr = row.querySelector('[name="edit-itemPrice"]');
-            if (!p.value.trim()) { p.classList.add('input-error'); isValid = false; }
-            if (!pr.value.trim()) { pr.classList.add('input-error'); isValid = false; }
+            ['edit-plantType','edit-plantStatus','edit-potSize','edit-itemPrice'].forEach(name => {
+                const el = row.querySelector(`[name="${name}"]`);
+                if (el && !el.value.trim()) { el.classList.add('input-error'); isValid = false; }
+            });
         });
         if (!isValid) { alert("尚有必填欄位未完成！"); return; }
         pendingAction = () => finalizeSubmission('edit');
@@ -591,15 +820,15 @@
     function submitOrder() {
         let isValid = true;
         document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
-        ['orderDate', 'buyerIG', 'region', 'deliveryInfo'].forEach(id => {
+        ['orderDate','buyerIG','region','deliveryInfo'].forEach(id => {
             const el = document.getElementById(id);
             if (!el.value.trim()) { el.classList.add('input-error'); isValid = false; }
         });
         document.querySelectorAll('#items-container .item-row').forEach(row => {
-            const p = row.querySelector('[name="plantType"]');
-            const pr = row.querySelector('[name="itemPrice"]');
-            if (!p.value.trim()) { p.classList.add('input-error'); isValid = false; }
-            if (!pr.value.trim()) { pr.classList.add('input-error'); isValid = false; }
+            ['plantType','plantStatus','potSize','itemPrice'].forEach(name => {
+                const el = row.querySelector(`[name="${name}"]`);
+                if (el && !el.value.trim()) { el.classList.add('input-error'); isValid = false; }
+            });
         });
         if (!isValid) { alert("尚有必填欄位未完成！"); return; }
         pendingAction = () => finalizeSubmission('new');
@@ -611,7 +840,6 @@
         if (mode === 'new') { btn.disabled = true; btn.innerText = "傳送中..."; }
 
         let orderData;
-
         if (mode === 'new') {
             const items = [];
             document.querySelectorAll('#items-container .item-row').forEach(row => {
@@ -634,21 +862,6 @@
                     box: document.getElementById('boxStatus').value,
                     note: document.getElementById('note').value
                 },
-                items: items
-            };
-        } else if (mode === 'supplement') {
-            const items = [];
-            document.querySelectorAll('#supplement-items-container .item-row').forEach(row => {
-                items.push({
-                    plantType: row.querySelector('[name="sup-plantType"]').value,
-                    plantStatus: row.querySelector('[name="sup-plantStatus"]').value,
-                    potSize: row.querySelector('[name="sup-potSize"]').value,
-                    price: row.querySelector('[name="sup-itemPrice"]').value
-                });
-            });
-            orderData = {
-                mode: 'supplement',
-                supplementOrderId: document.getElementById('supplementOrderId').value.trim(),
                 items: items
             };
         } else if (mode === 'edit') {
@@ -687,9 +900,6 @@
             if (mode === 'new') {
                 showSuccess('訂單送出成功！', `訂單日期：${orderData.header.date}`);
                 resetOrderForm();
-            } else if (mode === 'supplement') {
-                showSuccess('補單成功！', `已補單至訂單 ${orderData.supplementOrderId}`);
-                resetSupplementForm();
             } else if (mode === 'edit') {
                 showSuccess('訂單更新成功！', `訂單編號：${currentEditOrderId}`);
                 resetEditForm();
@@ -799,15 +1009,9 @@
         fillSelect('orderProgress', lists.progress, '未完成');
         fillSelect('boxStatus', lists.box, '未完成');
         document.getElementById('items-container').innerHTML = '';
-        addNewItem('items-container');
+        addNewItem('items-container', '');
         calcTotal();
         window.scrollTo(0, 0);
-    }
-
-    function resetSupplementForm() {
-        document.getElementById('supplementOrderId').value = '';
-        document.getElementById('supplement-items-container').innerHTML = '';
-        addNewItem('supplement-items-container', 'sup-');
     }
 
     function resetEditForm() {
