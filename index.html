@@ -9,20 +9,16 @@
         * { box-sizing: border-box; }
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--bg); color: var(--text); margin: 0; padding: 0; padding-bottom: 80px; }
         .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-
         .nav-bar { background: var(--primary); padding: 0; display: flex; position: sticky; top: 0; z-index: 500; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
         .nav-tab { flex: 1; padding: 14px; text-align: center; color: rgba(255,255,255,0.7); font-weight: bold; font-size: 15px; cursor: pointer; border-bottom: 3px solid transparent; transition: 0.2s; }
         .nav-tab.active { color: white; border-bottom-color: #95d5b2; }
-
         .page { display: none; }
         .page.active { display: block; }
         .sub-page { display: none; }
         .sub-page.active { display: block; }
-
         .app-header-container { text-align: center; color: var(--primary); margin-bottom: 20px; border-bottom: 3px solid var(--primary); padding-bottom: 10px; }
         h1.main-title { font-size: 22px; margin: 0; }
         .author-text { font-size: 11px; color: #999; margin-top: 4px; }
-
         .card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 20px; border: 1px solid #e0ebd4; }
         .section-title { font-size: 18px; font-weight: bold; margin-bottom: 15px; color: var(--primary); display: flex; align-items: center; }
         .section-title::before { content: ''; display: inline-block; width: 6px; height: 20px; background: var(--primary); margin-right: 8px; border-radius: 3px; }
@@ -30,29 +26,23 @@
         label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 14px; }
         input, select, textarea { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; background: #fafafa; transition: 0.2s; }
         input:focus, select:focus, textarea:focus { border-color: var(--primary); background: white; outline: none; }
-
         .input-error { border: 2px solid #e53935 !important; background-color: #ffebee !important; animation: shake 0.4s; }
         @keyframes shake { 0%,100% { transform: translateX(0); } 20%,60% { transform: translateX(-5px); } 40%,80% { transform: translateX(5px); } }
-
         .item-row { background: var(--light-green); padding: 15px; border-radius: 10px; margin-bottom: 15px; border: 1px solid #95d5b2; animation: slideDown 0.3s ease; }
         @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
         .item-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-weight: bold; color: var(--primary); }
         .remove-btn { background: transparent; color: var(--accent); border: 1px solid var(--accent); padding: 4px 10px; border-radius: 4px; font-size: 12px; cursor: pointer; }
-
         .add-btn { width: 100%; background: white; color: var(--primary); border: 2px dashed var(--primary); padding: 15px; border-radius: 8px; font-weight: bold; font-size: 16px; cursor: pointer; margin-top: 10px; margin-bottom: 20px; display: block; }
         .add-btn:active { background: var(--light-green); }
-
         .total-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: white; padding: 15px 20px; box-shadow: 0 -4px 15px rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center; z-index: 100; }
         .total-display { font-size: 16px; font-weight: bold; }
         .total-amount { color: var(--accent); font-size: 22px; }
         .submit-btn { background: var(--primary); color: white; border: none; padding: 12px 25px; border-radius: 50px; font-size: 18px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 10px rgba(45,106,79,0.4); }
         .submit-btn:disabled { background: #ccc; cursor: not-allowed; }
-
         .clickable-input { cursor: pointer; background-color: white !important; }
         .price-input-group { position: relative; }
         .price-input-group::before { content: '$'; position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: #666; z-index: 1; }
         .price-input-group input { padding-left: 25px; font-weight: bold; color: var(--accent); cursor: pointer; }
-
         .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9998; backdrop-filter: blur(2px); }
         .bottom-modal { display: none; position: fixed; bottom: 0; left: 0; width: 100%; background: white; box-shadow: 0 -5px 20px rgba(0,0,0,0.2); z-index: 9999; border-top-left-radius: 20px; border-top-right-radius: 20px; padding: 20px; padding-bottom: 30px; max-height: 80vh; flex-direction: column; }
         .center-modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 80%; max-width: 300px; background: white; border-radius: 15px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); z-index: 10000; text-align: center; }
@@ -62,7 +52,6 @@
         .modal-btn { flex: 1; padding: 10px; border-radius: 8px; font-weight: bold; cursor: pointer; border: none; font-size: 16px; }
         .btn-cancel { background: #f0f0f0; color: #666; }
         .btn-confirm { background: var(--primary); color: white; }
-
         .keypad-display-screen { background: #f8f9fa; border: 2px solid #e9ecef; border-radius: 12px; padding: 15px; margin-bottom: 20px; text-align: right; font-size: 36px; font-weight: bold; color: var(--primary); font-family: Consolas, monospace; height: 50px; line-height: 50px; }
         .keypad-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
         .key-btn { background: #ffffff; border: 1px solid #e0e0e0; padding: 15px; font-size: 24px; font-weight: bold; border-radius: 12px; color: #333; cursor: pointer; box-shadow: 0 3px 0 #dcdcdc; transition: transform 0.1s; }
@@ -71,7 +60,6 @@
         .key-btn.confirm:active { transform: translateY(4px); box-shadow: none; }
         .key-btn.clear { background: #ffebee; color: var(--accent); border-color: #ffcdd2; box-shadow: 0 3px 0 #ffcdd2; }
         .key-btn.backspace { background: #f1f3f5; box-shadow: 0 3px 0 #dee2e6; }
-
         .plant-picker-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
         .picker-title { font-size: 18px; font-weight: bold; color: var(--primary); }
         .close-picker { color: #999; font-size: 24px; cursor: pointer; background: none; border: none; padding: 0 10px; }
@@ -82,12 +70,10 @@
         .plant-option:active { background: #f0f9f4; color: var(--primary); font-weight: bold; }
         .plant-option:last-child { border-bottom: none; }
         .plant-icon { margin-right: 10px; font-size: 18px; }
-
         .loading-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.9); z-index: 99999; justify-content: center; align-items: center; flex-direction: column; gap: 15px; }
         .loading-overlay.show { display: flex; }
         .spinner { width: 40px; height: 40px; border: 4px solid #e0ebd4; border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
-
         .success-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 99999; justify-content: center; align-items: center; flex-direction: column; gap: 15px; }
         .success-overlay.show { display: flex; }
         .success-icon { font-size: 80px; animation: bounce 0.5s ease; }
@@ -95,45 +81,36 @@
         .success-title { font-size: 24px; font-weight: bold; color: var(--primary); }
         .success-subtitle { font-size: 16px; color: #666; text-align: center; padding: 0 20px; }
         .success-btn { margin-top: 10px; background: var(--primary); color: white; border: none; padding: 15px 40px; border-radius: 50px; font-size: 18px; font-weight: bold; cursor: pointer; }
-
-        /* 工作區菜單 */
         .workspace-menu { display: grid; grid-template-columns: 1fr; gap: 15px; }
         .menu-card { background: white; border-radius: 16px; padding: 25px 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); border: 1px solid #e0ebd4; cursor: pointer; display: flex; align-items: center; gap: 18px; transition: transform 0.15s, box-shadow 0.15s; }
-        .menu-card:active { transform: scale(0.98); box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        .menu-card:active { transform: scale(0.98); }
         .menu-card-icon { font-size: 36px; min-width: 48px; text-align: center; }
         .menu-card-text h3 { margin: 0 0 4px 0; font-size: 18px; color: var(--primary); }
         .menu-card-text p { margin: 0; font-size: 13px; color: #888; }
         .menu-card-arrow { margin-left: auto; font-size: 20px; color: #ccc; }
-
-        /* 返回按鈕 */
         .back-btn { display: flex; align-items: center; gap: 8px; background: none; border: none; color: var(--primary); font-size: 16px; font-weight: bold; cursor: pointer; padding: 0; margin-bottom: 20px; }
-        .back-btn:active { opacity: 0.7; }
-
-        /* 植物清單 */
         .plant-list-manage { max-height: 300px; overflow-y: auto; border: 1px solid #e0ebd4; border-radius: 8px; margin-bottom: 10px; }
         .plant-manage-item { display: flex; align-items: center; padding: 12px 15px; border-bottom: 1px solid #f0f0f0; font-size: 15px; }
         .plant-manage-item:last-child { border-bottom: none; }
         .plant-manage-item:nth-child(even) { background: #f9fff9; }
         .plant-index { color: #999; font-size: 12px; margin-right: 8px; min-width: 28px; }
+        .plant-delete-btn { margin-left: auto; background: transparent; color: var(--accent); border: 1px solid var(--accent); padding: 3px 8px; border-radius: 4px; font-size: 12px; cursor: pointer; }
+        .plant-search-manage { width: 100%; padding: 10px 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 15px; margin-bottom: 10px; }
+        .plant-search-manage:focus { border-color: var(--primary); outline: none; }
         .add-plant-group { display: flex; gap: 10px; }
         .add-plant-group input { flex: 1; }
         .add-plant-btn { background: var(--primary); color: white; border: none; padding: 12px 20px; border-radius: 8px; font-weight: bold; font-size: 15px; cursor: pointer; white-space: nowrap; }
         .tag { display: inline-block; background: var(--light-green); color: var(--primary); border-radius: 20px; padding: 3px 10px; font-size: 12px; font-weight: bold; margin-left: 8px; }
         .workspace-action-btn { width: 100%; background: var(--primary); color: white; border: none; padding: 15px; border-radius: 10px; font-weight: bold; font-size: 17px; cursor: pointer; margin-top: 5px; box-shadow: 0 4px 10px rgba(45,106,79,0.3); }
-
-        /* 查詢結果 */
         .lookup-group { display: flex; gap: 10px; margin-bottom: 15px; }
         .lookup-group input { flex: 1; }
         .lookup-btn { background: var(--primary); color: white; border: none; padding: 12px 20px; border-radius: 8px; font-weight: bold; font-size: 15px; cursor: pointer; white-space: nowrap; }
         .order-list { display: flex; flex-direction: column; gap: 10px; }
-        .order-list-item { background: var(--light-green); border: 1px solid #95d5b2; border-radius: 10px; padding: 15px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: 0.15s; }
+        .order-list-item { background: var(--light-green); border: 1px solid #95d5b2; border-radius: 10px; padding: 15px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
         .order-list-item:active { background: #b7e4c7; }
-        .order-list-item-left { display: flex; flex-direction: column; gap: 4px; }
         .order-id { font-weight: bold; color: var(--primary); font-size: 15px; }
         .order-meta { font-size: 12px; color: #666; }
         .order-list-arrow { color: var(--primary); font-size: 18px; }
-
-        /* 訂單詳情 */
         .order-detail-card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 15px; border: 1px solid #e0ebd4; }
         .detail-section-title { font-size: 14px; font-weight: bold; color: #888; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; padding-bottom: 6px; border-bottom: 1px solid #eee; }
         .detail-row { display: flex; justify-content: space-between; align-items: flex-start; padding: 8px 0; border-bottom: 1px solid #f5f5f5; }
@@ -151,8 +128,17 @@
         .total-summary { background: var(--primary); color: white; border-radius: 10px; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; margin-top: 5px; }
         .total-summary-label { font-size: 14px; opacity: 0.85; }
         .total-summary-amount { font-size: 24px; font-weight: bold; }
-
         .edit-order-id-badge { background: var(--light-green); color: var(--primary); border-radius: 8px; padding: 10px 15px; font-weight: bold; margin-bottom: 15px; text-align: center; font-size: 16px; }
+
+        /* 日報樣式 */
+        .daily-field { display: flex; justify-content: space-between; align-items: center; padding: 14px 0; border-bottom: 1px solid #f0f0f0; }
+        .daily-field:last-child { border-bottom: none; }
+        .daily-field-label { font-size: 15px; font-weight: 600; color: var(--text); }
+        .daily-field-input { display: flex; align-items: center; gap: 10px; }
+        .daily-checkbox { width: 28px; height: 28px; cursor: pointer; accent-color: var(--primary); }
+        .daily-select { width: 80px; padding: 8px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; font-weight: bold; text-align: center; background: white; }
+        .daily-select:focus { border-color: var(--primary); outline: none; }
+        .daily-date-badge { background: var(--light-green); color: var(--primary); border-radius: 8px; padding: 8px 15px; font-weight: bold; text-align: center; font-size: 14px; margin-bottom: 15px; }
     </style>
 </head>
 <body>
@@ -242,26 +228,22 @@
             <div class="workspace-menu">
                 <div class="menu-card" onclick="switchSub('sub-query')">
                     <div class="menu-card-icon">🔍</div>
-                    <div class="menu-card-text">
-                        <h3>訂單查詢</h3>
-                        <p>輸入購買人 IG 查詢所有訂單</p>
-                    </div>
+                    <div class="menu-card-text"><h3>訂單查詢</h3><p>輸入購買人 IG 查詢所有訂單</p></div>
                     <div class="menu-card-arrow">›</div>
                 </div>
                 <div class="menu-card" onclick="switchSub('sub-edit')">
                     <div class="menu-card-icon">✏️</div>
-                    <div class="menu-card-text">
-                        <h3>編輯訂單</h3>
-                        <p>輸入訂單編號載入並修改</p>
-                    </div>
+                    <div class="menu-card-text"><h3>編輯訂單</h3><p>輸入訂單編號載入並修改</p></div>
                     <div class="menu-card-arrow">›</div>
                 </div>
                 <div class="menu-card" onclick="switchSub('sub-plant')">
                     <div class="menu-card-icon">🌿</div>
-                    <div class="menu-card-text">
-                        <h3>新增植物</h3>
-                        <p>管理植物種類清單</p>
-                    </div>
+                    <div class="menu-card-text"><h3>植物清單</h3><p>新增或刪除植物種類</p></div>
+                    <div class="menu-card-arrow">›</div>
+                </div>
+                <div class="menu-card" onclick="switchSub('sub-daily')">
+                    <div class="menu-card-icon">📋</div>
+                    <div class="menu-card-text"><h3>日報填寫</h3><p>填寫今日工作紀錄</p></div>
                     <div class="menu-card-arrow">›</div>
                 </div>
             </div>
@@ -270,11 +252,7 @@
         <!-- 訂單查詢 -->
         <div class="sub-page" id="sub-query">
             <button class="back-btn" onclick="switchSub('sub-menu')">‹ 返回工作區</button>
-            <div class="app-header-container">
-                <h1 class="main-title">🔍 訂單查詢</h1>
-            </div>
-
-            <!-- 查詢輸入 -->
+            <div class="app-header-container"><h1 class="main-title">🔍 訂單查詢</h1></div>
             <div class="card" id="query-input-card">
                 <div class="lookup-group">
                     <input type="text" id="queryIG" placeholder="輸入購買人 IG...">
@@ -282,8 +260,6 @@
                 </div>
                 <div id="query-results"></div>
             </div>
-
-            <!-- 訂單詳情 -->
             <div id="order-detail-view" style="display:none;">
                 <button class="back-btn" onclick="backToQueryList()">‹ 返回查詢結果</button>
                 <div id="order-detail-content"></div>
@@ -293,9 +269,7 @@
         <!-- 編輯訂單 -->
         <div class="sub-page" id="sub-edit">
             <button class="back-btn" onclick="switchSub('sub-menu')">‹ 返回工作區</button>
-            <div class="app-header-container">
-                <h1 class="main-title">✏️ 編輯訂單</h1>
-            </div>
+            <div class="app-header-container"><h1 class="main-title">✏️ 編輯訂單</h1></div>
             <div class="card">
                 <div class="lookup-group">
                     <input type="text" id="editOrderId" placeholder="輸入訂單編號，例如：20260414-1">
@@ -306,42 +280,18 @@
                 <div class="edit-order-id-badge" id="edit-order-badge"></div>
                 <div class="card" style="border-color:#ffe082;background:#fffde7;">
                     <div class="section-title" style="font-size:15px;">基本資料</div>
-                    <div class="form-group">
-                        <label>訂單日期 <span style="color:red">*</span></label>
-                        <input type="date" id="editOrderDate">
-                    </div>
+                    <div class="form-group"><label>訂單日期 <span style="color:red">*</span></label><input type="date" id="editOrderDate"></div>
                     <div class="form-group" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-                        <div>
-                            <label>購買人 IG <span style="color:red">*</span></label>
-                            <input type="text" id="editBuyerIG">
-                        </div>
-                        <div>
-                            <label>地區 <span style="color:red">*</span></label>
-                            <select id="editRegion"><option value="" disabled selected>請選擇</option></select>
-                        </div>
+                        <div><label>購買人 IG <span style="color:red">*</span></label><input type="text" id="editBuyerIG"></div>
+                        <div><label>地區 <span style="color:red">*</span></label><select id="editRegion"><option value="" disabled selected>請選擇</option></select></div>
                     </div>
-                    <div class="form-group">
-                        <label>配送資訊 <span style="color:red">*</span></label>
-                        <textarea id="editDeliveryInfo" rows="4"></textarea>
-                    </div>
+                    <div class="form-group"><label>配送資訊 <span style="color:red">*</span></label><textarea id="editDeliveryInfo" rows="4"></textarea></div>
                     <div class="form-group" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-                        <div>
-                            <label>付款狀況 <span style="color:red">*</span></label>
-                            <select id="editPaymentStatus"></select>
-                        </div>
-                        <div>
-                            <label>訂單進度 <span style="color:red">*</span></label>
-                            <select id="editOrderProgress"></select>
-                        </div>
+                        <div><label>付款狀況 <span style="color:red">*</span></label><select id="editPaymentStatus"></select></div>
+                        <div><label>訂單進度 <span style="color:red">*</span></label><select id="editOrderProgress"></select></div>
                     </div>
-                    <div class="form-group">
-                        <label>紙箱狀態 <span style="color:red">*</span></label>
-                        <select id="editBoxStatus"></select>
-                    </div>
-                    <div class="form-group">
-                        <label>備註</label>
-                        <textarea id="editNote" rows="2"></textarea>
-                    </div>
+                    <div class="form-group"><label>紙箱狀態 <span style="color:red">*</span></label><select id="editBoxStatus"></select></div>
+                    <div class="form-group"><label>備註</label><textarea id="editNote" rows="2"></textarea></div>
                 </div>
                 <div id="edit-items-container"></div>
                 <button class="add-btn" onclick="addNewItem('edit-items-container','edit-')">＋ 新增品項</button>
@@ -349,21 +299,98 @@
             </div>
         </div>
 
-        <!-- 新增植物 -->
+        <!-- 植物清單 -->
         <div class="sub-page" id="sub-plant">
             <button class="back-btn" onclick="switchSub('sub-menu')">‹ 返回工作區</button>
-            <div class="app-header-container">
-                <h1 class="main-title">🌿 新增植物</h1>
-            </div>
+            <div class="app-header-container"><h1 class="main-title">🌿 植物清單</h1></div>
             <div class="card">
-                <div class="section-title">植物種類清單 <span class="tag" id="plant-count-tag">載入中</span></div>
+                <div class="section-title">植物種類 <span class="tag" id="plant-count-tag">載入中</span></div>
+                <input type="text" class="plant-search-manage" id="plant-search-manage" placeholder="搜尋植物..." oninput="filterPlantManageList()">
                 <div class="plant-list-manage" id="plant-manage-list">
                     <div style="padding:20px;text-align:center;color:#999;">載入中...</div>
                 </div>
-                <div class="add-plant-group">
+                <div class="add-plant-group" style="margin-top:10px;">
                     <input type="text" id="new-plant-input" placeholder="輸入新植物名稱">
                     <button class="add-plant-btn" onclick="addNewPlant()">新增</button>
                 </div>
+            </div>
+        </div>
+
+        <!-- 日報填寫 -->
+        <div class="sub-page" id="sub-daily">
+            <button class="back-btn" onclick="switchSub('sub-menu')">‹ 返回工作區</button>
+            <div class="app-header-container"><h1 class="main-title">📋 日報填寫</h1></div>
+            <div class="card">
+                <div class="form-group">
+                    <label>日期 <span style="color:red">*</span></label>
+                    <input type="date" id="dailyDate">
+                </div>
+                <div id="daily-fields">
+                    <!-- 勾選項目 -->
+                    <div class="daily-field">
+                        <div class="daily-field-label">肉咖選品</div>
+                        <div class="daily-field-input"><input type="checkbox" class="daily-checkbox" id="daily-0"></div>
+                    </div>
+                    <div class="daily-field">
+                        <div class="daily-field-label">百慕達選品</div>
+                        <div class="daily-field-input"><input type="checkbox" class="daily-checkbox" id="daily-1"></div>
+                    </div>
+                    <!-- 數字項目 -->
+                    <div class="daily-field">
+                        <div class="daily-field-label">北部訂單</div>
+                        <div class="daily-field-input">
+                            <select class="daily-select" id="daily-2">
+                                ${Array.from({length:16},(_,i)=>`<option value="${i}">${i}</option>`).join('')}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="daily-field">
+                        <div class="daily-field-label">中部訂單</div>
+                        <div class="daily-field-input"><select class="daily-select" id="daily-3">${Array.from({length:16},(_,i)=>`<option value="${i}">${i}</option>`).join('')}</select></div>
+                    </div>
+                    <div class="daily-field">
+                        <div class="daily-field-label">南部訂單</div>
+                        <div class="daily-field-input"><select class="daily-select" id="daily-4">${Array.from({length:16},(_,i)=>`<option value="${i}">${i}</option>`).join('')}</select></div>
+                    </div>
+                    <div class="daily-field">
+                        <div class="daily-field-label">自取訂單</div>
+                        <div class="daily-field-input"><select class="daily-select" id="daily-5">${Array.from({length:16},(_,i)=>`<option value="${i}">${i}</option>`).join('')}</select></div>
+                    </div>
+                    <div class="daily-field">
+                        <div class="daily-field-label">現場客</div>
+                        <div class="daily-field-input"><select class="daily-select" id="daily-6">${Array.from({length:16},(_,i)=>`<option value="${i}">${i}</option>`).join('')}</select></div>
+                    </div>
+                    <div class="daily-field">
+                        <div class="daily-field-label">新品</div>
+                        <div class="daily-field-input"><select class="daily-select" id="daily-7">${Array.from({length:16},(_,i)=>`<option value="${i}">${i}</option>`).join('')}</select></div>
+                    </div>
+                    <!-- 勾選項目 -->
+                    <div class="daily-field">
+                        <div class="daily-field-label">裝箱</div>
+                        <div class="daily-field-input"><input type="checkbox" class="daily-checkbox" id="daily-8"></div>
+                    </div>
+                    <div class="daily-field">
+                        <div class="daily-field-label">室外澆水</div>
+                        <div class="daily-field-input"><input type="checkbox" class="daily-checkbox" id="daily-9"></div>
+                    </div>
+                    <div class="daily-field">
+                        <div class="daily-field-label">室內澆水</div>
+                        <div class="daily-field-input"><input type="checkbox" class="daily-checkbox" id="daily-10"></div>
+                    </div>
+                    <div class="daily-field">
+                        <div class="daily-field-label">植物進貨</div>
+                        <div class="daily-field-input"><input type="checkbox" class="daily-checkbox" id="daily-11"></div>
+                    </div>
+                    <div class="daily-field">
+                        <div class="daily-field-label">盆器進貨</div>
+                        <div class="daily-field-input"><input type="checkbox" class="daily-checkbox" id="daily-12"></div>
+                    </div>
+                    <div class="daily-field">
+                        <div class="daily-field-label">環境打掃</div>
+                        <div class="daily-field-input"><input type="checkbox" class="daily-checkbox" id="daily-13"></div>
+                    </div>
+                </div>
+                <button class="workspace-action-btn" style="margin-top:20px;" onclick="submitDailyReport()">送出日報</button>
             </div>
         </div>
 
@@ -384,18 +411,10 @@
 <div id="keypad-modal" class="bottom-modal" style="display:none;">
     <div id="keypad-screen" class="keypad-display-screen">0</div>
     <div class="keypad-grid">
-        <button class="key-btn" onclick="pressKey(7)">7</button>
-        <button class="key-btn" onclick="pressKey(8)">8</button>
-        <button class="key-btn" onclick="pressKey(9)">9</button>
-        <button class="key-btn" onclick="pressKey(4)">4</button>
-        <button class="key-btn" onclick="pressKey(5)">5</button>
-        <button class="key-btn" onclick="pressKey(6)">6</button>
-        <button class="key-btn" onclick="pressKey(1)">1</button>
-        <button class="key-btn" onclick="pressKey(2)">2</button>
-        <button class="key-btn" onclick="pressKey(3)">3</button>
-        <button class="key-btn clear" onclick="clearKey()">C</button>
-        <button class="key-btn" onclick="pressKey(0)">0</button>
-        <button class="key-btn backspace" onclick="backspaceKey()">⌫</button>
+        <button class="key-btn" onclick="pressKey(7)">7</button><button class="key-btn" onclick="pressKey(8)">8</button><button class="key-btn" onclick="pressKey(9)">9</button>
+        <button class="key-btn" onclick="pressKey(4)">4</button><button class="key-btn" onclick="pressKey(5)">5</button><button class="key-btn" onclick="pressKey(6)">6</button>
+        <button class="key-btn" onclick="pressKey(1)">1</button><button class="key-btn" onclick="pressKey(2)">2</button><button class="key-btn" onclick="pressKey(3)">3</button>
+        <button class="key-btn clear" onclick="clearKey()">C</button><button class="key-btn" onclick="pressKey(0)">0</button><button class="key-btn backspace" onclick="backspaceKey()">⌫</button>
         <button class="key-btn confirm" onclick="closeAllModals()">確 定</button>
     </div>
 </div>
@@ -409,7 +428,7 @@
 </div>
 
 <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyCbyjZJJbBgsdtjDjT4MhpqmYZoOSzgmDJdLDQSnV0whmKNDqXiwWqhnDVsVbJ0WFe/exec";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwTZBovMWF6DdPktGnPd_2pvy4CHuDH_S3wVQofvrPj8y56N5AlH64EYR3yOuhv3xSe/exec";
 
     let lists = { plants: [], potSize: [], payments: [], progress: [], box: [], plantStatus: [], regions: [] };
     let isListLoaded = false;
@@ -417,22 +436,17 @@
     let activePriceInput = null;
     let pendingAction = null;
     let currentEditOrderId = null;
-    let lastQueryResults = [];
+    let plantToDelete = null;
 
-    // ==========================================
-    // 初始化
-    // ==========================================
     window.onload = async function() {
         document.getElementById('orderDate').valueAsDate = new Date();
+        document.getElementById('dailyDate').valueAsDate = new Date();
         document.getElementById('loading-overlay').classList.add('show');
         await fetchAllLists();
         document.getElementById('loading-overlay').classList.remove('show');
         addNewItem('items-container', '');
     };
 
-    // ==========================================
-    // 頁面 / 子頁面切換
-    // ==========================================
     function switchPage(page) {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
@@ -448,9 +462,6 @@
         window.scrollTo(0, 0);
     }
 
-    // ==========================================
-    // 載入所有清單
-    // ==========================================
     async function fetchAllLists() {
         try {
             const response = await fetch(SCRIPT_URL);
@@ -486,9 +497,6 @@
         if (defaultValue) select.value = defaultValue;
     }
 
-    // ==========================================
-    // 通用品項新增
-    // ==========================================
     function addNewItem(containerId, prefix) {
         const container = document.getElementById(containerId);
         const itemCount = container.children.length + 1;
@@ -496,7 +504,6 @@
             (lists.plantStatus.length > 0 ? lists.plantStatus.map(s => `<option value="${s}">${s}</option>`).join('') : '');
         const potSizeOptions = '<option value="" disabled selected>請選擇</option>' +
             (lists.potSize.length > 0 ? lists.potSize.map(s => `<option value="${s}">${s}</option>`).join('') : '');
-
         const div = document.createElement('div');
         div.className = 'item-row';
         div.innerHTML = `
@@ -509,14 +516,8 @@
                 <input type="text" class="clickable-input" name="${prefix}plantType" placeholder="點擊選擇植物..." readonly onclick="openPlantPicker(this)">
             </div>
             <div class="form-group" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-                <div>
-                    <label>植物狀態 <span style="color:red">*</span></label>
-                    <select name="${prefix}plantStatus">${plantStatusOptions}</select>
-                </div>
-                <div>
-                    <label>水泥盆/其他 <span style="color:red">*</span></label>
-                    <select name="${prefix}potSize">${potSizeOptions}</select>
-                </div>
+                <div><label>植物狀態 <span style="color:red">*</span></label><select name="${prefix}plantStatus">${plantStatusOptions}</select></div>
+                <div><label>水泥盆/其他 <span style="color:red">*</span></label><select name="${prefix}potSize">${potSizeOptions}</select></div>
             </div>
             <div class="form-group">
                 <label>品項價格 <span style="color:red">*</span></label>
@@ -536,173 +537,55 @@
     }
 
     // ==========================================
-    // 訂單查詢
+    // 植物清單管理（含搜尋和刪除）
     // ==========================================
-    async function queryOrdersByIG() {
-        const ig = document.getElementById('queryIG').value.trim();
-        if (!ig) { alert("請輸入購買人 IG！"); return; }
-
-        document.getElementById('loading-text').textContent = '查詢中...';
-        document.getElementById('loading-overlay').classList.add('show');
-
-        try {
-            const response = await fetch(SCRIPT_URL + '?action=queryByIG&ig=' + encodeURIComponent(ig));
-            const data = await response.json();
-
-            if (data.error) { alert("查詢失敗：" + data.error); return; }
-
-            lastQueryResults = data.orders || [];
-            renderQueryResults(ig, lastQueryResults);
-
-        } catch (err) {
-            alert("❌ 查詢失敗：" + err.message);
-        } finally {
-            document.getElementById('loading-text').textContent = '載入清單中...';
-            document.getElementById('loading-overlay').classList.remove('show');
-        }
-    }
-
-    function renderQueryResults(ig, orders) {
-        const container = document.getElementById('query-results');
-        if (!orders || orders.length === 0) {
-            container.innerHTML = `<div style="text-align:center;color:#999;padding:20px;">找不到「${ig}」的訂單</div>`;
-            return;
-        }
-        container.innerHTML = `
-            <div style="font-size:13px;color:#888;margin-bottom:10px;">找到 ${orders.length} 筆訂單</div>
-            <div class="order-list">
-                ${orders.map(o => `
-                    <div class="order-list-item" onclick="showOrderDetail('${o.orderId}')">
-                        <div class="order-list-item-left">
-                            <div class="order-id">${o.orderId}</div>
-                            <div class="order-meta">${o.date} ｜ ${o.progress} ｜ $${o.total}</div>
-                        </div>
-                        <div class="order-list-arrow">›</div>
-                    </div>
-                `).join('')}
-            </div>
-        `;
-    }
-
-    async function showOrderDetail(orderId) {
-        document.getElementById('loading-text').textContent = '載入訂單...';
-        document.getElementById('loading-overlay').classList.add('show');
-
-        try {
-            const response = await fetch(SCRIPT_URL + '?action=getOrder&orderId=' + encodeURIComponent(orderId));
-            const data = await response.json();
-
-            if (data.error || !data.header) { alert("找不到訂單：" + orderId); return; }
-
-            document.getElementById('query-input-card').style.display = 'none';
-            document.getElementById('order-detail-view').style.display = 'block';
-            document.getElementById('order-detail-content').innerHTML = renderOrderDetail(orderId, data);
-            window.scrollTo(0, 0);
-
-        } catch (err) {
-            alert("❌ 載入失敗：" + err.message);
-        } finally {
-            document.getElementById('loading-text').textContent = '載入清單中...';
-            document.getElementById('loading-overlay').classList.remove('show');
-        }
-    }
-
-    function renderOrderDetail(orderId, data) {
-        const h = data.header;
-        const items = data.items;
-        const total = items.reduce((s, i) => s + (parseInt(i.price) || 0), 0);
-
-        function getBadgeClass(val) {
-            if (val === '未付款' || val === '未完成') return 'badge-red';
-            if (val === '裝箱完成') return 'badge-green';
-            return 'badge-gray';
-        }
-
-        const itemsHtml = items.map((item, idx) => `
-            <div class="item-detail-card">
-                <div class="item-detail-name">🌿 ${item.plantType || '-'}</div>
-                <div class="item-detail-meta">
-                    <span>狀態：${item.plantStatus || '-'}</span>
-                    <span>盆器：${item.potSize || '-'}</span>
-                </div>
-                <div class="item-detail-price">$${item.price || 0}</div>
-            </div>
-        `).join('');
-
-        return `
-            <div class="order-detail-card">
-                <div class="detail-section-title">訂單資訊</div>
-                <div class="detail-row">
-                    <div class="detail-label">訂單編號</div>
-                    <div class="detail-value" style="color:var(--primary);font-weight:bold;">${orderId}</div>
-                </div>
-                <div class="detail-row">
-                    <div class="detail-label">日期</div>
-                    <div class="detail-value">${h.date || '-'}</div>
-                </div>
-                <div class="detail-row">
-                    <div class="detail-label">購買人</div>
-                    <div class="detail-value">${h.ig || '-'}</div>
-                </div>
-                <div class="detail-row">
-                    <div class="detail-label">地區</div>
-                    <div class="detail-value">${h.region || '-'}</div>
-                </div>
-                <div class="detail-row">
-                    <div class="detail-label">付款狀況</div>
-                    <div class="detail-value"><span class="detail-badge ${getBadgeClass(h.payment)}">${h.payment || '-'}</span></div>
-                </div>
-                <div class="detail-row">
-                    <div class="detail-label">訂單進度</div>
-                    <div class="detail-value"><span class="detail-badge ${getBadgeClass(h.progress)}">${h.progress || '-'}</span></div>
-                </div>
-                <div class="detail-row">
-                    <div class="detail-label">紙箱狀態</div>
-                    <div class="detail-value"><span class="detail-badge ${getBadgeClass(h.box)}">${h.box || '-'}</span></div>
-                </div>
-                <div class="detail-row">
-                    <div class="detail-label">配送資訊</div>
-                    <div class="detail-value">${(h.delivery || '-').replace(/\n/g, '<br>')}</div>
-                </div>
-                ${h.note ? `<div class="detail-row">
-                    <div class="detail-label">備註</div>
-                    <div class="detail-value" style="color:#cc0000;">${h.note}</div>
-                </div>` : ''}
-            </div>
-            <div class="order-detail-card">
-                <div class="detail-section-title">品項 (${items.length} 項)</div>
-                ${itemsHtml}
-                <div class="total-summary">
-                    <div class="total-summary-label">訂單總額</div>
-                    <div class="total-summary-amount">$${total}</div>
-                </div>
-            </div>
-        `;
-    }
-
-    function backToQueryList() {
-        document.getElementById('query-input-card').style.display = 'block';
-        document.getElementById('order-detail-view').style.display = 'none';
-        window.scrollTo(0, 0);
-    }
-
-    // ==========================================
-    // 植物清單管理
-    // ==========================================
-    function renderPlantManageList() {
+    function renderPlantManageList(filter) {
         const container = document.getElementById('plant-manage-list');
         const tag = document.getElementById('plant-count-tag');
         tag.textContent = lists.plants.length;
-        if (!lists.plants || lists.plants.length === 0) {
-            container.innerHTML = '<div style="padding:20px;text-align:center;color:#999;">尚無植物資料</div>';
+        const filtered = filter
+            ? lists.plants.filter(p => p.toLowerCase().includes(filter.toLowerCase()))
+            : lists.plants;
+        if (!filtered || filtered.length === 0) {
+            container.innerHTML = '<div style="padding:20px;text-align:center;color:#999;">沒有找到植物</div>';
             return;
         }
-        container.innerHTML = lists.plants.map((p, i) => `
+        container.innerHTML = filtered.map((p, i) => `
             <div class="plant-manage-item">
-                <span class="plant-index">${i + 1}</span>
-                <span>${p}</span>
+                <span class="plant-index">${lists.plants.indexOf(p) + 1}</span>
+                <span style="flex:1;">${p}</span>
+                <button class="plant-delete-btn" onclick="confirmDeletePlant('${p}')">刪除</button>
             </div>
         `).join('');
+    }
+
+    function filterPlantManageList() {
+        const query = document.getElementById('plant-search-manage').value;
+        renderPlantManageList(query);
+    }
+
+    function confirmDeletePlant(name) {
+        plantToDelete = name;
+        pendingAction = () => finalizeDeletePlant(name);
+        openPasswordModal();
+    }
+
+    async function finalizeDeletePlant(name) {
+        document.getElementById('loading-overlay').classList.add('show');
+        try {
+            await fetch(SCRIPT_URL, {
+                method: "POST", mode: "no-cors",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ mode: 'deletePlant', plantName: name })
+            });
+            lists.plants = lists.plants.filter(p => p !== name);
+            renderPlantManageList(document.getElementById('plant-search-manage').value);
+            showSuccess('刪除成功！', `「${name}」已從清單移除`);
+        } catch (err) {
+            alert("❌ 刪除失敗：" + err.message);
+        } finally {
+            document.getElementById('loading-overlay').classList.remove('show');
+        }
     }
 
     function addNewPlant() {
@@ -723,7 +606,7 @@
                 body: JSON.stringify({ mode: 'addPlant', plantName: name })
             });
             lists.plants.push(name);
-            renderPlantManageList();
+            renderPlantManageList(document.getElementById('plant-search-manage').value);
             input.value = '';
             showSuccess('新增成功！', `「${name}」已加入植物清單`);
         } catch (err) {
@@ -734,40 +617,189 @@
     }
 
     // ==========================================
+    // 日報填寫
+    // ==========================================
+    async function submitDailyReport() {
+        const dateStr = document.getElementById('dailyDate').value;
+        if (!dateStr) { alert("請選擇日期！"); return; }
+
+        const date = new Date(dateStr);
+        const month = date.getMonth() + 1;
+
+        const values = [];
+        // 0,1: 勾選
+        values.push(document.getElementById('daily-0').checked);
+        values.push(document.getElementById('daily-1').checked);
+        // 2-7: 數字
+        for (let i = 2; i <= 7; i++) {
+            values.push(parseInt(document.getElementById('daily-' + i).value) || 0);
+        }
+        // 8-13: 勾選
+        for (let i = 8; i <= 13; i++) {
+            values.push(document.getElementById('daily-' + i).checked);
+        }
+
+        pendingAction = async () => {
+            document.getElementById('loading-overlay').classList.add('show');
+            try {
+                await fetch(SCRIPT_URL, {
+                    method: "POST", mode: "no-cors",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ mode: 'dailyReport', month: month, date: dateStr, values: values })
+                });
+                showSuccess('日報送出成功！', `${month}月 ${date.getDate()}日 記錄已儲存`);
+                resetDailyForm();
+            } catch (err) {
+                alert("❌ 傳送失敗：" + err.message);
+            } finally {
+                document.getElementById('loading-overlay').classList.remove('show');
+            }
+        };
+        openPasswordModal();
+    }
+
+    function resetDailyForm() {
+        document.getElementById('dailyDate').valueAsDate = new Date();
+        for (let i = 0; i <= 1; i++) document.getElementById('daily-' + i).checked = false;
+        for (let i = 2; i <= 7; i++) document.getElementById('daily-' + i).value = '0';
+        for (let i = 8; i <= 13; i++) document.getElementById('daily-' + i).checked = false;
+    }
+
+    // ==========================================
+    // 訂單查詢
+    // ==========================================
+    async function queryOrdersByIG() {
+        const ig = document.getElementById('queryIG').value.trim();
+        if (!ig) { alert("請輸入購買人 IG！"); return; }
+        document.getElementById('loading-text').textContent = '查詢中...';
+        document.getElementById('loading-overlay').classList.add('show');
+        try {
+            const response = await fetch(SCRIPT_URL + '?action=queryByIG&ig=' + encodeURIComponent(ig));
+            const data = await response.json();
+            if (data.error) { alert("查詢失敗：" + data.error); return; }
+            renderQueryResults(ig, data.orders || []);
+        } catch (err) {
+            alert("❌ 查詢失敗：" + err.message);
+        } finally {
+            document.getElementById('loading-text').textContent = '載入清單中...';
+            document.getElementById('loading-overlay').classList.remove('show');
+        }
+    }
+
+    function renderQueryResults(ig, orders) {
+        const container = document.getElementById('query-results');
+        if (!orders || orders.length === 0) {
+            container.innerHTML = `<div style="text-align:center;color:#999;padding:20px;">找不到「${ig}」的訂單</div>`;
+            return;
+        }
+        container.innerHTML = `
+            <div style="font-size:13px;color:#888;margin-bottom:10px;">找到 ${orders.length} 筆訂單</div>
+            <div class="order-list">
+                ${orders.map(o => `
+                    <div class="order-list-item" onclick="showOrderDetail('${o.orderId}')">
+                        <div>
+                            <div class="order-id">${o.orderId}</div>
+                            <div class="order-meta">${o.date} ｜ ${o.progress} ｜ $${o.total}</div>
+                        </div>
+                        <div class="order-list-arrow">›</div>
+                    </div>
+                `).join('')}
+            </div>
+        `;
+    }
+
+    async function showOrderDetail(orderId) {
+        document.getElementById('loading-text').textContent = '載入訂單...';
+        document.getElementById('loading-overlay').classList.add('show');
+        try {
+            const response = await fetch(SCRIPT_URL + '?action=getOrder&orderId=' + encodeURIComponent(orderId));
+            const data = await response.json();
+            if (data.error || !data.header) { alert("找不到訂單：" + orderId); return; }
+            document.getElementById('query-input-card').style.display = 'none';
+            document.getElementById('order-detail-view').style.display = 'block';
+            document.getElementById('order-detail-content').innerHTML = renderOrderDetail(orderId, data);
+            window.scrollTo(0, 0);
+        } catch (err) {
+            alert("❌ 載入失敗：" + err.message);
+        } finally {
+            document.getElementById('loading-text').textContent = '載入清單中...';
+            document.getElementById('loading-overlay').classList.remove('show');
+        }
+    }
+
+    function renderOrderDetail(orderId, data) {
+        const h = data.header;
+        const items = data.items;
+        const total = items.reduce((s, i) => s + (parseInt(i.price) || 0), 0);
+        function getBadge(val) {
+            if (val === '未付款' || val === '未完成') return 'badge-red';
+            if (val === '裝箱完成') return 'badge-green';
+            return 'badge-gray';
+        }
+        return `
+            <div class="order-detail-card">
+                <div class="detail-section-title">訂單資訊</div>
+                <div class="detail-row"><div class="detail-label">訂單編號</div><div class="detail-value" style="color:var(--primary);font-weight:bold;">${orderId}</div></div>
+                <div class="detail-row"><div class="detail-label">日期</div><div class="detail-value">${h.date||'-'}</div></div>
+                <div class="detail-row"><div class="detail-label">購買人</div><div class="detail-value">${h.ig||'-'}</div></div>
+                <div class="detail-row"><div class="detail-label">地區</div><div class="detail-value">${h.region||'-'}</div></div>
+                <div class="detail-row"><div class="detail-label">付款狀況</div><div class="detail-value"><span class="detail-badge ${getBadge(h.payment)}">${h.payment||'-'}</span></div></div>
+                <div class="detail-row"><div class="detail-label">訂單進度</div><div class="detail-value"><span class="detail-badge ${getBadge(h.progress)}">${h.progress||'-'}</span></div></div>
+                <div class="detail-row"><div class="detail-label">紙箱狀態</div><div class="detail-value"><span class="detail-badge ${getBadge(h.box)}">${h.box||'-'}</span></div></div>
+                <div class="detail-row"><div class="detail-label">配送資訊</div><div class="detail-value">${(h.delivery||'-').replace(/\n/g,'<br>')}</div></div>
+                ${h.note?`<div class="detail-row"><div class="detail-label">備註</div><div class="detail-value" style="color:#cc0000;">${h.note}</div></div>`:''}
+            </div>
+            <div class="order-detail-card">
+                <div class="detail-section-title">品項 (${items.length} 項)</div>
+                ${items.map(item=>`
+                    <div class="item-detail-card">
+                        <div class="item-detail-name">🌿 ${item.plantType||'-'}</div>
+                        <div class="item-detail-meta"><span>狀態：${item.plantStatus||'-'}</span><span>盆器：${item.potSize||'-'}</span></div>
+                        <div class="item-detail-price">$${item.price||0}</div>
+                    </div>
+                `).join('')}
+                <div class="total-summary">
+                    <div class="total-summary-label">訂單總額</div>
+                    <div class="total-summary-amount">$${total}</div>
+                </div>
+            </div>
+        `;
+    }
+
+    function backToQueryList() {
+        document.getElementById('query-input-card').style.display = 'block';
+        document.getElementById('order-detail-view').style.display = 'none';
+        window.scrollTo(0, 0);
+    }
+
+    // ==========================================
     // 編輯訂單
     // ==========================================
     async function loadOrderForEdit() {
         const orderId = document.getElementById('editOrderId').value.trim();
         if (!orderId) { alert("請輸入訂單編號！"); return; }
-
         document.getElementById('loading-text').textContent = '載入訂單資料...';
         document.getElementById('loading-overlay').classList.add('show');
-
         try {
             const response = await fetch(SCRIPT_URL + '?action=getOrder&orderId=' + encodeURIComponent(orderId));
             const data = await response.json();
             if (data.error || !data.header) { alert("找不到訂單：" + orderId); return; }
-
             currentEditOrderId = orderId;
             const h = data.header;
-
             document.getElementById('editOrderDate').value = h.date || '';
             document.getElementById('editBuyerIG').value = h.ig || '';
             document.getElementById('editDeliveryInfo').value = h.delivery || '';
             document.getElementById('editNote').value = h.note || '';
-
             fillSelect('editRegion', lists.regions, '');
             fillSelect('editPaymentStatus', lists.payments, '未付款');
             fillSelect('editOrderProgress', lists.progress, '未完成');
             fillSelect('editBoxStatus', lists.box, '未完成');
-
             setTimeout(() => {
                 if (h.region) document.getElementById('editRegion').value = h.region;
                 if (h.payment) document.getElementById('editPaymentStatus').value = h.payment;
                 if (h.progress) document.getElementById('editOrderProgress').value = h.progress;
                 if (h.box) document.getElementById('editBoxStatus').value = h.box;
             }, 100);
-
             const editContainer = document.getElementById('edit-items-container');
             editContainer.innerHTML = '';
             data.items.forEach(item => {
@@ -783,11 +815,9 @@
                     if (pot && item.potSize) pot.value = item.potSize;
                 }, 150);
             });
-
             document.getElementById('edit-order-badge').textContent = '編輯中：' + orderId;
             document.getElementById('edit-order-form').style.display = 'block';
             window.scrollTo(0, 0);
-
         } catch (err) {
             alert("❌ 載入失敗：" + err.message);
         } finally {
@@ -838,7 +868,6 @@
     async function finalizeSubmission(mode) {
         const btn = document.getElementById('submitBtn');
         if (mode === 'new') { btn.disabled = true; btn.innerText = "傳送中..."; }
-
         let orderData;
         if (mode === 'new') {
             const items = [];
@@ -890,20 +919,14 @@
                 items: items
             };
         }
-
         try {
             await fetch(SCRIPT_URL, {
                 method: "POST", mode: "no-cors",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(orderData)
             });
-            if (mode === 'new') {
-                showSuccess('訂單送出成功！', `訂單日期：${orderData.header.date}`);
-                resetOrderForm();
-            } else if (mode === 'edit') {
-                showSuccess('訂單更新成功！', `訂單編號：${currentEditOrderId}`);
-                resetEditForm();
-            }
+            if (mode === 'new') { showSuccess('訂單送出成功！', `訂單日期：${orderData.header.date}`); resetOrderForm(); }
+            else if (mode === 'edit') { showSuccess('訂單更新成功！', `訂單編號：${currentEditOrderId}`); resetEditForm(); }
         } catch (err) {
             alert("❌ 傳送失敗：" + err.message);
         } finally {
@@ -934,9 +957,6 @@
         }
     }
 
-    // ==========================================
-    // 選擇器
-    // ==========================================
     function openPlantPicker(inputElement) {
         activePlantInput = inputElement;
         inputElement.classList.remove('input-error');
@@ -967,9 +987,6 @@
         renderPickerList(lists.plants.filter(p => p.toLowerCase().includes(query)));
     }
 
-    // ==========================================
-    // 數字鍵盤
-    // ==========================================
     function openKeypad(inputElement) {
         activePriceInput = inputElement;
         inputElement.classList.remove('input-error');
