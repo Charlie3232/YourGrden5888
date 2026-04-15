@@ -94,7 +94,6 @@
         .plant-manage-item:last-child { border-bottom: none; }
         .plant-manage-item:nth-child(even) { background: #f9fff9; }
         .plant-index { color: #999; font-size: 12px; margin-right: 8px; min-width: 28px; }
-        .plant-delete-btn { margin-left: auto; background: transparent; color: var(--accent); border: 1px solid var(--accent); padding: 3px 8px; border-radius: 4px; font-size: 12px; cursor: pointer; }
         .plant-search-manage { width: 100%; padding: 10px 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 15px; margin-bottom: 10px; }
         .plant-search-manage:focus { border-color: var(--primary); outline: none; }
         .add-plant-group { display: flex; gap: 10px; }
@@ -136,6 +135,7 @@
         .daily-checkbox { width: 28px; height: 28px; cursor: pointer; accent-color: var(--primary); }
         .daily-select { width: 80px; padding: 8px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; font-weight: bold; text-align: center; background: white; }
         .daily-select:focus { border-color: var(--primary); outline: none; }
+        .freight-warning { background: #fff8e1; border: 1px solid #ffe082; border-radius: 8px; padding: 12px 15px; font-size: 14px; color: #795548; margin-bottom: 15px; display: none; }
     </style>
 </head>
 <body>
@@ -203,6 +203,7 @@
                 <textarea id="note" rows="3" placeholder="例如: 12/26以後送到"></textarea>
             </div>
         </div>
+        <div id="freight-warning" class="freight-warning">⚠️ 總金額未滿 $2000，請確認品項中已包含「運費」！</div>
         <div id="items-container"></div>
         <button class="add-btn" onclick="addNewItem('items-container','')">＋ 新增商品</button>
     </div>
@@ -235,7 +236,7 @@
                 </div>
                 <div class="menu-card" onclick="switchSub('sub-plant')">
                     <div class="menu-card-icon">🌿</div>
-                    <div class="menu-card-text"><h3>植物清單</h3><p>新增或刪除植物種類</p></div>
+                    <div class="menu-card-text"><h3>植物清單</h3><p>新增植物種類</p></div>
                     <div class="menu-card-arrow">›</div>
                 </div>
                 <div class="menu-card" onclick="switchSub('sub-daily')">
@@ -323,62 +324,20 @@
                     <input type="date" id="dailyDate">
                 </div>
                 <div id="daily-fields">
-                    <div class="daily-field">
-                        <div class="daily-field-label">肉咖選品</div>
-                        <div class="daily-field-input"><input type="checkbox" class="daily-checkbox" id="daily-0"></div>
-                    </div>
-                    <div class="daily-field">
-                        <div class="daily-field-label">百慕達選品</div>
-                        <div class="daily-field-input"><input type="checkbox" class="daily-checkbox" id="daily-1"></div>
-                    </div>
-                    <div class="daily-field">
-                        <div class="daily-field-label">北部訂單</div>
-                        <div class="daily-field-input"><select class="daily-select" id="daily-2"></select></div>
-                    </div>
-                    <div class="daily-field">
-                        <div class="daily-field-label">中部訂單</div>
-                        <div class="daily-field-input"><select class="daily-select" id="daily-3"></select></div>
-                    </div>
-                    <div class="daily-field">
-                        <div class="daily-field-label">南部訂單</div>
-                        <div class="daily-field-input"><select class="daily-select" id="daily-4"></select></div>
-                    </div>
-                    <div class="daily-field">
-                        <div class="daily-field-label">自取訂單</div>
-                        <div class="daily-field-input"><select class="daily-select" id="daily-5"></select></div>
-                    </div>
-                    <div class="daily-field">
-                        <div class="daily-field-label">現場客</div>
-                        <div class="daily-field-input"><select class="daily-select" id="daily-6"></select></div>
-                    </div>
-                    <div class="daily-field">
-                        <div class="daily-field-label">新品</div>
-                        <div class="daily-field-input"><select class="daily-select" id="daily-7"></select></div>
-                    </div>
-                    <div class="daily-field">
-                        <div class="daily-field-label">裝箱</div>
-                        <div class="daily-field-input"><input type="checkbox" class="daily-checkbox" id="daily-8"></div>
-                    </div>
-                    <div class="daily-field">
-                        <div class="daily-field-label">室外澆水</div>
-                        <div class="daily-field-input"><input type="checkbox" class="daily-checkbox" id="daily-9"></div>
-                    </div>
-                    <div class="daily-field">
-                        <div class="daily-field-label">室內澆水</div>
-                        <div class="daily-field-input"><input type="checkbox" class="daily-checkbox" id="daily-10"></div>
-                    </div>
-                    <div class="daily-field">
-                        <div class="daily-field-label">植物進貨</div>
-                        <div class="daily-field-input"><input type="checkbox" class="daily-checkbox" id="daily-11"></div>
-                    </div>
-                    <div class="daily-field">
-                        <div class="daily-field-label">盆器進貨</div>
-                        <div class="daily-field-input"><input type="checkbox" class="daily-checkbox" id="daily-12"></div>
-                    </div>
-                    <div class="daily-field">
-                        <div class="daily-field-label">環境打掃</div>
-                        <div class="daily-field-input"><input type="checkbox" class="daily-checkbox" id="daily-13"></div>
-                    </div>
+                    <div class="daily-field"><div class="daily-field-label">肉咖選品</div><div class="daily-field-input"><input type="checkbox" class="daily-checkbox" id="daily-0"></div></div>
+                    <div class="daily-field"><div class="daily-field-label">百慕達選品</div><div class="daily-field-input"><input type="checkbox" class="daily-checkbox" id="daily-1"></div></div>
+                    <div class="daily-field"><div class="daily-field-label">北部訂單</div><div class="daily-field-input"><select class="daily-select" id="daily-2"></select></div></div>
+                    <div class="daily-field"><div class="daily-field-label">中部訂單</div><div class="daily-field-input"><select class="daily-select" id="daily-3"></select></div></div>
+                    <div class="daily-field"><div class="daily-field-label">南部訂單</div><div class="daily-field-input"><select class="daily-select" id="daily-4"></select></div></div>
+                    <div class="daily-field"><div class="daily-field-label">自取訂單</div><div class="daily-field-input"><select class="daily-select" id="daily-5"></select></div></div>
+                    <div class="daily-field"><div class="daily-field-label">現場客</div><div class="daily-field-input"><select class="daily-select" id="daily-6"></select></div></div>
+                    <div class="daily-field"><div class="daily-field-label">新品</div><div class="daily-field-input"><select class="daily-select" id="daily-7"></select></div></div>
+                    <div class="daily-field"><div class="daily-field-label">裝箱</div><div class="daily-field-input"><input type="checkbox" class="daily-checkbox" id="daily-8"></div></div>
+                    <div class="daily-field"><div class="daily-field-label">室外澆水</div><div class="daily-field-input"><input type="checkbox" class="daily-checkbox" id="daily-9"></div></div>
+                    <div class="daily-field"><div class="daily-field-label">室內澆水</div><div class="daily-field-input"><input type="checkbox" class="daily-checkbox" id="daily-10"></div></div>
+                    <div class="daily-field"><div class="daily-field-label">植物進貨</div><div class="daily-field-input"><input type="checkbox" class="daily-checkbox" id="daily-11"></div></div>
+                    <div class="daily-field"><div class="daily-field-label">盆器進貨</div><div class="daily-field-input"><input type="checkbox" class="daily-checkbox" id="daily-12"></div></div>
+                    <div class="daily-field"><div class="daily-field-label">環境打掃</div><div class="daily-field-input"><input type="checkbox" class="daily-checkbox" id="daily-13"></div></div>
                 </div>
                 <button class="workspace-action-btn" style="margin-top:20px;" onclick="submitDailyReport()">送出日報</button>
             </div>
@@ -391,7 +350,7 @@
 <div class="overlay" id="overlay" onclick="closeAllModals()"></div>
 <div id="password-modal" class="center-modal">
     <div style="font-size:18px;font-weight:bold;margin-bottom:10px;color:var(--primary);">🔒 請輸入管理密碼</div>
-    <input type="tel" id="admin-password" class="password-input" maxlength="4" placeholder="****">
+    <input type="number" id="admin-password" class="password-input" inputmode="numeric" maxlength="4" placeholder="****" oninput="if(this.value.length>4)this.value=this.value.slice(0,4)">
     <div id="password-error" style="color:#e53935;font-size:14px;margin-bottom:10px;display:none;">密碼錯誤！</div>
     <div class="modal-btn-group">
         <button class="modal-btn btn-cancel" onclick="closeAllModals()">取消</button>
@@ -418,7 +377,7 @@
 </div>
 
 <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxQe9AHSogPG0av7AF1HugOQ_K__pNdWhNQCEgmxzk8kTIebNzi9JPu2kf8OSTHjAQ4/exec";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyvksgNZAgF5ulYKS-vBJTZlKBp1RXk5oo-NNSe7ouO8Af7dU2tUQt_YDRDfJsBwP7M/exec";
 
     let lists = { plants: [], potSize: [], payments: [], progress: [], box: [], plantStatus: [], regions: [] };
     let isListLoaded = false;
@@ -426,7 +385,6 @@
     let activePriceInput = null;
     let pendingAction = null;
     let currentEditOrderId = null;
-    let plantToDelete = null;
 
     window.onload = async function() {
         document.getElementById('orderDate').valueAsDate = new Date();
@@ -531,9 +489,19 @@
         let total = 0;
         document.getElementsByName('itemPrice').forEach(i => { total += parseInt(i.value) || 0; });
         document.getElementById('totalDisplay').innerText = total;
+        // 顯示運費提示
+        const warning = document.getElementById('freight-warning');
+        if (total > 0 && total < 2000) {
+            warning.style.display = 'block';
+        } else {
+            warning.style.display = 'none';
+        }
         return total;
     }
 
+    // ==========================================
+    // 植物清單管理（只保留新增和搜尋）
+    // ==========================================
     function renderPlantManageList(filter) {
         const container = document.getElementById('plant-manage-list');
         const tag = document.getElementById('plant-count-tag');
@@ -549,37 +517,12 @@
             <div class="plant-manage-item">
                 <span class="plant-index">${lists.plants.indexOf(p) + 1}</span>
                 <span style="flex:1;">${p}</span>
-                <button class="plant-delete-btn" onclick="confirmDeletePlant('${p}')">刪除</button>
             </div>
         `).join('');
     }
 
     function filterPlantManageList() {
         renderPlantManageList(document.getElementById('plant-search-manage').value);
-    }
-
-    function confirmDeletePlant(name) {
-        plantToDelete = name;
-        pendingAction = () => finalizeDeletePlant(name);
-        openPasswordModal();
-    }
-
-    async function finalizeDeletePlant(name) {
-        document.getElementById('loading-overlay').classList.add('show');
-        try {
-            await fetch(SCRIPT_URL, {
-                method: "POST", mode: "no-cors",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ mode: 'deletePlant', plantName: name })
-            });
-            lists.plants = lists.plants.filter(p => p !== name);
-            renderPlantManageList(document.getElementById('plant-search-manage').value);
-            showSuccess('刪除成功！', `「${name}」已從清單移除`);
-        } catch (err) {
-            alert("❌ 刪除失敗：" + err.message);
-        } finally {
-            document.getElementById('loading-overlay').classList.remove('show');
-        }
     }
 
     function addNewPlant() {
@@ -610,11 +553,15 @@
         }
     }
 
+    // ==========================================
+    // 日報填寫
+    // ==========================================
     async function submitDailyReport() {
         const dateStr = document.getElementById('dailyDate').value;
         if (!dateStr) { alert("請選擇日期！"); return; }
-        const date = new Date(dateStr);
-        const month = date.getMonth() + 1;
+        const parts = dateStr.split('-');
+        const month = parseInt(parts[1]);
+        const day = parseInt(parts[2]);
         const values = [];
         values.push(document.getElementById('daily-0').checked);
         values.push(document.getElementById('daily-1').checked);
@@ -632,7 +579,7 @@
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ mode: 'dailyReport', month: month, date: dateStr, values: values })
                 });
-                showSuccess('日報送出成功！', `${month}月 ${date.getDate()}日 記錄已儲存`);
+                showSuccess('日報送出成功！', `${month}月${day}日 記錄已儲存`);
                 resetDailyForm();
             } catch (err) {
                 alert("❌ 傳送失敗：" + err.message);
@@ -650,6 +597,9 @@
         for (let i = 8; i <= 13; i++) document.getElementById('daily-' + i).checked = false;
     }
 
+    // ==========================================
+    // 訂單查詢
+    // ==========================================
     async function queryOrdersByIG() {
         const ig = document.getElementById('queryIG').value.trim();
         if (!ig) { alert("請輸入購買人 IG！"); return; }
@@ -754,6 +704,9 @@
         window.scrollTo(0, 0);
     }
 
+    // ==========================================
+    // 編輯訂單
+    // ==========================================
     async function loadOrderForEdit() {
         const orderId = document.getElementById('editOrderId').value.trim();
         if (!orderId) { alert("請輸入訂單編號！"); return; }
@@ -823,6 +776,9 @@
         openPasswordModal();
     }
 
+    // ==========================================
+    // 新訂單
+    // ==========================================
     function submitOrder() {
         let isValid = true;
         document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
@@ -837,6 +793,18 @@
             });
         });
         if (!isValid) { alert("尚有必填欄位未完成！"); return; }
+
+        // 運費驗證
+        const total = calcTotal();
+        if (total < 2000) {
+            const plantInputs = document.querySelectorAll('#items-container [name="plantType"]');
+            const hasFreight = Array.from(plantInputs).some(input => input.value.includes('運費'));
+            if (!hasFreight) {
+                alert("⚠️ 總金額未滿 $2000，請新增一筆「運費」品項！");
+                return;
+            }
+        }
+
         pendingAction = () => finalizeSubmission('new');
         openPasswordModal();
     }
@@ -910,6 +878,9 @@
         }
     }
 
+    // ==========================================
+    // 密碼 Modal
+    // ==========================================
     function openPasswordModal() {
         document.getElementById('admin-password').value = '';
         document.getElementById('password-error').style.display = 'none';
@@ -999,6 +970,7 @@
         fillSelect('orderProgress', lists.progress, '未完成');
         fillSelect('boxStatus', lists.box, '未完成');
         document.getElementById('items-container').innerHTML = '';
+        document.getElementById('freight-warning').style.display = 'none';
         addNewItem('items-container', '');
         calcTotal();
         window.scrollTo(0, 0);
