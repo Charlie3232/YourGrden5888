@@ -152,7 +152,6 @@
         .clock-record-time { font-weight: bold; color: var(--primary); }
         .plant-info-modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90%; max-width: 420px; background: white; border-radius: 15px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); z-index: 10000; max-height: 90vh; overflow-y: auto; }
         .multi-select-container { border: 2px solid #ddd; border-radius: 8px; padding: 8px; background: #fafafa; min-height: 50px; cursor: pointer; }
-        .multi-select-container:focus-within { border-color: var(--primary); background: white; }
         .multi-select-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 4px; }
         .multi-select-tag { background: var(--primary); color: white; border-radius: 20px; padding: 4px 10px; font-size: 13px; display: flex; align-items: center; gap: 5px; }
         .multi-select-tag-remove { cursor: pointer; font-size: 16px; line-height: 1; }
@@ -180,7 +179,6 @@
         .price-height { font-size: 11px; color: #aaa; }
         .price-value { font-weight: bold; color: var(--primary); font-size: 16px; min-width: 60px; text-align: right; }
         .price-value.no-data { color: #ccc; font-size: 13px; font-weight: normal; }
-        /* 營業額圖表 */
         .chart-container { width: 100%; overflow-x: auto; padding-bottom: 10px; }
         .chart-bars { display: flex; align-items: flex-end; gap: 6px; height: 300px; padding: 50px 0 0 0; position: relative; }
         .chart-bar-wrap { display: flex; flex-direction: column; align-items: center; flex: 1; min-width: 24px; height: 100%; justify-content: flex-end; }
@@ -260,7 +258,6 @@
             </div>
         </div>
 
-        <!-- 訂單查詢 -->
         <div class="sub-page" id="sub-query">
             <button class="back-btn" onclick="switchSub('sub-menu')">‹ 返回工作區</button>
             <div class="app-header-container"><h1 class="main-title">🔍 訂單查詢</h1></div>
@@ -277,7 +274,6 @@
             </div>
         </div>
 
-        <!-- 訂單總覽 -->
         <div class="sub-page" id="sub-overview">
             <button class="back-btn" onclick="switchSub('sub-menu')">‹ 返回工作區</button>
             <div class="app-header-container"><h1 class="main-title">📊 訂單總覽</h1></div>
@@ -311,7 +307,6 @@
             </div>
         </div>
 
-        <!-- 編輯訂單 -->
         <div class="sub-page" id="sub-edit">
             <button class="back-btn" onclick="switchSub('sub-menu')">‹ 返回工作區</button>
             <div class="app-header-container"><h1 class="main-title">✏️ 編輯訂單</h1></div>
@@ -344,7 +339,6 @@
             </div>
         </div>
 
-        <!-- 植物清單 -->
         <div class="sub-page" id="sub-plant">
             <button class="back-btn" onclick="switchSub('sub-menu')">‹ 返回工作區</button>
             <div class="app-header-container"><h1 class="main-title">🌿 植物清單</h1></div>
@@ -359,7 +353,6 @@
             </div>
         </div>
 
-        <!-- 日報填寫 -->
         <div class="sub-page" id="sub-daily">
             <button class="back-btn" onclick="switchSub('sub-menu')">‹ 返回工作區</button>
             <div class="app-header-container"><h1 class="main-title">📋 日報填寫</h1></div>
@@ -385,7 +378,6 @@
             </div>
         </div>
 
-        <!-- 打卡 -->
         <div class="sub-page" id="sub-clock">
             <button class="back-btn" onclick="switchSub('sub-menu')">‹ 返回工作區</button>
             <div class="app-header-container"><h1 class="main-title">🕐 打卡</h1></div>
@@ -405,7 +397,6 @@
             </div>
         </div>
 
-        <!-- 庫存查詢 -->
         <div class="sub-page" id="sub-inventory">
             <button class="back-btn" onclick="switchSub('sub-menu')">‹ 返回工作區</button>
             <div class="app-header-container"><h1 class="main-title">📦 庫存查詢</h1></div>
@@ -415,7 +406,6 @@
             </div>
         </div>
 
-        <!-- 價格查詢 -->
         <div class="sub-page" id="sub-price">
             <button class="back-btn" onclick="switchSub('sub-menu')">‹ 返回工作區</button>
             <div class="app-header-container"><h1 class="main-title">💰 價格查詢</h1></div>
@@ -429,7 +419,6 @@
             </div>
         </div>
 
-        <!-- 營業額報表 -->
         <div class="sub-page" id="sub-revenue">
             <button class="back-btn" onclick="switchSub('sub-menu')">‹ 返回工作區</button>
             <div class="app-header-container"><h1 class="main-title">📈 營業額報表</h1></div>
@@ -514,8 +503,9 @@
             if (sel) sel.innerHTML = Array.from({length:16}, (_,i) => `<option value="${i}">${i}</option>`).join('');
         });
         updateClockDisplay();
+        // 點選項目外才關閉下拉 — 修正版
         document.addEventListener('click', function(e) {
-            if (!e.target.closest('.multi-select-wrapper')) {
+            if (!e.target.closest('.multi-select-wrapper') && !e.target.closest('.multi-select-dropdown')) {
                 document.querySelectorAll('.multi-select-dropdown').forEach(d => d.classList.remove('show'));
             }
         });
@@ -689,9 +679,6 @@
         await showOrderDetailInner(orderId, 'overview-detail-content', 'overview-input-card', 'overview-detail-view');
     }
 
-    // ==========================================
-    // 訂單查詢
-    // ==========================================
     async function queryOrdersByIG() {
         const ig = document.getElementById('queryIG').value.trim();
         if (!ig) { alert("請輸入購買人 IG！"); return; }
@@ -799,9 +786,6 @@
         window.scrollTo(0, 0);
     }
 
-    // ==========================================
-    // 庫存
-    // ==========================================
     async function loadInventory() {
         document.getElementById('loading-text').textContent = '讀取庫存...';
         document.getElementById('loading-overlay').classList.add('show');
@@ -810,10 +794,7 @@
             const data = await response.json();
             if (data.error) { alert("讀取失敗：" + data.error); return; }
             const container = document.getElementById('inventory-list');
-            if (!data.items || data.items.length === 0) {
-                container.innerHTML = '<div style="text-align:center;color:#999;padding:20px;">沒有庫存資料</div>';
-                return;
-            }
+            if (!data.items || data.items.length === 0) { container.innerHTML = '<div style="text-align:center;color:#999;padding:20px;">沒有庫存資料</div>'; return; }
             container.innerHTML = data.items.map(item => `
                 <div class="inventory-item">
                     <div class="inventory-name">${item.name}</div>
@@ -828,9 +809,6 @@
         }
     }
 
-    // ==========================================
-    // 價格查詢
-    // ==========================================
     function filterPricePlants() {
         const query = document.getElementById('price-search-input').value.toLowerCase().trim();
         const suggest = document.getElementById('price-suggest');
@@ -859,10 +837,7 @@
             const response = await fetch(SCRIPT_URL + '?action=getPlantPrice&plantName=' + encodeURIComponent(name));
             const data = await response.json();
             const container = document.getElementById('price-result');
-            if (data.error) {
-                container.innerHTML = `<div style="text-align:center;color:#999;padding:20px;">找不到「${name}」的價格資料</div>`;
-                return;
-            }
+            if (data.error) { container.innerHTML = `<div style="text-align:center;color:#999;padding:20px;">找不到「${name}」的價格資料</div>`; return; }
             container.innerHTML = `
                 <div class="price-result-card">
                     <div class="price-plant-name">🌿 ${data.plantName}</div>
@@ -882,22 +857,16 @@
         }
     }
 
-    // ==========================================
-    // 營業額報表（修正版）
-    // ==========================================
     async function loadRevenue() {
         try {
             const response = await fetch(SCRIPT_URL + '?action=getRevenue');
             const data = await response.json();
             if (data.error) { document.getElementById('revenue-chart').innerHTML = '<div style="color:red;padding:20px;">讀取失敗</div>'; return; }
-
             const monthLabels = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
             const revenues = data.revenues;
             const maxVal = Math.max(...revenues, 1);
             const totalRevenue = revenues.reduce((a, b) => a + b, 0);
-
             const colors = ['#1b4332','#2d6a4f','#40916c','#52b788','#74c69d','#95d5b2','#1b4332','#2d6a4f','#40916c','#52b788','#74c69d','#95d5b2'];
-
             const barsHtml = revenues.map((val, i) => {
                 const heightPct = val > 0 ? Math.max((val / maxVal) * 100, 3) : 0;
                 const displayVal = val > 0 ? (val >= 10000 ? (val/10000).toFixed(1) + '萬' : val.toLocaleString()) : '0';
@@ -909,7 +878,6 @@
                     </div>
                 `;
             }).join('');
-
             document.getElementById('revenue-chart').innerHTML = `<div class="chart-bars">${barsHtml}</div>`;
             document.getElementById('revenue-total').innerHTML = `年度總營業額：<strong>$${totalRevenue.toLocaleString()}</strong>`;
         } catch (err) {
@@ -917,9 +885,6 @@
         }
     }
 
-    // ==========================================
-    // 植物清單
-    // ==========================================
     function renderPlantManageList(filter) {
         const container = document.getElementById('plant-manage-list');
         const tag = document.getElementById('plant-count-tag');
@@ -1000,9 +965,6 @@
         openPasswordModal();
     }
 
-    // ==========================================
-    // 日報
-    // ==========================================
     async function submitDailyReport() {
         const dateStr = document.getElementById('dailyDate').value;
         if (!dateStr) { alert("請選擇日期！"); return; }
@@ -1033,9 +995,6 @@
         for (let i = 8; i <= 13; i++) document.getElementById('daily-' + i).checked = false;
     }
 
-    // ==========================================
-    // 打卡
-    // ==========================================
     async function doClockIn(type) {
         const now = new Date();
         const month = now.getMonth() + 1;
@@ -1061,9 +1020,6 @@
         finally { document.getElementById('loading-text').textContent = '載入清單中...'; document.getElementById('loading-overlay').classList.remove('show'); }
     }
 
-    // ==========================================
-    // 品項
-    // ==========================================
     function addNewItem(containerId, prefix) {
         const container = document.getElementById(containerId);
         const itemCount = container.children.length + 1;
@@ -1102,9 +1058,6 @@
         return total;
     }
 
-    // ==========================================
-    // 編輯訂單
-    // ==========================================
     async function loadOrderForEdit() {
         const orderId = document.getElementById('editOrderId').value.trim();
         if (!orderId) { alert("請輸入訂單編號！"); return; }
@@ -1170,9 +1123,6 @@
         openPasswordModal();
     }
 
-    // ==========================================
-    // 新訂單
-    // ==========================================
     function submitOrder() {
         let isValid = true;
         document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
@@ -1222,9 +1172,6 @@
         finally { if (mode === 'new') { btn.disabled = false; btn.innerText = "送出訂單"; } }
     }
 
-    // ==========================================
-    // 密碼、選擇器、鍵盤
-    // ==========================================
     function openPasswordModal() {
         document.getElementById('admin-password').value = '';
         document.getElementById('password-error').style.display = 'none';
