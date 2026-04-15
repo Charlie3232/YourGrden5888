@@ -151,30 +151,25 @@
         .clock-record-label { color: #666; }
         .clock-record-time { font-weight: bold; color: var(--primary); }
         .plant-info-modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90%; max-width: 420px; background: white; border-radius: 15px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); z-index: 10000; max-height: 90vh; overflow-y: auto; }
-
-        /* 多選標籤 */
         .multi-select-container { border: 2px solid #ddd; border-radius: 8px; padding: 8px; background: #fafafa; min-height: 50px; cursor: pointer; }
         .multi-select-container:focus-within { border-color: var(--primary); background: white; }
-        .multi-select-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 6px; }
+        .multi-select-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 4px; }
         .multi-select-tag { background: var(--primary); color: white; border-radius: 20px; padding: 4px 10px; font-size: 13px; display: flex; align-items: center; gap: 5px; }
         .multi-select-tag-remove { cursor: pointer; font-size: 16px; line-height: 1; }
-        .multi-select-dropdown { background: white; border: 2px solid var(--primary); border-radius: 8px; max-height: 200px; overflow-y: auto; display: none; position: absolute; z-index: 100; width: 100%; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .multi-select-dropdown { background: white; border: 2px solid var(--primary); border-radius: 8px; max-height: 220px; overflow-y: auto; display: none; position: absolute; z-index: 200; width: 100%; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
         .multi-select-dropdown.show { display: block; }
-        .multi-select-option { padding: 10px 15px; cursor: pointer; font-size: 15px; display: flex; align-items: center; gap: 8px; }
-        .multi-select-option:hover { background: var(--light-green); }
+        .multi-select-option { padding: 12px 15px; cursor: pointer; font-size: 15px; border-bottom: 1px solid #f0f0f0; }
+        .multi-select-option:last-child { border-bottom: none; }
+        .multi-select-option:active { background: var(--light-green); }
         .multi-select-option.selected { background: #e8f5e9; font-weight: bold; color: var(--primary); }
-        .multi-select-wrapper { position: relative; }
+        .multi-select-wrapper { position: relative; margin-bottom: 5px; }
         .multi-select-placeholder { color: #aaa; font-size: 15px; padding: 4px 0; }
-
-        /* 庫存 */
         .inventory-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 15px; border-bottom: 1px solid #f0f0f0; font-size: 15px; }
         .inventory-item:last-child { border-bottom: none; }
         .inventory-name { flex: 1; font-weight: 500; }
-        .inventory-qty { font-weight: bold; font-size: 18px; min-width: 50px; text-align: right; }
+        .inventory-qty { font-weight: bold; font-size: 18px; min-width: 60px; text-align: right; }
         .inventory-qty.low { color: var(--accent); }
         .refresh-btn { background: var(--light-green); color: var(--primary); border: 2px solid var(--primary); padding: 10px 20px; border-radius: 8px; font-weight: bold; font-size: 15px; cursor: pointer; width: 100%; margin-bottom: 15px; }
-
-        /* 價格查詢 */
         .price-search-group { display: flex; gap: 10px; margin-bottom: 15px; }
         .price-search-group input { flex: 1; }
         .price-result-card { background: white; border-radius: 10px; border: 1px solid #e0ebd4; overflow: hidden; }
@@ -185,15 +180,13 @@
         .price-height { font-size: 11px; color: #aaa; }
         .price-value { font-weight: bold; color: var(--primary); font-size: 16px; min-width: 60px; text-align: right; }
         .price-value.no-data { color: #ccc; font-size: 13px; font-weight: normal; }
-
         /* 營業額圖表 */
-        .chart-container { width: 100%; overflow-x: auto; }
-        .chart-bars { display: flex; align-items: flex-end; gap: 8px; height: 350px; padding: 40px 0 0 0; position: relative; }
-        .chart-bar-wrap { display: flex; flex-direction: column; align-items: center; flex: 1; min-width: 30px; }
+        .chart-container { width: 100%; overflow-x: auto; padding-bottom: 10px; }
+        .chart-bars { display: flex; align-items: flex-end; gap: 6px; height: 300px; padding: 50px 0 0 0; position: relative; }
+        .chart-bar-wrap { display: flex; flex-direction: column; align-items: center; flex: 1; min-width: 24px; height: 100%; justify-content: flex-end; }
         .chart-bar-value { font-size: 10px; color: var(--primary); font-weight: bold; margin-bottom: 4px; text-align: center; white-space: nowrap; }
-        .chart-bar { width: 100%; background: var(--primary); border-radius: 4px 4px 0 0; transition: height 0.5s ease; min-height: 2px; }
-        .chart-bar.zero { background: #e0e0e0; }
-        .chart-label { font-size: 11px; color: #888; margin-top: 6px; text-align: center; }
+        .chart-bar { width: 100%; border-radius: 4px 4px 0 0; min-height: 2px; transition: height 0.5s ease; }
+        .chart-label { font-size: 11px; color: #888; margin-top: 6px; text-align: center; white-space: nowrap; }
         .chart-total { text-align: center; margin-top: 15px; font-size: 14px; color: #666; }
         .chart-total strong { color: var(--primary); font-size: 18px; }
     </style>
@@ -252,56 +245,18 @@
 <!-- 工作區頁面 -->
 <div class="page" id="page-workspace">
     <div class="container">
-
-        <!-- 菜單 -->
         <div class="sub-page active" id="sub-menu">
             <div class="app-header-container"><h1 class="main-title">⚙️ 工作區</h1><div class="author-text">選擇功能</div></div>
             <div class="workspace-menu">
-                <div class="menu-card" onclick="switchSub('sub-query')">
-                    <div class="menu-card-icon">🔍</div>
-                    <div class="menu-card-text"><h3>訂單查詢</h3><p>輸入購買人 IG 查詢所有訂單</p></div>
-                    <div class="menu-card-arrow">›</div>
-                </div>
-                <div class="menu-card" onclick="switchSub('sub-overview')">
-                    <div class="menu-card-icon">📊</div>
-                    <div class="menu-card-text"><h3>訂單總覽</h3><p>依進度和地區篩選訂單</p></div>
-                    <div class="menu-card-arrow">›</div>
-                </div>
-                <div class="menu-card" onclick="switchSub('sub-edit')">
-                    <div class="menu-card-icon">✏️</div>
-                    <div class="menu-card-text"><h3>編輯訂單</h3><p>輸入訂單編號載入並修改</p></div>
-                    <div class="menu-card-arrow">›</div>
-                </div>
-                <div class="menu-card" onclick="switchSub('sub-plant')">
-                    <div class="menu-card-icon">🌿</div>
-                    <div class="menu-card-text"><h3>植物清單</h3><p>新增植物種類</p></div>
-                    <div class="menu-card-arrow">›</div>
-                </div>
-                <div class="menu-card" onclick="switchSub('sub-daily')">
-                    <div class="menu-card-icon">📋</div>
-                    <div class="menu-card-text"><h3>日報填寫</h3><p>填寫今日工作紀錄</p></div>
-                    <div class="menu-card-arrow">›</div>
-                </div>
-                <div class="menu-card" onclick="switchSub('sub-clock')">
-                    <div class="menu-card-icon">🕐</div>
-                    <div class="menu-card-text"><h3>打卡</h3><p>上班 / 下班打卡</p></div>
-                    <div class="menu-card-arrow">›</div>
-                </div>
-                <div class="menu-card" onclick="switchSub('sub-inventory')">
-                    <div class="menu-card-icon">📦</div>
-                    <div class="menu-card-text"><h3>庫存查詢</h3><p>盆器庫存即時查詢</p></div>
-                    <div class="menu-card-arrow">›</div>
-                </div>
-                <div class="menu-card" onclick="switchSub('sub-price')">
-                    <div class="menu-card-icon">💰</div>
-                    <div class="menu-card-text"><h3>價格查詢</h3><p>查詢植物各尺寸售價</p></div>
-                    <div class="menu-card-arrow">›</div>
-                </div>
-                <div class="menu-card" onclick="switchSub('sub-revenue')">
-                    <div class="menu-card-icon">📈</div>
-                    <div class="menu-card-text"><h3>營業額報表</h3><p>全年月份營業額圖表</p></div>
-                    <div class="menu-card-arrow">›</div>
-                </div>
+                <div class="menu-card" onclick="switchSub('sub-query')"><div class="menu-card-icon">🔍</div><div class="menu-card-text"><h3>訂單查詢</h3><p>輸入購買人 IG 查詢所有訂單</p></div><div class="menu-card-arrow">›</div></div>
+                <div class="menu-card" onclick="switchSub('sub-overview')"><div class="menu-card-icon">📊</div><div class="menu-card-text"><h3>訂單總覽</h3><p>依進度和地區篩選訂單</p></div><div class="menu-card-arrow">›</div></div>
+                <div class="menu-card" onclick="switchSub('sub-edit')"><div class="menu-card-icon">✏️</div><div class="menu-card-text"><h3>編輯訂單</h3><p>輸入訂單編號載入並修改</p></div><div class="menu-card-arrow">›</div></div>
+                <div class="menu-card" onclick="switchSub('sub-plant')"><div class="menu-card-icon">🌿</div><div class="menu-card-text"><h3>植物清單</h3><p>新增植物種類</p></div><div class="menu-card-arrow">›</div></div>
+                <div class="menu-card" onclick="switchSub('sub-daily')"><div class="menu-card-icon">📋</div><div class="menu-card-text"><h3>日報填寫</h3><p>填寫今日工作紀錄</p></div><div class="menu-card-arrow">›</div></div>
+                <div class="menu-card" onclick="switchSub('sub-clock')"><div class="menu-card-icon">🕐</div><div class="menu-card-text"><h3>打卡</h3><p>上班 / 下班打卡</p></div><div class="menu-card-arrow">›</div></div>
+                <div class="menu-card" onclick="switchSub('sub-inventory')"><div class="menu-card-icon">📦</div><div class="menu-card-text"><h3>庫存查詢</h3><p>盆器庫存即時查詢</p></div><div class="menu-card-arrow">›</div></div>
+                <div class="menu-card" onclick="switchSub('sub-price')"><div class="menu-card-icon">💰</div><div class="menu-card-text"><h3>價格查詢</h3><p>查詢植物各尺寸售價</p></div><div class="menu-card-arrow">›</div></div>
+                <div class="menu-card" onclick="switchSub('sub-revenue')"><div class="menu-card-icon">📈</div><div class="menu-card-text"><h3>營業額報表</h3><p>全年月份營業額圖表</p></div><div class="menu-card-arrow">›</div></div>
             </div>
         </div>
 
@@ -347,7 +302,7 @@
                         <div class="multi-select-dropdown" id="region-dropdown"></div>
                     </div>
                 </div>
-                <button class="workspace-action-btn" onclick="queryOverview()">查詢</button>
+                <button class="workspace-action-btn" style="margin-top:10px;" onclick="queryOverview()">查詢</button>
                 <div id="overview-results" style="margin-top:15px;"></div>
             </div>
             <div id="overview-detail-view" style="display:none;">
@@ -438,23 +393,13 @@
                 <div class="clock-container">
                     <div class="clock-date-display" id="clock-date-display"></div>
                     <div class="clock-btn-group">
-                        <button class="clock-btn clock-btn-in" onclick="doClockIn('in')">
-                            <div class="clock-btn-icon">🌅</div><div>上班打卡</div>
-                        </button>
-                        <button class="clock-btn clock-btn-out" onclick="doClockIn('out')">
-                            <div class="clock-btn-icon">🌙</div><div>下班打卡</div>
-                        </button>
+                        <button class="clock-btn clock-btn-in" onclick="doClockIn('in')"><div class="clock-btn-icon">🌅</div><div>上班打卡</div></button>
+                        <button class="clock-btn clock-btn-out" onclick="doClockIn('out')"><div class="clock-btn-icon">🌙</div><div>下班打卡</div></button>
                     </div>
                     <div class="clock-record">
                         <div class="clock-record-title">今日紀錄</div>
-                        <div class="clock-record-row">
-                            <div class="clock-record-label">上班時間</div>
-                            <div class="clock-record-time" id="clock-in-display">—</div>
-                        </div>
-                        <div class="clock-record-row">
-                            <div class="clock-record-label">下班時間</div>
-                            <div class="clock-record-time" id="clock-out-display">—</div>
-                        </div>
+                        <div class="clock-record-row"><div class="clock-record-label">上班時間</div><div class="clock-record-time" id="clock-in-display">—</div></div>
+                        <div class="clock-record-row"><div class="clock-record-label">下班時間</div><div class="clock-record-time" id="clock-out-display">—</div></div>
                     </div>
                 </div>
             </div>
@@ -489,13 +434,10 @@
             <button class="back-btn" onclick="switchSub('sub-menu')">‹ 返回工作區</button>
             <div class="app-header-container"><h1 class="main-title">📈 營業額報表</h1></div>
             <div class="card">
-                <div class="chart-container" id="revenue-chart">
-                    <div style="text-align:center;color:#999;padding:30px;">載入中...</div>
-                </div>
+                <div class="chart-container" id="revenue-chart"><div style="text-align:center;color:#999;padding:30px;">載入中...</div></div>
                 <div class="chart-total" id="revenue-total"></div>
             </div>
         </div>
-
     </div>
 </div>
 
@@ -542,7 +484,7 @@
 </div>
 
 <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzY8szlzKh4miQh1KwoGc9OYMjv1n4LaaOUiBmJSNujxcQCyIPN0-ig6ktbK4PqUa_c/exec";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx5odqVyE0QiVbnFmgANHIFJBCARrF5JSj91odBppmvFCegQ_YOi0k6HHGy8I1tHWqv/exec";
 
     let lists = { plants: [], potSize: [], payments: [], progress: [], box: [], plantStatus: [], regions: [], envList: [], waterList: [], lightList: [], pricePlants: [] };
     let isListLoaded = false;
@@ -554,7 +496,6 @@
     let clockOutTime = null;
     let selectedProgress = [];
     let selectedRegions = [];
-    let currentDetailSource = 'query';
 
     const plantAutoFill = {
         '運費': { plantStatus: '已換盆', potSize: '運費優惠' },
@@ -647,20 +588,21 @@
     function initMultiSelects() {
         selectedProgress = [];
         selectedRegions = [];
-        renderMultiSelect('progress-dropdown', 'progress-tags', 'progress-placeholder', lists.progress, selectedProgress);
-        renderMultiSelect('region-dropdown', 'region-tags', 'region-placeholder', lists.regions, selectedRegions);
+        renderMultiSelect('progress-dropdown', 'progress-tags', 'progress-placeholder', lists.progress, selectedProgress, false);
+        renderMultiSelect('region-dropdown', 'region-tags', 'region-placeholder', lists.regions, selectedRegions, false);
         document.getElementById('overview-results').innerHTML = '';
     }
 
-    function renderMultiSelect(dropdownId, tagsId, placeholderId, options, selected) {
+    function renderMultiSelect(dropdownId, tagsId, placeholderId, options, selected, keepOpen) {
         const dropdown = document.getElementById(dropdownId);
         dropdown.innerHTML = options.map(opt => `
             <div class="multi-select-option ${selected.includes(opt) ? 'selected' : ''}"
-                 onclick="toggleOption('${dropdownId}', '${tagsId}', '${placeholderId}', '${opt}', ${dropdownId === 'progress-dropdown' ? 'selectedProgress' : 'selectedRegions'})">
-                ${selected.includes(opt) ? '✓' : ''} ${opt}
+                 onclick="toggleOption('${dropdownId}','${tagsId}','${placeholderId}','${opt}')">
+                ${selected.includes(opt) ? '✓ ' : ''}${opt}
             </div>
         `).join('');
         renderTags(tagsId, placeholderId, selected, dropdownId);
+        if (keepOpen) dropdown.classList.add('show');
     }
 
     function toggleDropdown(dropdownId) {
@@ -671,15 +613,13 @@
         dropdown.classList.toggle('show');
     }
 
-    function toggleOption(dropdownId, tagsId, placeholderId, value, selectedArr) {
-    const arr = dropdownId === 'progress-dropdown' ? selectedProgress : selectedRegions;
-    const idx = arr.indexOf(value);
-    if (idx === -1) arr.push(value);
-    else arr.splice(idx, 1);
-    renderMultiSelect(dropdownId, tagsId, placeholderId,
-        dropdownId === 'progress-dropdown' ? lists.progress : lists.regions, arr);
-    // 重新開啟下拉
-    document.getElementById(dropdownId).classList.add('show');
+    function toggleOption(dropdownId, tagsId, placeholderId, value) {
+        const arr = dropdownId === 'progress-dropdown' ? selectedProgress : selectedRegions;
+        const idx = arr.indexOf(value);
+        if (idx === -1) arr.push(value);
+        else arr.splice(idx, 1);
+        const options = dropdownId === 'progress-dropdown' ? lists.progress : lists.regions;
+        renderMultiSelect(dropdownId, tagsId, placeholderId, options, arr, true);
     }
 
     function renderTags(tagsId, placeholderId, selected, dropdownId) {
@@ -698,22 +638,18 @@
         const arr = dropdownId === 'progress-dropdown' ? selectedProgress : selectedRegions;
         const idx = arr.indexOf(value);
         if (idx !== -1) arr.splice(idx, 1);
-        renderMultiSelect(dropdownId, tagsId, placeholderId,
-            dropdownId === 'progress-dropdown' ? lists.progress : lists.regions, arr);
+        const options = dropdownId === 'progress-dropdown' ? lists.progress : lists.regions;
+        renderMultiSelect(dropdownId, tagsId, placeholderId, options, arr, false);
     }
 
     // ==========================================
-    // 訂單總覽查詢
+    // 訂單總覽
     // ==========================================
     async function queryOverview() {
         document.getElementById('loading-text').textContent = '查詢中...';
         document.getElementById('loading-overlay').classList.add('show');
         try {
-            const params = new URLSearchParams({
-                action: 'queryOrders',
-                progresses: selectedProgress.join(','),
-                regions: selectedRegions.join(',')
-            });
+            const params = new URLSearchParams({ action: 'queryOrders', progresses: selectedProgress.join(','), regions: selectedRegions.join(',') });
             const response = await fetch(SCRIPT_URL + '?' + params.toString());
             const data = await response.json();
             if (data.error) { alert("查詢失敗：" + data.error); return; }
@@ -740,7 +676,7 @@
                     <div class="order-list-item" onclick="showDetailFromOverview('${o.orderId}')">
                         <div>
                             <div class="order-id">${o.orderId}</div>
-                            <div class="order-meta">${o.date} ｜ ${o.ig || '-'} ｜ ${o.region || '-'} ｜ ${o.progress} ｜ $${o.total}</div>
+                            <div class="order-meta">${o.date} ｜ ${o.ig||'-'} ｜ ${o.region||'-'} ｜ ${o.progress} ｜ $${o.total}</div>
                         </div>
                         <div class="order-list-arrow">›</div>
                     </div>
@@ -750,7 +686,6 @@
     }
 
     async function showDetailFromOverview(orderId) {
-        currentDetailSource = 'overview';
         await showOrderDetailInner(orderId, 'overview-detail-content', 'overview-input-card', 'overview-detail-view');
     }
 
@@ -795,7 +730,6 @@
     }
 
     async function showDetailFromQuery(orderId) {
-        currentDetailSource = 'query';
         await showOrderDetailInner(orderId, 'order-detail-content', 'query-input-card', 'order-detail-view');
     }
 
@@ -849,10 +783,7 @@
                         <div class="item-detail-price">$${item.price||0}</div>
                     </div>
                 `).join('')}
-                <div class="total-summary">
-                    <div class="total-summary-label">訂單總額</div>
-                    <div class="total-summary-amount">$${total}</div>
-                </div>
+                <div class="total-summary"><div class="total-summary-label">訂單總額</div><div class="total-summary-amount">$${total}</div></div>
             </div>
         `;
     }
@@ -869,7 +800,7 @@
     }
 
     // ==========================================
-    // 庫存查詢
+    // 庫存
     // ==========================================
     async function loadInventory() {
         document.getElementById('loading-text').textContent = '讀取庫存...';
@@ -886,7 +817,7 @@
             container.innerHTML = data.items.map(item => `
                 <div class="inventory-item">
                     <div class="inventory-name">${item.name}</div>
-                    <div class="inventory-qty ${item.qty < 10 ? 'low' : ''}">${item.qty} ${item.qty < 10 ? '⚠️' : ''}</div>
+                    <div class="inventory-qty ${item.qty < 10 ? 'low' : ''}">${item.qty}${item.qty < 10 ? ' ⚠️' : ''}</div>
                 </div>
             `).join('');
         } catch (err) {
@@ -908,8 +839,7 @@
         if (filtered.length === 0) { suggest.style.display = 'none'; return; }
         suggest.style.display = 'block';
         suggest.innerHTML = filtered.map(p => `
-            <div style="padding:10px 15px;cursor:pointer;border-bottom:1px solid #f0f0f0;font-size:15px;"
-                 onmousedown="selectPricePlant('${p}')">🌿 ${p}</div>
+            <div style="padding:10px 15px;cursor:pointer;border-bottom:1px solid #f0f0f0;font-size:15px;" onmousedown="selectPricePlant('${p}')">🌿 ${p}</div>
         `).join('');
     }
 
@@ -938,13 +868,8 @@
                     <div class="price-plant-name">🌿 ${data.plantName}</div>
                     ${data.prices.map(p => `
                         <div class="price-row">
-                            <div class="price-size">
-                                ${p.size}
-                                <div class="price-height">${p.height || ''}</div>
-                            </div>
-                            <div class="price-value ${p.price === null ? 'no-data' : ''}">
-                                ${p.price !== null ? '$' + p.price.toLocaleString() : '無'}
-                            </div>
+                            <div class="price-size">${p.size}<div class="price-height">${p.height||''}</div></div>
+                            <div class="price-value ${p.price===null?'no-data':''}">${p.price!==null?'$'+p.price.toLocaleString():'無'}</div>
                         </div>
                     `).join('')}
                 </div>
@@ -958,7 +883,7 @@
     }
 
     // ==========================================
-    // 營業額報表
+    // 營業額報表（修正版）
     // ==========================================
     async function loadRevenue() {
         try {
@@ -966,19 +891,21 @@
             const data = await response.json();
             if (data.error) { document.getElementById('revenue-chart').innerHTML = '<div style="color:red;padding:20px;">讀取失敗</div>'; return; }
 
-            const months = data.months;
+            const monthLabels = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
             const revenues = data.revenues;
             const maxVal = Math.max(...revenues, 1);
             const totalRevenue = revenues.reduce((a, b) => a + b, 0);
 
+            const colors = ['#1b4332','#2d6a4f','#40916c','#52b788','#74c69d','#95d5b2','#1b4332','#2d6a4f','#40916c','#52b788','#74c69d','#95d5b2'];
+
             const barsHtml = revenues.map((val, i) => {
-                const heightPct = (val / maxVal) * 100;
+                const heightPct = val > 0 ? Math.max((val / maxVal) * 100, 3) : 0;
                 const displayVal = val > 0 ? (val >= 10000 ? (val/10000).toFixed(1) + '萬' : val.toLocaleString()) : '0';
                 return `
                     <div class="chart-bar-wrap">
                         <div class="chart-bar-value">${displayVal}</div>
-                        <div class="chart-bar ${val === 0 ? 'zero' : ''}" style="height:${Math.max(heightPct, 1)}%;"></div>
-                        <div class="chart-label">${months[i] || (i+1) + '月'}</div>
+                        <div class="chart-bar" style="height:${heightPct}%;background:${colors[i]};"></div>
+                        <div class="chart-label">${monthLabels[i]}</div>
                     </div>
                 `;
             }).join('');
@@ -1090,8 +1017,7 @@
         pendingAction = async () => {
             document.getElementById('loading-overlay').classList.add('show');
             try {
-                await fetch(SCRIPT_URL, { method: "POST", mode: "no-cors", headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ mode: 'dailyReport', month: month, day: day, values: values }) });
+                await fetch(SCRIPT_URL, { method: "POST", mode: "no-cors", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ mode: 'dailyReport', month: month, day: day, values: values }) });
                 showSuccess('日報送出成功！', `${month}月${day}日 記錄已儲存`);
                 resetDailyForm();
             } catch (err) { alert("❌ 傳送失敗：" + err.message); }
@@ -1117,34 +1043,26 @@
         const hh = String(now.getHours()).padStart(2, '0');
         const mm = String(now.getMinutes()).padStart(2, '0');
         const timeStr = hh + ':' + mm;
-
         let locationStr = '';
         try {
             const pos = await new Promise((resolve, reject) => {
                 navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 10000, enableHighAccuracy: true });
             });
-            const lat = pos.coords.latitude.toFixed(6);
-            const lng = pos.coords.longitude.toFixed(6);
-            locationStr = ` | https://maps.google.com/?q=${lat},${lng}`;
+            locationStr = ` | https://maps.google.com/?q=${pos.coords.latitude.toFixed(6)},${pos.coords.longitude.toFixed(6)}`;
         } catch (err) { locationStr = ' | 無法取得位置'; }
-
         const fullStr = timeStr + locationStr;
         document.getElementById('loading-text').textContent = '打卡中...';
         document.getElementById('loading-overlay').classList.add('show');
         try {
-            await fetch(SCRIPT_URL, { method: "POST", mode: "no-cors", headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ mode: 'clockIn', type: type, month: month, day: day, time: fullStr }) });
+            await fetch(SCRIPT_URL, { method: "POST", mode: "no-cors", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ mode: 'clockIn', type: type, month: month, day: day, time: fullStr }) });
             if (type === 'in') { clockInTime = timeStr; document.getElementById('clock-in-display').textContent = timeStr; showSuccess('上班打卡成功！', `打卡時間：${timeStr}`); }
             else { clockOutTime = timeStr; document.getElementById('clock-out-display').textContent = timeStr; showSuccess('下班打卡成功！', `打卡時間：${timeStr}`); }
         } catch (err) { alert("❌ 打卡失敗：" + err.message); }
-        finally {
-            document.getElementById('loading-text').textContent = '載入清單中...';
-            document.getElementById('loading-overlay').classList.remove('show');
-        }
+        finally { document.getElementById('loading-text').textContent = '載入清單中...'; document.getElementById('loading-overlay').classList.remove('show'); }
     }
 
     // ==========================================
-    // 品項新增
+    // 品項
     // ==========================================
     function addNewItem(containerId, prefix) {
         const container = document.getElementById(containerId);
@@ -1231,10 +1149,7 @@
             document.getElementById('edit-order-form').style.display = 'block';
             window.scrollTo(0, 0);
         } catch (err) { alert("❌ 載入失敗：" + err.message); }
-        finally {
-            document.getElementById('loading-text').textContent = '載入清單中...';
-            document.getElementById('loading-overlay').classList.remove('show');
-        }
+        finally { document.getElementById('loading-text').textContent = '載入清單中...'; document.getElementById('loading-overlay').classList.remove('show'); }
     }
 
     function submitEditOrder() {
