@@ -131,11 +131,26 @@
         .daily-field { display: flex; justify-content: space-between; align-items: center; padding: 14px 0; border-bottom: 1px solid #f0f0f0; }
         .daily-field:last-child { border-bottom: none; }
         .daily-field-label { font-size: 15px; font-weight: 600; color: var(--text); }
-        .daily-field-input { display: flex; align-items: center; gap: 10px; }
+        .daily-field-input { display: flex; align-items: center; }
         .daily-checkbox { width: 28px; height: 28px; cursor: pointer; accent-color: var(--primary); }
         .daily-select { width: 80px; padding: 8px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; font-weight: bold; text-align: center; background: white; }
         .daily-select:focus { border-color: var(--primary); outline: none; }
         .freight-warning { background: #fff8e1; border: 1px solid #ffe082; border-radius: 8px; padding: 12px 15px; font-size: 14px; color: #795548; margin-bottom: 15px; display: none; }
+        /* 打卡 */
+        .clock-container { display: flex; flex-direction: column; gap: 20px; }
+        .clock-date-display { background: var(--light-green); border-radius: 12px; padding: 15px; text-align: center; font-size: 18px; font-weight: bold; color: var(--primary); }
+        .clock-btn-group { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .clock-btn { border: none; border-radius: 16px; padding: 30px 15px; font-size: 18px; font-weight: bold; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: transform 0.15s; }
+        .clock-btn:active { transform: scale(0.97); }
+        .clock-btn-in { background: var(--primary); color: white; }
+        .clock-btn-out { background: #e8f5e9; color: var(--primary); border: 2px solid var(--primary); }
+        .clock-btn-icon { font-size: 36px; }
+        .clock-record { background: white; border-radius: 12px; padding: 15px; border: 1px solid #e0ebd4; }
+        .clock-record-title { font-size: 14px; color: #888; margin-bottom: 10px; font-weight: bold; }
+        .clock-record-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #f5f5f5; font-size: 15px; }
+        .clock-record-row:last-child { border-bottom: none; }
+        .clock-record-label { color: #666; }
+        .clock-record-time { font-weight: bold; color: var(--primary); }
     </style>
 </head>
 <body>
@@ -171,28 +186,16 @@
                 <input type="date" id="orderDate">
             </div>
             <div class="form-group" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-                <div>
-                    <label>購買人 IG <span style="color:red">*</span></label>
-                    <input type="text" id="buyerIG" placeholder="例如: shan1101">
-                </div>
-                <div>
-                    <label>地區 <span style="color:red">*</span></label>
-                    <select id="region"><option value="" disabled selected>請選擇</option></select>
-                </div>
+                <div><label>購買人 IG <span style="color:red">*</span></label><input type="text" id="buyerIG" placeholder="例如: shan1101"></div>
+                <div><label>地區 <span style="color:red">*</span></label><select id="region"><option value="" disabled selected>請選擇</option></select></div>
             </div>
             <div class="form-group">
                 <label>配送資訊 <span style="color:red">*</span></label>
                 <textarea id="deliveryInfo" rows="4" placeholder="例如: 詹小美 0912345678 台中市..."></textarea>
             </div>
             <div class="form-group" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-                <div>
-                    <label>付款狀況 <span style="color:red">*</span></label>
-                    <select id="paymentStatus"></select>
-                </div>
-                <div>
-                    <label>訂單進度 <span style="color:red">*</span></label>
-                    <select id="orderProgress"></select>
-                </div>
+                <div><label>付款狀況 <span style="color:red">*</span></label><select id="paymentStatus"></select></div>
+                <div><label>訂單進度 <span style="color:red">*</span></label><select id="orderProgress"></select></div>
             </div>
             <div class="form-group">
                 <label>紙箱狀態 <span style="color:red">*</span></label>
@@ -242,6 +245,11 @@
                 <div class="menu-card" onclick="switchSub('sub-daily')">
                     <div class="menu-card-icon">📋</div>
                     <div class="menu-card-text"><h3>日報填寫</h3><p>填寫今日工作紀錄</p></div>
+                    <div class="menu-card-arrow">›</div>
+                </div>
+                <div class="menu-card" onclick="switchSub('sub-clock')">
+                    <div class="menu-card-icon">🕐</div>
+                    <div class="menu-card-text"><h3>打卡</h3><p>上班 / 下班打卡</p></div>
                     <div class="menu-card-arrow">›</div>
                 </div>
             </div>
@@ -343,6 +351,38 @@
             </div>
         </div>
 
+        <!-- 打卡 -->
+        <div class="sub-page" id="sub-clock">
+            <button class="back-btn" onclick="switchSub('sub-menu')">‹ 返回工作區</button>
+            <div class="app-header-container"><h1 class="main-title">🕐 打卡</h1></div>
+            <div class="card">
+                <div class="clock-container">
+                    <div class="clock-date-display" id="clock-date-display"></div>
+                    <div class="clock-btn-group">
+                        <button class="clock-btn clock-btn-in" onclick="doClockIn('in')">
+                            <div class="clock-btn-icon">🌅</div>
+                            <div>上班打卡</div>
+                        </button>
+                        <button class="clock-btn clock-btn-out" onclick="doClockIn('out')">
+                            <div class="clock-btn-icon">🌙</div>
+                            <div>下班打卡</div>
+                        </button>
+                    </div>
+                    <div class="clock-record">
+                        <div class="clock-record-title">今日紀錄</div>
+                        <div class="clock-record-row">
+                            <div class="clock-record-label">上班時間</div>
+                            <div class="clock-record-time" id="clock-in-display">—</div>
+                        </div>
+                        <div class="clock-record-row">
+                            <div class="clock-record-label">下班時間</div>
+                            <div class="clock-record-time" id="clock-out-display">—</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 </div>
 
@@ -377,7 +417,7 @@
 </div>
 
 <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzvlm75_cBnFISNYaOs7jihCINf6A1fSrcp7TCG9Vbe_g0zNEvJKPTHx2v1-i7YJd6b/exec";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwS89ClSvHj3KbBM9rXcBS8ltzI6c8fXS39EzK8Draama2gti6eWbHFuDLHt2qZNLQ/exec";
 
     let lists = { plants: [], potSize: [], payments: [], progress: [], box: [], plantStatus: [], regions: [] };
     let isListLoaded = false;
@@ -385,6 +425,14 @@
     let activePriceInput = null;
     let pendingAction = null;
     let currentEditOrderId = null;
+    let clockInTime = null;
+    let clockOutTime = null;
+
+    // 植物種類自動帶入規則
+    const plantAutoFill = {
+        '運費': { plantStatus: '已換盆', potSize: '運費優惠' },
+        '卡片': { plantStatus: '已換盆', potSize: '卡片+緞帶' }
+    };
 
     window.onload = async function() {
         document.getElementById('orderDate').valueAsDate = new Date();
@@ -401,7 +449,19 @@
                 ).join('');
             }
         });
+        updateClockDisplay();
     };
+
+    function updateClockDisplay() {
+        const now = new Date();
+        const y = now.getFullYear();
+        const m = now.getMonth() + 1;
+        const d = now.getDate();
+        const weekDays = ['日','一','二','三','四','五','六'];
+        const w = weekDays[now.getDay()];
+        document.getElementById('clock-date-display').textContent =
+            `${y}年${m}月${d}日 （${w}）`;
+    }
 
     function switchPage(page) {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -415,6 +475,7 @@
         document.querySelectorAll('.sub-page').forEach(p => p.classList.remove('active'));
         document.getElementById(subId).classList.add('active');
         if (subId === 'sub-plant' && isListLoaded) renderPlantManageList();
+        if (subId === 'sub-clock') updateClockDisplay();
         window.scrollTo(0, 0);
     }
 
@@ -489,7 +550,6 @@
         let total = 0;
         document.getElementsByName('itemPrice').forEach(i => { total += parseInt(i.value) || 0; });
         document.getElementById('totalDisplay').innerText = total;
-        // 顯示運費提示
         const warning = document.getElementById('freight-warning');
         if (total > 0 && total < 2000) {
             warning.style.display = 'block';
@@ -500,7 +560,7 @@
     }
 
     // ==========================================
-    // 植物清單管理（只保留新增和搜尋）
+    // 植物清單管理
     // ==========================================
     function renderPlantManageList(filter) {
         const container = document.getElementById('plant-manage-list');
@@ -577,7 +637,7 @@
                 await fetch(SCRIPT_URL, {
                     method: "POST", mode: "no-cors",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ mode: 'dailyReport', month: month, date: dateStr, values: values })
+                    body: JSON.stringify({ mode: 'dailyReport', month: month, day: day, values: values })
                 });
                 showSuccess('日報送出成功！', `${month}月${day}日 記錄已儲存`);
                 resetDailyForm();
@@ -595,6 +655,42 @@
         for (let i = 0; i <= 1; i++) document.getElementById('daily-' + i).checked = false;
         for (let i = 2; i <= 7; i++) document.getElementById('daily-' + i).value = '0';
         for (let i = 8; i <= 13; i++) document.getElementById('daily-' + i).checked = false;
+    }
+
+    // ==========================================
+    // 打卡
+    // ==========================================
+    async function doClockIn(type) {
+        const now = new Date();
+        const month = now.getMonth() + 1;
+        const day = now.getDate();
+        const hh = String(now.getHours()).padStart(2, '0');
+        const mm = String(now.getMinutes()).padStart(2, '0');
+        const timeStr = hh + ':' + mm;
+
+        document.getElementById('loading-text').textContent = '打卡中...';
+        document.getElementById('loading-overlay').classList.add('show');
+        try {
+            await fetch(SCRIPT_URL, {
+                method: "POST", mode: "no-cors",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ mode: 'clockIn', type: type, month: month, day: day, time: timeStr })
+            });
+            if (type === 'in') {
+                clockInTime = timeStr;
+                document.getElementById('clock-in-display').textContent = timeStr;
+                showSuccess('上班打卡成功！', `打卡時間：${timeStr}`);
+            } else {
+                clockOutTime = timeStr;
+                document.getElementById('clock-out-display').textContent = timeStr;
+                showSuccess('下班打卡成功！', `打卡時間：${timeStr}`);
+            }
+        } catch (err) {
+            alert("❌ 打卡失敗：" + err.message);
+        } finally {
+            document.getElementById('loading-text').textContent = '載入清單中...';
+            document.getElementById('loading-overlay').classList.remove('show');
+        }
     }
 
     // ==========================================
@@ -794,7 +890,6 @@
         });
         if (!isValid) { alert("尚有必填欄位未完成！"); return; }
 
-        // 運費驗證
         const total = calcTotal();
         if (total < 2000) {
             const plantInputs = document.querySelectorAll('#items-container [name="plantType"]');
@@ -921,7 +1016,21 @@
             const div = document.createElement('div');
             div.className = 'plant-option';
             div.innerHTML = `<span class="plant-icon">🌿</span> ${item}`;
-            div.onclick = () => { if (activePlantInput) activePlantInput.value = item; closeAllModals(); };
+            div.onclick = () => {
+                if (activePlantInput) {
+                    activePlantInput.value = item;
+                    // 自動帶入規則
+                    const row = activePlantInput.closest('.item-row');
+                    if (row && plantAutoFill[item]) {
+                        const rule = plantAutoFill[item];
+                        const statusSel = row.querySelector('[name="plantStatus"], [name="edit-plantStatus"]');
+                        const potSel = row.querySelector('[name="potSize"], [name="edit-potSize"]');
+                        if (statusSel && rule.plantStatus) statusSel.value = rule.plantStatus;
+                        if (potSel && rule.potSize) potSel.value = rule.potSize;
+                    }
+                }
+                closeAllModals();
+            };
             container.appendChild(div);
         });
     }
