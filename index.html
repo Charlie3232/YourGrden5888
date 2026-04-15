@@ -661,38 +661,54 @@
     // 打卡
     // ==========================================
     async function doClockIn(type) {
-        const now = new Date();
-        const month = now.getMonth() + 1;
-        const day = now.getDate();
-        const hh = String(now.getHours()).padStart(2, '0');
-        const mm = String(now.getMinutes()).padStart(2, '0');
-        const timeStr = hh + ':' + mm;
+    const now = new Date();
+    const month = now.getMonth() + 1;
+    const day = now.getDate();
+    const hh = String(now.getHours()).padStart(2, '0');
+    const mm = String(now.getMinutes()).padStart(2, '0');
+    const timeStr = hh + ':' + mm;
 
-        document.getElementById('loading-text').textContent = '打卡中...';
-        document.getElementById('loading-overlay').classList.add('show');
-        try {
-            await fetch(SCRIPT_URL, {
-                method: "POST", mode: "no-cors",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ mode: 'clockIn', type: type, month: month, day: day, time: timeStr })
+    // 取得 GPS
+    let locationStr = '';
+    try {
+        const pos = await new Promise((resolve, reject) => {
+            navigator.geolocation.getCurrentPosition(resolve, reject, {
+                timeout: 10000, enableHighAccuracy: true
             });
-            if (type === 'in') {
-                clockInTime = timeStr;
-                document.getElementById('clock-in-display').textContent = timeStr;
-                showSuccess('上班打卡成功！', `打卡時間：${timeStr}`);
-            } else {
-                clockOutTime = timeStr;
-                document.getElementById('clock-out-display').textContent = timeStr;
-                showSuccess('下班打卡成功！', `打卡時間：${timeStr}`);
-            }
-        } catch (err) {
-            alert("❌ 打卡失敗：" + err.message);
-        } finally {
-            document.getElementById('loading-text').textContent = '載入清單中...';
-            document.getElementById('loading-overlay').classList.remove('show');
-        }
+        });
+        const lat = pos.coords.latitude.toFixed(6);
+        const lng = pos.coords.longitude.toFixed(6);
+        locationStr = ` | https://maps.google.com/?q=${lat},${lng}`;
+    } catch (err) {
+        locationStr = ' | 無法取得位置';
     }
 
+    const fullStr = timeStr + locationStr;
+
+    document.getElementById('loading-text').textContent = '打卡中...';
+    document.getElementById('loading-overlay').classList.add('show');
+    try {
+        await fetch(SCRIPT_URL, {
+            method: "POST", mode: "no-cors",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ mode: 'clockIn', type: type, month: month, day: day, time: fullStr })
+        });
+        if (type === 'in') {
+            clockInTime = timeStr;
+            document.getElementById('clock-in-display').textContent = timeStr;
+            showSuccess('上班打卡成功！', `打卡時間：${timeStr}`);
+        } else {
+            clockOutTime = timeStr;
+            document.getElementById('clock-out-display').textContent = timeStr;
+            showSuccess('下班打卡成功！', `打卡時間：${timeStr}`);
+        }
+    } catch (err) {
+        alert("❌ 打卡失敗：" + err.message);
+    } finally {
+        document.getElementById('loading-text').textContent = '載入清單中...';
+        document.getElementById('loading-overlay').classList.remove('show');
+    }
+}
     // ==========================================
     // 訂單查詢
     // ==========================================
