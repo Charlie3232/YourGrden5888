@@ -151,6 +151,51 @@
         .clock-record-label { color: #666; }
         .clock-record-time { font-weight: bold; color: var(--primary); }
         .plant-info-modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90%; max-width: 420px; background: white; border-radius: 15px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); z-index: 10000; max-height: 90vh; overflow-y: auto; }
+
+        /* 多選標籤 */
+        .multi-select-container { border: 2px solid #ddd; border-radius: 8px; padding: 8px; background: #fafafa; min-height: 50px; cursor: pointer; }
+        .multi-select-container:focus-within { border-color: var(--primary); background: white; }
+        .multi-select-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 6px; }
+        .multi-select-tag { background: var(--primary); color: white; border-radius: 20px; padding: 4px 10px; font-size: 13px; display: flex; align-items: center; gap: 5px; }
+        .multi-select-tag-remove { cursor: pointer; font-size: 16px; line-height: 1; }
+        .multi-select-dropdown { background: white; border: 2px solid var(--primary); border-radius: 8px; max-height: 200px; overflow-y: auto; display: none; position: absolute; z-index: 100; width: 100%; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .multi-select-dropdown.show { display: block; }
+        .multi-select-option { padding: 10px 15px; cursor: pointer; font-size: 15px; display: flex; align-items: center; gap: 8px; }
+        .multi-select-option:hover { background: var(--light-green); }
+        .multi-select-option.selected { background: #e8f5e9; font-weight: bold; color: var(--primary); }
+        .multi-select-wrapper { position: relative; }
+        .multi-select-placeholder { color: #aaa; font-size: 15px; padding: 4px 0; }
+
+        /* 庫存 */
+        .inventory-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 15px; border-bottom: 1px solid #f0f0f0; font-size: 15px; }
+        .inventory-item:last-child { border-bottom: none; }
+        .inventory-name { flex: 1; font-weight: 500; }
+        .inventory-qty { font-weight: bold; font-size: 18px; min-width: 50px; text-align: right; }
+        .inventory-qty.low { color: var(--accent); }
+        .refresh-btn { background: var(--light-green); color: var(--primary); border: 2px solid var(--primary); padding: 10px 20px; border-radius: 8px; font-weight: bold; font-size: 15px; cursor: pointer; width: 100%; margin-bottom: 15px; }
+
+        /* 價格查詢 */
+        .price-search-group { display: flex; gap: 10px; margin-bottom: 15px; }
+        .price-search-group input { flex: 1; }
+        .price-result-card { background: white; border-radius: 10px; border: 1px solid #e0ebd4; overflow: hidden; }
+        .price-plant-name { background: var(--primary); color: white; padding: 12px 15px; font-weight: bold; font-size: 16px; }
+        .price-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; border-bottom: 1px solid #f0f0f0; }
+        .price-row:last-child { border-bottom: none; }
+        .price-size { font-size: 13px; color: #555; flex: 1; }
+        .price-height { font-size: 11px; color: #aaa; }
+        .price-value { font-weight: bold; color: var(--primary); font-size: 16px; min-width: 60px; text-align: right; }
+        .price-value.no-data { color: #ccc; font-size: 13px; font-weight: normal; }
+
+        /* 營業額圖表 */
+        .chart-container { width: 100%; overflow-x: auto; }
+        .chart-bars { display: flex; align-items: flex-end; gap: 8px; height: 200px; padding: 30px 0 0 0; position: relative; }
+        .chart-bar-wrap { display: flex; flex-direction: column; align-items: center; flex: 1; min-width: 30px; }
+        .chart-bar-value { font-size: 10px; color: var(--primary); font-weight: bold; margin-bottom: 4px; text-align: center; white-space: nowrap; }
+        .chart-bar { width: 100%; background: var(--primary); border-radius: 4px 4px 0 0; transition: height 0.5s ease; min-height: 2px; }
+        .chart-bar.zero { background: #e0e0e0; }
+        .chart-label { font-size: 11px; color: #888; margin-top: 6px; text-align: center; }
+        .chart-total { text-align: center; margin-top: 15px; font-size: 14px; color: #666; }
+        .chart-total strong { color: var(--primary); font-size: 18px; }
     </style>
 </head>
 <body>
@@ -207,12 +252,19 @@
 <!-- 工作區頁面 -->
 <div class="page" id="page-workspace">
     <div class="container">
+
+        <!-- 菜單 -->
         <div class="sub-page active" id="sub-menu">
             <div class="app-header-container"><h1 class="main-title">⚙️ 工作區</h1><div class="author-text">選擇功能</div></div>
             <div class="workspace-menu">
                 <div class="menu-card" onclick="switchSub('sub-query')">
                     <div class="menu-card-icon">🔍</div>
                     <div class="menu-card-text"><h3>訂單查詢</h3><p>輸入購買人 IG 查詢所有訂單</p></div>
+                    <div class="menu-card-arrow">›</div>
+                </div>
+                <div class="menu-card" onclick="switchSub('sub-overview')">
+                    <div class="menu-card-icon">📊</div>
+                    <div class="menu-card-text"><h3>訂單總覽</h3><p>依進度和地區篩選訂單</p></div>
                     <div class="menu-card-arrow">›</div>
                 </div>
                 <div class="menu-card" onclick="switchSub('sub-edit')">
@@ -235,6 +287,21 @@
                     <div class="menu-card-text"><h3>打卡</h3><p>上班 / 下班打卡</p></div>
                     <div class="menu-card-arrow">›</div>
                 </div>
+                <div class="menu-card" onclick="switchSub('sub-inventory')">
+                    <div class="menu-card-icon">📦</div>
+                    <div class="menu-card-text"><h3>庫存查詢</h3><p>盆器庫存即時查詢</p></div>
+                    <div class="menu-card-arrow">›</div>
+                </div>
+                <div class="menu-card" onclick="switchSub('sub-price')">
+                    <div class="menu-card-icon">💰</div>
+                    <div class="menu-card-text"><h3>價格查詢</h3><p>查詢植物各尺寸售價</p></div>
+                    <div class="menu-card-arrow">›</div>
+                </div>
+                <div class="menu-card" onclick="switchSub('sub-revenue')">
+                    <div class="menu-card-icon">📈</div>
+                    <div class="menu-card-text"><h3>營業額報表</h3><p>全年月份營業額圖表</p></div>
+                    <div class="menu-card-arrow">›</div>
+                </div>
             </div>
         </div>
 
@@ -250,8 +317,42 @@
                 <div id="query-results"></div>
             </div>
             <div id="order-detail-view" style="display:none;">
-                <button class="back-btn" onclick="backToQueryList()">‹ 返回查詢結果</button>
+                <button class="back-btn" onclick="backToQueryList('query')">‹ 返回查詢結果</button>
                 <div id="order-detail-content"></div>
+            </div>
+        </div>
+
+        <!-- 訂單總覽 -->
+        <div class="sub-page" id="sub-overview">
+            <button class="back-btn" onclick="switchSub('sub-menu')">‹ 返回工作區</button>
+            <div class="app-header-container"><h1 class="main-title">📊 訂單總覽</h1></div>
+            <div class="card" id="overview-input-card">
+                <div class="form-group">
+                    <label>訂單進度（可多選）</label>
+                    <div class="multi-select-wrapper" id="progress-wrapper">
+                        <div class="multi-select-container" onclick="toggleDropdown('progress-dropdown')">
+                            <div class="multi-select-tags" id="progress-tags"></div>
+                            <div class="multi-select-placeholder" id="progress-placeholder">點擊選擇進度...</div>
+                        </div>
+                        <div class="multi-select-dropdown" id="progress-dropdown"></div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>地區（可多選）</label>
+                    <div class="multi-select-wrapper" id="region-wrapper">
+                        <div class="multi-select-container" onclick="toggleDropdown('region-dropdown')">
+                            <div class="multi-select-tags" id="region-tags"></div>
+                            <div class="multi-select-placeholder" id="region-placeholder">點擊選擇地區...</div>
+                        </div>
+                        <div class="multi-select-dropdown" id="region-dropdown"></div>
+                    </div>
+                </div>
+                <button class="workspace-action-btn" onclick="queryOverview()">查詢</button>
+                <div id="overview-results" style="margin-top:15px;"></div>
+            </div>
+            <div id="overview-detail-view" style="display:none;">
+                <button class="back-btn" onclick="backToQueryList('overview')">‹ 返回總覽結果</button>
+                <div id="overview-detail-content"></div>
             </div>
         </div>
 
@@ -338,12 +439,10 @@
                     <div class="clock-date-display" id="clock-date-display"></div>
                     <div class="clock-btn-group">
                         <button class="clock-btn clock-btn-in" onclick="doClockIn('in')">
-                            <div class="clock-btn-icon">🌅</div>
-                            <div>上班打卡</div>
+                            <div class="clock-btn-icon">🌅</div><div>上班打卡</div>
                         </button>
                         <button class="clock-btn clock-btn-out" onclick="doClockIn('out')">
-                            <div class="clock-btn-icon">🌙</div>
-                            <div>下班打卡</div>
+                            <div class="clock-btn-icon">🌙</div><div>下班打卡</div>
                         </button>
                     </div>
                     <div class="clock-record">
@@ -360,12 +459,48 @@
                 </div>
             </div>
         </div>
+
+        <!-- 庫存查詢 -->
+        <div class="sub-page" id="sub-inventory">
+            <button class="back-btn" onclick="switchSub('sub-menu')">‹ 返回工作區</button>
+            <div class="app-header-container"><h1 class="main-title">📦 庫存查詢</h1></div>
+            <div class="card">
+                <button class="refresh-btn" onclick="loadInventory()">🔄 重新讀取庫存</button>
+                <div id="inventory-list"><div style="text-align:center;color:#999;padding:20px;">點擊上方按鈕讀取庫存</div></div>
+            </div>
+        </div>
+
+        <!-- 價格查詢 -->
+        <div class="sub-page" id="sub-price">
+            <button class="back-btn" onclick="switchSub('sub-menu')">‹ 返回工作區</button>
+            <div class="app-header-container"><h1 class="main-title">💰 價格查詢</h1></div>
+            <div class="card">
+                <div class="price-search-group">
+                    <input type="text" id="price-search-input" placeholder="輸入或搜尋植物名稱..." oninput="filterPricePlants()">
+                    <button class="lookup-btn" onclick="searchPrice()">查詢</button>
+                </div>
+                <div id="price-suggest" style="background:white;border:1px solid #e0ebd4;border-radius:8px;max-height:200px;overflow-y:auto;display:none;margin-bottom:10px;"></div>
+                <div id="price-result"></div>
+            </div>
+        </div>
+
+        <!-- 營業額報表 -->
+        <div class="sub-page" id="sub-revenue">
+            <button class="back-btn" onclick="switchSub('sub-menu')">‹ 返回工作區</button>
+            <div class="app-header-container"><h1 class="main-title">📈 營業額報表</h1></div>
+            <div class="card">
+                <div class="chart-container" id="revenue-chart">
+                    <div style="text-align:center;color:#999;padding:30px;">載入中...</div>
+                </div>
+                <div class="chart-total" id="revenue-total"></div>
+            </div>
+        </div>
+
     </div>
 </div>
 
 <!-- Modals -->
 <div class="overlay" id="overlay" onclick="closeAllModals()"></div>
-
 <div id="password-modal" class="center-modal">
     <div style="font-size:18px;font-weight:bold;margin-bottom:10px;color:var(--primary);">🔒 請輸入管理密碼</div>
     <input type="number" id="admin-password" class="password-input" inputmode="numeric" maxlength="4" placeholder="****" oninput="if(this.value.length>4)this.value=this.value.slice(0,4)">
@@ -375,7 +510,6 @@
         <button class="modal-btn btn-confirm" onclick="verifyPassword()">確定</button>
     </div>
 </div>
-
 <div id="keypad-modal" class="bottom-modal" style="display:none;">
     <div id="keypad-screen" class="keypad-display-screen">0</div>
     <div class="keypad-grid">
@@ -386,7 +520,6 @@
         <button class="key-btn confirm" onclick="closeAllModals()">確 定</button>
     </div>
 </div>
-
 <div id="plant-picker-modal" class="bottom-modal" style="display:none;">
     <div class="plant-picker-header">
         <span class="picker-title">選擇植物</span>
@@ -395,27 +528,13 @@
     <input type="text" id="plant-search" class="plant-search-box" placeholder="搜尋植物名稱..." oninput="filterPickerList()">
     <div id="plant-list-container" class="plant-list-container"></div>
 </div>
-
-<!-- 植物百科填寫 Modal -->
 <div id="plant-info-modal" class="plant-info-modal">
     <div style="font-size:18px;font-weight:bold;margin-bottom:15px;color:var(--primary);text-align:center;">🌿 填寫植物百科</div>
     <div id="plant-info-name" style="background:var(--light-green);border-radius:8px;padding:8px 12px;font-weight:bold;color:var(--primary);margin-bottom:15px;text-align:center;font-size:16px;"></div>
-    <div class="form-group">
-        <label>環境 <span style="color:red">*</span></label>
-        <select id="info-env"><option value="" disabled selected>請選擇</option></select>
-    </div>
-    <div class="form-group">
-        <label>澆水頻率 <span style="color:red">*</span></label>
-        <select id="info-water"><option value="" disabled selected>請選擇</option></select>
-    </div>
-    <div class="form-group">
-        <label>光照 <span style="color:red">*</span></label>
-        <select id="info-light"><option value="" disabled selected>請選擇</option></select>
-    </div>
-    <div class="form-group">
-        <label>備註</label>
-        <textarea id="info-note" rows="2" placeholder="選填"></textarea>
-    </div>
+    <div class="form-group"><label>環境 <span style="color:red">*</span></label><select id="info-env"><option value="" disabled selected>請選擇</option></select></div>
+    <div class="form-group"><label>澆水頻率 <span style="color:red">*</span></label><select id="info-water"><option value="" disabled selected>請選擇</option></select></div>
+    <div class="form-group"><label>光照 <span style="color:red">*</span></label><select id="info-light"><option value="" disabled selected>請選擇</option></select></div>
+    <div class="form-group"><label>備註</label><textarea id="info-note" rows="2" placeholder="選填"></textarea></div>
     <div class="modal-btn-group">
         <button class="modal-btn btn-cancel" onclick="closePlantInfoModal()">跳過</button>
         <button class="modal-btn btn-confirm" onclick="submitPlantInfo()">送出</button>
@@ -423,9 +542,9 @@
 </div>
 
 <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzNk7116xB7ooF-gFlT5dLNTluBi0EHzoX57WtyfPD9hPIcX708jkMuPPRBkC7wEvh9/exec";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzY8szlzKh4miQh1KwoGc9OYMjv1n4LaaOUiBmJSNujxcQCyIPN0-ig6ktbK4PqUa_c/exec";
 
-    let lists = { plants: [], potSize: [], payments: [], progress: [], box: [], plantStatus: [], regions: [], envList: [], waterList: [], lightList: [] };
+    let lists = { plants: [], potSize: [], payments: [], progress: [], box: [], plantStatus: [], regions: [], envList: [], waterList: [], lightList: [], pricePlants: [] };
     let isListLoaded = false;
     let activePlantInput = null;
     let activePriceInput = null;
@@ -433,6 +552,9 @@
     let currentEditOrderId = null;
     let clockInTime = null;
     let clockOutTime = null;
+    let selectedProgress = [];
+    let selectedRegions = [];
+    let currentDetailSource = 'query';
 
     const plantAutoFill = {
         '運費': { plantStatus: '已換盆', potSize: '運費優惠' },
@@ -448,23 +570,21 @@
         addNewItem('items-container', '');
         [2,3,4,5,6,7].forEach(idx => {
             const sel = document.getElementById('daily-' + idx);
-            if (sel) {
-                sel.innerHTML = Array.from({length:16}, (_,i) =>
-                    `<option value="${i}">${i}</option>`
-                ).join('');
-            }
+            if (sel) sel.innerHTML = Array.from({length:16}, (_,i) => `<option value="${i}">${i}</option>`).join('');
         });
         updateClockDisplay();
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.multi-select-wrapper')) {
+                document.querySelectorAll('.multi-select-dropdown').forEach(d => d.classList.remove('show'));
+            }
+        });
     };
 
     function updateClockDisplay() {
         const now = new Date();
-        const y = now.getFullYear();
-        const m = now.getMonth() + 1;
-        const d = now.getDate();
         const weekDays = ['日','一','二','三','四','五','六'];
-        const w = weekDays[now.getDay()];
-        document.getElementById('clock-date-display').textContent = `${y}年${m}月${d}日 （${w}）`;
+        document.getElementById('clock-date-display').textContent =
+            `${now.getFullYear()}年${now.getMonth()+1}月${now.getDate()}日 （${weekDays[now.getDay()]}）`;
     }
 
     function switchPage(page) {
@@ -480,6 +600,9 @@
         document.getElementById(subId).classList.add('active');
         if (subId === 'sub-plant' && isListLoaded) renderPlantManageList();
         if (subId === 'sub-clock') updateClockDisplay();
+        if (subId === 'sub-overview') initMultiSelects();
+        if (subId === 'sub-inventory') loadInventory();
+        if (subId === 'sub-revenue') loadRevenue();
         window.scrollTo(0, 0);
     }
 
@@ -518,234 +641,120 @@
         if (defaultValue) select.value = defaultValue;
     }
 
-    function addNewItem(containerId, prefix) {
-        const container = document.getElementById(containerId);
-        const itemCount = container.children.length + 1;
-        const plantStatusOptions = '<option value="" disabled selected>請選擇</option>' +
-            (lists.plantStatus.length > 0 ? lists.plantStatus.map(s => `<option value="${s}">${s}</option>`).join('') : '');
-        const potSizeOptions = '<option value="" disabled selected>請選擇</option>' +
-            (lists.potSize.length > 0 ? lists.potSize.map(s => `<option value="${s}">${s}</option>`).join('') : '');
-        const div = document.createElement('div');
-        div.className = 'item-row';
-        div.innerHTML = `
-            <div class="item-header">
-                <span>#${itemCount} 品項</span>
-                ${itemCount > 1 ? `<button class="remove-btn" onclick="this.closest('.item-row').remove();calcTotal()">移除</button>` : ''}
-            </div>
-            <div class="form-group">
-                <label>植物種類 <span style="color:red">*</span></label>
-                <input type="text" class="clickable-input" name="${prefix}plantType" placeholder="點擊選擇植物..." readonly onclick="openPlantPicker(this)">
-            </div>
-            <div class="form-group" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-                <div><label>植物狀態 <span style="color:red">*</span></label><select name="${prefix}plantStatus">${plantStatusOptions}</select></div>
-                <div><label>水泥盆/其他 <span style="color:red">*</span></label><select name="${prefix}potSize">${potSizeOptions}</select></div>
-            </div>
-            <div class="form-group">
-                <label>品項價格 <span style="color:red">*</span></label>
-                <div class="price-input-group">
-                    <input type="number" class="clickable-input" name="${prefix}itemPrice" value="" placeholder="點擊輸入" readonly onclick="openKeypad(this)">
-                </div>
-            </div>
-        `;
-        container.appendChild(div);
+    // ==========================================
+    // 多選元件
+    // ==========================================
+    function initMultiSelects() {
+        selectedProgress = [];
+        selectedRegions = [];
+        renderMultiSelect('progress-dropdown', 'progress-tags', 'progress-placeholder', lists.progress, selectedProgress);
+        renderMultiSelect('region-dropdown', 'region-tags', 'region-placeholder', lists.regions, selectedRegions);
+        document.getElementById('overview-results').innerHTML = '';
     }
 
-    function calcTotal() {
-        let total = 0;
-        document.getElementsByName('itemPrice').forEach(i => { total += parseInt(i.value) || 0; });
-        document.getElementById('totalDisplay').innerText = total;
-        const warning = document.getElementById('freight-warning');
-        warning.style.display = (total > 0 && total < 2000) ? 'block' : 'none';
-        return total;
-    }
-
-    function renderPlantManageList(filter) {
-        const container = document.getElementById('plant-manage-list');
-        const tag = document.getElementById('plant-count-tag');
-        tag.textContent = lists.plants.length;
-        const filtered = filter ? lists.plants.filter(p => p.toLowerCase().includes(filter.toLowerCase())) : lists.plants;
-        if (!filtered || filtered.length === 0) {
-            container.innerHTML = '<div style="padding:20px;text-align:center;color:#999;">沒有找到植物</div>';
-            return;
-        }
-        container.innerHTML = filtered.map((p) => `
-            <div class="plant-manage-item">
-                <span class="plant-index">${lists.plants.indexOf(p) + 1}</span>
-                <span style="flex:1;">${p}</span>
+    function renderMultiSelect(dropdownId, tagsId, placeholderId, options, selected) {
+        const dropdown = document.getElementById(dropdownId);
+        dropdown.innerHTML = options.map(opt => `
+            <div class="multi-select-option ${selected.includes(opt) ? 'selected' : ''}"
+                 onclick="toggleOption('${dropdownId}', '${tagsId}', '${placeholderId}', '${opt}', ${dropdownId === 'progress-dropdown' ? 'selectedProgress' : 'selectedRegions'})">
+                ${selected.includes(opt) ? '✓' : ''} ${opt}
             </div>
         `).join('');
+        renderTags(tagsId, placeholderId, selected, dropdownId);
     }
 
-    function filterPlantManageList() {
-        renderPlantManageList(document.getElementById('plant-search-manage').value);
+    function toggleDropdown(dropdownId) {
+        const dropdown = document.getElementById(dropdownId);
+        document.querySelectorAll('.multi-select-dropdown').forEach(d => {
+            if (d.id !== dropdownId) d.classList.remove('show');
+        });
+        dropdown.classList.toggle('show');
     }
 
-    function addNewPlant() {
-        const input = document.getElementById('new-plant-input');
-        const name = input.value.trim();
-        if (!name) { input.classList.add('input-error'); setTimeout(() => input.classList.remove('input-error'), 1000); return; }
-        if (lists.plants.includes(name)) { alert(`「${name}」已在清單中！`); return; }
-        pendingAction = () => finalizeAddPlant(name, input);
-        openPasswordModal();
+    function toggleOption(dropdownId, tagsId, placeholderId, value, selectedArr) {
+        const arr = dropdownId === 'progress-dropdown' ? selectedProgress : selectedRegions;
+        const idx = arr.indexOf(value);
+        if (idx === -1) arr.push(value);
+        else arr.splice(idx, 1);
+        renderMultiSelect(dropdownId, tagsId, placeholderId,
+            dropdownId === 'progress-dropdown' ? lists.progress : lists.regions, arr);
     }
 
-    async function finalizeAddPlant(name, input) {
+    function renderTags(tagsId, placeholderId, selected, dropdownId) {
+        const tagsEl = document.getElementById(tagsId);
+        const placeholder = document.getElementById(placeholderId);
+        tagsEl.innerHTML = selected.map(s => `
+            <span class="multi-select-tag">
+                ${s}
+                <span class="multi-select-tag-remove" onclick="event.stopPropagation();removeTag('${dropdownId}','${tagsId}','${placeholderId}','${s}')">×</span>
+            </span>
+        `).join('');
+        placeholder.style.display = selected.length > 0 ? 'none' : 'block';
+    }
+
+    function removeTag(dropdownId, tagsId, placeholderId, value) {
+        const arr = dropdownId === 'progress-dropdown' ? selectedProgress : selectedRegions;
+        const idx = arr.indexOf(value);
+        if (idx !== -1) arr.splice(idx, 1);
+        renderMultiSelect(dropdownId, tagsId, placeholderId,
+            dropdownId === 'progress-dropdown' ? lists.progress : lists.regions, arr);
+    }
+
+    // ==========================================
+    // 訂單總覽查詢
+    // ==========================================
+    async function queryOverview() {
+        document.getElementById('loading-text').textContent = '查詢中...';
         document.getElementById('loading-overlay').classList.add('show');
         try {
-            await fetch(SCRIPT_URL, {
-                method: "POST", mode: "no-cors",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ mode: 'addPlant', plantName: name })
+            const params = new URLSearchParams({
+                action: 'queryOrders',
+                progresses: selectedProgress.join(','),
+                regions: selectedRegions.join(',')
             });
-            lists.plants.push(name);
-            renderPlantManageList(document.getElementById('plant-search-manage').value);
-            input.value = '';
-            document.getElementById('loading-overlay').classList.remove('show');
-            openPlantInfoModal(name);
+            const response = await fetch(SCRIPT_URL + '?' + params.toString());
+            const data = await response.json();
+            if (data.error) { alert("查詢失敗：" + data.error); return; }
+            renderOverviewResults(data.orders || []);
         } catch (err) {
-            alert("❌ 新增失敗：" + err.message);
-            document.getElementById('loading-overlay').classList.remove('show');
-        }
-    }
-
-    function openPlantInfoModal(name) {
-        document.getElementById('plant-info-name').textContent = name;
-        document.getElementById('plant-info-modal').dataset.plantName = name;
-        fillSelect('info-env', lists.envList || [], '');
-        fillSelect('info-water', lists.waterList || [], '');
-        fillSelect('info-light', lists.lightList || [], '');
-        document.getElementById('info-note').value = '';
-        ['info-env','info-water','info-light'].forEach(id => {
-            document.getElementById(id).classList.remove('input-error');
-        });
-        document.getElementById('overlay').style.display = 'block';
-        document.getElementById('plant-info-modal').style.display = 'block';
-    }
-
-    function closePlantInfoModal() {
-        document.getElementById('overlay').style.display = 'none';
-        document.getElementById('plant-info-modal').style.display = 'none';
-        showSuccess('新增成功！', `植物已加入清單`);
-    }
-
-    function submitPlantInfo() {
-        let isValid = true;
-        ['info-env','info-water','info-light'].forEach(id => {
-            const el = document.getElementById(id);
-            if (!el.value) { el.classList.add('input-error'); isValid = false; }
-        });
-        if (!isValid) { alert("請填寫必填欄位！"); return; }
-        const name = document.getElementById('plant-info-modal').dataset.plantName;
-        document.getElementById('overlay').style.display = 'none';
-        document.getElementById('plant-info-modal').style.display = 'none';
-        pendingAction = async () => {
-            document.getElementById('loading-overlay').classList.add('show');
-            try {
-                await fetch(SCRIPT_URL, {
-                    method: "POST", mode: "no-cors",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        mode: 'addPlantInfo',
-                        plantName: name,
-                        env: document.getElementById('info-env').value,
-                        water: document.getElementById('info-water').value,
-                        light: document.getElementById('info-light').value,
-                        note: document.getElementById('info-note').value
-                    })
-                });
-                showSuccess('新增成功！', `「${name}」已加入植物清單及百科`);
-            } catch (err) {
-                alert("❌ 百科寫入失敗：" + err.message);
-            } finally {
-                document.getElementById('loading-overlay').classList.remove('show');
-            }
-        };
-        openPasswordModal();
-    }
-
-    async function submitDailyReport() {
-        const dateStr = document.getElementById('dailyDate').value;
-        if (!dateStr) { alert("請選擇日期！"); return; }
-        const parts = dateStr.split('-');
-        const month = parseInt(parts[1]);
-        const day = parseInt(parts[2]);
-        const values = [];
-        values.push(document.getElementById('daily-0').checked);
-        values.push(document.getElementById('daily-1').checked);
-        for (let i = 2; i <= 7; i++) values.push(parseInt(document.getElementById('daily-' + i).value) || 0);
-        for (let i = 8; i <= 13; i++) values.push(document.getElementById('daily-' + i).checked);
-        pendingAction = async () => {
-            document.getElementById('loading-overlay').classList.add('show');
-            try {
-                await fetch(SCRIPT_URL, {
-                    method: "POST", mode: "no-cors",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ mode: 'dailyReport', month: month, day: day, values: values })
-                });
-                showSuccess('日報送出成功！', `${month}月${day}日 記錄已儲存`);
-                resetDailyForm();
-            } catch (err) {
-                alert("❌ 傳送失敗：" + err.message);
-            } finally {
-                document.getElementById('loading-overlay').classList.remove('show');
-            }
-        };
-        openPasswordModal();
-    }
-
-    function resetDailyForm() {
-        document.getElementById('dailyDate').valueAsDate = new Date();
-        for (let i = 0; i <= 1; i++) document.getElementById('daily-' + i).checked = false;
-        for (let i = 2; i <= 7; i++) document.getElementById('daily-' + i).value = '0';
-        for (let i = 8; i <= 13; i++) document.getElementById('daily-' + i).checked = false;
-    }
-
-    async function doClockIn(type) {
-        const now = new Date();
-        const month = now.getMonth() + 1;
-        const day = now.getDate();
-        const hh = String(now.getHours()).padStart(2, '0');
-        const mm = String(now.getMinutes()).padStart(2, '0');
-        const timeStr = hh + ':' + mm;
-
-        let locationStr = '';
-        try {
-            const pos = await new Promise((resolve, reject) => {
-                navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 10000, enableHighAccuracy: true });
-            });
-            const lat = pos.coords.latitude.toFixed(6);
-            const lng = pos.coords.longitude.toFixed(6);
-            locationStr = ` | https://maps.google.com/?q=${lat},${lng}`;
-        } catch (err) {
-            locationStr = ' | 無法取得位置';
-        }
-
-        const fullStr = timeStr + locationStr;
-        document.getElementById('loading-text').textContent = '打卡中...';
-        document.getElementById('loading-overlay').classList.add('show');
-        try {
-            await fetch(SCRIPT_URL, {
-                method: "POST", mode: "no-cors",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ mode: 'clockIn', type: type, month: month, day: day, time: fullStr })
-            });
-            if (type === 'in') {
-                clockInTime = timeStr;
-                document.getElementById('clock-in-display').textContent = timeStr;
-                showSuccess('上班打卡成功！', `打卡時間：${timeStr}`);
-            } else {
-                clockOutTime = timeStr;
-                document.getElementById('clock-out-display').textContent = timeStr;
-                showSuccess('下班打卡成功！', `打卡時間：${timeStr}`);
-            }
-        } catch (err) {
-            alert("❌ 打卡失敗：" + err.message);
+            alert("❌ 查詢失敗：" + err.message);
         } finally {
             document.getElementById('loading-text').textContent = '載入清單中...';
             document.getElementById('loading-overlay').classList.remove('show');
         }
     }
 
+    function renderOverviewResults(orders) {
+        const container = document.getElementById('overview-results');
+        if (!orders || orders.length === 0) {
+            container.innerHTML = '<div style="text-align:center;color:#999;padding:20px;">沒有找到符合條件的訂單</div>';
+            return;
+        }
+        const total = orders.reduce((s, o) => s + (o.total || 0), 0);
+        container.innerHTML = `
+            <div style="font-size:13px;color:#888;margin-bottom:10px;">找到 ${orders.length} 筆訂單，合計 $${total.toLocaleString()}</div>
+            <div class="order-list">
+                ${orders.map(o => `
+                    <div class="order-list-item" onclick="showDetailFromOverview('${o.orderId}')">
+                        <div>
+                            <div class="order-id">${o.orderId}</div>
+                            <div class="order-meta">${o.date} ｜ ${o.ig || '-'} ｜ ${o.region || '-'} ｜ ${o.progress} ｜ $${o.total}</div>
+                        </div>
+                        <div class="order-list-arrow">›</div>
+                    </div>
+                `).join('')}
+            </div>
+        `;
+    }
+
+    async function showDetailFromOverview(orderId) {
+        currentDetailSource = 'overview';
+        await showOrderDetailInner(orderId, 'overview-detail-content', 'overview-input-card', 'overview-detail-view');
+    }
+
+    // ==========================================
+    // 訂單查詢
+    // ==========================================
     async function queryOrdersByIG() {
         const ig = document.getElementById('queryIG').value.trim();
         if (!ig) { alert("請輸入購買人 IG！"); return; }
@@ -774,7 +783,7 @@
             <div style="font-size:13px;color:#888;margin-bottom:10px;">找到 ${orders.length} 筆訂單</div>
             <div class="order-list">
                 ${orders.map(o => `
-                    <div class="order-list-item" onclick="showOrderDetail('${o.orderId}')">
+                    <div class="order-list-item" onclick="showDetailFromQuery('${o.orderId}')">
                         <div><div class="order-id">${o.orderId}</div><div class="order-meta">${o.date} ｜ ${o.progress} ｜ $${o.total}</div></div>
                         <div class="order-list-arrow">›</div>
                     </div>
@@ -783,16 +792,21 @@
         `;
     }
 
-    async function showOrderDetail(orderId) {
+    async function showDetailFromQuery(orderId) {
+        currentDetailSource = 'query';
+        await showOrderDetailInner(orderId, 'order-detail-content', 'query-input-card', 'order-detail-view');
+    }
+
+    async function showOrderDetailInner(orderId, contentId, inputCardId, detailViewId) {
         document.getElementById('loading-text').textContent = '載入訂單...';
         document.getElementById('loading-overlay').classList.add('show');
         try {
             const response = await fetch(SCRIPT_URL + '?action=getOrder&orderId=' + encodeURIComponent(orderId));
             const data = await response.json();
             if (data.error || !data.header) { alert("找不到訂單：" + orderId); return; }
-            document.getElementById('query-input-card').style.display = 'none';
-            document.getElementById('order-detail-view').style.display = 'block';
-            document.getElementById('order-detail-content').innerHTML = renderOrderDetail(orderId, data);
+            document.getElementById(inputCardId).style.display = 'none';
+            document.getElementById(detailViewId).style.display = 'block';
+            document.getElementById(contentId).innerHTML = renderOrderDetail(orderId, data);
             window.scrollTo(0, 0);
         } catch (err) {
             alert("❌ 載入失敗：" + err.message);
@@ -841,12 +855,336 @@
         `;
     }
 
-    function backToQueryList() {
-        document.getElementById('query-input-card').style.display = 'block';
-        document.getElementById('order-detail-view').style.display = 'none';
+    function backToQueryList(source) {
+        if (source === 'query') {
+            document.getElementById('query-input-card').style.display = 'block';
+            document.getElementById('order-detail-view').style.display = 'none';
+        } else {
+            document.getElementById('overview-input-card').style.display = 'block';
+            document.getElementById('overview-detail-view').style.display = 'none';
+        }
         window.scrollTo(0, 0);
     }
 
+    // ==========================================
+    // 庫存查詢
+    // ==========================================
+    async function loadInventory() {
+        document.getElementById('loading-text').textContent = '讀取庫存...';
+        document.getElementById('loading-overlay').classList.add('show');
+        try {
+            const response = await fetch(SCRIPT_URL + '?action=getInventory');
+            const data = await response.json();
+            if (data.error) { alert("讀取失敗：" + data.error); return; }
+            const container = document.getElementById('inventory-list');
+            if (!data.items || data.items.length === 0) {
+                container.innerHTML = '<div style="text-align:center;color:#999;padding:20px;">沒有庫存資料</div>';
+                return;
+            }
+            container.innerHTML = data.items.map(item => `
+                <div class="inventory-item">
+                    <div class="inventory-name">${item.name}</div>
+                    <div class="inventory-qty ${item.qty < 10 ? 'low' : ''}">${item.qty} ${item.qty < 10 ? '⚠️' : ''}</div>
+                </div>
+            `).join('');
+        } catch (err) {
+            alert("❌ 讀取失敗：" + err.message);
+        } finally {
+            document.getElementById('loading-text').textContent = '載入清單中...';
+            document.getElementById('loading-overlay').classList.remove('show');
+        }
+    }
+
+    // ==========================================
+    // 價格查詢
+    // ==========================================
+    function filterPricePlants() {
+        const query = document.getElementById('price-search-input').value.toLowerCase().trim();
+        const suggest = document.getElementById('price-suggest');
+        if (!query) { suggest.style.display = 'none'; return; }
+        const filtered = (lists.pricePlants || []).filter(p => p.toLowerCase().includes(query));
+        if (filtered.length === 0) { suggest.style.display = 'none'; return; }
+        suggest.style.display = 'block';
+        suggest.innerHTML = filtered.map(p => `
+            <div style="padding:10px 15px;cursor:pointer;border-bottom:1px solid #f0f0f0;font-size:15px;"
+                 onmousedown="selectPricePlant('${p}')">🌿 ${p}</div>
+        `).join('');
+    }
+
+    function selectPricePlant(name) {
+        document.getElementById('price-search-input').value = name;
+        document.getElementById('price-suggest').style.display = 'none';
+        searchPrice();
+    }
+
+    async function searchPrice() {
+        const name = document.getElementById('price-search-input').value.trim();
+        if (!name) { alert("請輸入植物名稱！"); return; }
+        document.getElementById('price-suggest').style.display = 'none';
+        document.getElementById('loading-text').textContent = '查詢價格...';
+        document.getElementById('loading-overlay').classList.add('show');
+        try {
+            const response = await fetch(SCRIPT_URL + '?action=getPlantPrice&plantName=' + encodeURIComponent(name));
+            const data = await response.json();
+            const container = document.getElementById('price-result');
+            if (data.error) {
+                container.innerHTML = `<div style="text-align:center;color:#999;padding:20px;">找不到「${name}」的價格資料</div>`;
+                return;
+            }
+            container.innerHTML = `
+                <div class="price-result-card">
+                    <div class="price-plant-name">🌿 ${data.plantName}</div>
+                    ${data.prices.map(p => `
+                        <div class="price-row">
+                            <div class="price-size">
+                                ${p.size}
+                                <div class="price-height">${p.height || ''}</div>
+                            </div>
+                            <div class="price-value ${p.price === null ? 'no-data' : ''}">
+                                ${p.price !== null ? '$' + p.price.toLocaleString() : '無'}
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        } catch (err) {
+            alert("❌ 查詢失敗：" + err.message);
+        } finally {
+            document.getElementById('loading-text').textContent = '載入清單中...';
+            document.getElementById('loading-overlay').classList.remove('show');
+        }
+    }
+
+    // ==========================================
+    // 營業額報表
+    // ==========================================
+    async function loadRevenue() {
+        try {
+            const response = await fetch(SCRIPT_URL + '?action=getRevenue');
+            const data = await response.json();
+            if (data.error) { document.getElementById('revenue-chart').innerHTML = '<div style="color:red;padding:20px;">讀取失敗</div>'; return; }
+
+            const months = data.months;
+            const revenues = data.revenues;
+            const maxVal = Math.max(...revenues, 1);
+            const totalRevenue = revenues.reduce((a, b) => a + b, 0);
+
+            const barsHtml = revenues.map((val, i) => {
+                const heightPct = (val / maxVal) * 100;
+                const displayVal = val > 0 ? (val >= 10000 ? (val/10000).toFixed(1) + '萬' : val.toLocaleString()) : '0';
+                return `
+                    <div class="chart-bar-wrap">
+                        <div class="chart-bar-value">${displayVal}</div>
+                        <div class="chart-bar ${val === 0 ? 'zero' : ''}" style="height:${Math.max(heightPct, 1)}%;"></div>
+                        <div class="chart-label">${months[i] || (i+1) + '月'}</div>
+                    </div>
+                `;
+            }).join('');
+
+            document.getElementById('revenue-chart').innerHTML = `<div class="chart-bars">${barsHtml}</div>`;
+            document.getElementById('revenue-total').innerHTML = `年度總營業額：<strong>$${totalRevenue.toLocaleString()}</strong>`;
+        } catch (err) {
+            document.getElementById('revenue-chart').innerHTML = '<div style="color:red;padding:20px;">讀取失敗：' + err.message + '</div>';
+        }
+    }
+
+    // ==========================================
+    // 植物清單
+    // ==========================================
+    function renderPlantManageList(filter) {
+        const container = document.getElementById('plant-manage-list');
+        const tag = document.getElementById('plant-count-tag');
+        tag.textContent = lists.plants.length;
+        const filtered = filter ? lists.plants.filter(p => p.toLowerCase().includes(filter.toLowerCase())) : lists.plants;
+        if (!filtered || filtered.length === 0) { container.innerHTML = '<div style="padding:20px;text-align:center;color:#999;">沒有找到植物</div>'; return; }
+        container.innerHTML = filtered.map((p) => `
+            <div class="plant-manage-item">
+                <span class="plant-index">${lists.plants.indexOf(p) + 1}</span>
+                <span style="flex:1;">${p}</span>
+            </div>
+        `).join('');
+    }
+
+    function filterPlantManageList() { renderPlantManageList(document.getElementById('plant-search-manage').value); }
+
+    function addNewPlant() {
+        const input = document.getElementById('new-plant-input');
+        const name = input.value.trim();
+        if (!name) { input.classList.add('input-error'); setTimeout(() => input.classList.remove('input-error'), 1000); return; }
+        if (lists.plants.includes(name)) { alert(`「${name}」已在清單中！`); return; }
+        pendingAction = () => finalizeAddPlant(name, input);
+        openPasswordModal();
+    }
+
+    async function finalizeAddPlant(name, input) {
+        document.getElementById('loading-overlay').classList.add('show');
+        try {
+            await fetch(SCRIPT_URL, { method: "POST", mode: "no-cors", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ mode: 'addPlant', plantName: name }) });
+            lists.plants.push(name);
+            renderPlantManageList(document.getElementById('plant-search-manage').value);
+            input.value = '';
+            document.getElementById('loading-overlay').classList.remove('show');
+            openPlantInfoModal(name);
+        } catch (err) {
+            alert("❌ 新增失敗：" + err.message);
+            document.getElementById('loading-overlay').classList.remove('show');
+        }
+    }
+
+    function openPlantInfoModal(name) {
+        document.getElementById('plant-info-name').textContent = name;
+        document.getElementById('plant-info-modal').dataset.plantName = name;
+        fillSelect('info-env', lists.envList || [], '');
+        fillSelect('info-water', lists.waterList || [], '');
+        fillSelect('info-light', lists.lightList || [], '');
+        document.getElementById('info-note').value = '';
+        ['info-env','info-water','info-light'].forEach(id => document.getElementById(id).classList.remove('input-error'));
+        document.getElementById('overlay').style.display = 'block';
+        document.getElementById('plant-info-modal').style.display = 'block';
+    }
+
+    function closePlantInfoModal() {
+        document.getElementById('overlay').style.display = 'none';
+        document.getElementById('plant-info-modal').style.display = 'none';
+        showSuccess('新增成功！', `植物已加入清單`);
+    }
+
+    function submitPlantInfo() {
+        let isValid = true;
+        ['info-env','info-water','info-light'].forEach(id => {
+            const el = document.getElementById(id);
+            if (!el.value) { el.classList.add('input-error'); isValid = false; }
+        });
+        if (!isValid) { alert("請填寫必填欄位！"); return; }
+        const name = document.getElementById('plant-info-modal').dataset.plantName;
+        document.getElementById('overlay').style.display = 'none';
+        document.getElementById('plant-info-modal').style.display = 'none';
+        pendingAction = async () => {
+            document.getElementById('loading-overlay').classList.add('show');
+            try {
+                await fetch(SCRIPT_URL, { method: "POST", mode: "no-cors", headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ mode: 'addPlantInfo', plantName: name, env: document.getElementById('info-env').value, water: document.getElementById('info-water').value, light: document.getElementById('info-light').value, note: document.getElementById('info-note').value }) });
+                showSuccess('新增成功！', `「${name}」已加入植物清單及百科`);
+            } catch (err) { alert("❌ 百科寫入失敗：" + err.message); }
+            finally { document.getElementById('loading-overlay').classList.remove('show'); }
+        };
+        openPasswordModal();
+    }
+
+    // ==========================================
+    // 日報
+    // ==========================================
+    async function submitDailyReport() {
+        const dateStr = document.getElementById('dailyDate').value;
+        if (!dateStr) { alert("請選擇日期！"); return; }
+        const parts = dateStr.split('-');
+        const month = parseInt(parts[1]);
+        const day = parseInt(parts[2]);
+        const values = [];
+        values.push(document.getElementById('daily-0').checked);
+        values.push(document.getElementById('daily-1').checked);
+        for (let i = 2; i <= 7; i++) values.push(parseInt(document.getElementById('daily-' + i).value) || 0);
+        for (let i = 8; i <= 13; i++) values.push(document.getElementById('daily-' + i).checked);
+        pendingAction = async () => {
+            document.getElementById('loading-overlay').classList.add('show');
+            try {
+                await fetch(SCRIPT_URL, { method: "POST", mode: "no-cors", headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ mode: 'dailyReport', month: month, day: day, values: values }) });
+                showSuccess('日報送出成功！', `${month}月${day}日 記錄已儲存`);
+                resetDailyForm();
+            } catch (err) { alert("❌ 傳送失敗：" + err.message); }
+            finally { document.getElementById('loading-overlay').classList.remove('show'); }
+        };
+        openPasswordModal();
+    }
+
+    function resetDailyForm() {
+        document.getElementById('dailyDate').valueAsDate = new Date();
+        for (let i = 0; i <= 1; i++) document.getElementById('daily-' + i).checked = false;
+        for (let i = 2; i <= 7; i++) document.getElementById('daily-' + i).value = '0';
+        for (let i = 8; i <= 13; i++) document.getElementById('daily-' + i).checked = false;
+    }
+
+    // ==========================================
+    // 打卡
+    // ==========================================
+    async function doClockIn(type) {
+        const now = new Date();
+        const month = now.getMonth() + 1;
+        const day = now.getDate();
+        const hh = String(now.getHours()).padStart(2, '0');
+        const mm = String(now.getMinutes()).padStart(2, '0');
+        const timeStr = hh + ':' + mm;
+
+        let locationStr = '';
+        try {
+            const pos = await new Promise((resolve, reject) => {
+                navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 10000, enableHighAccuracy: true });
+            });
+            const lat = pos.coords.latitude.toFixed(6);
+            const lng = pos.coords.longitude.toFixed(6);
+            locationStr = ` | https://maps.google.com/?q=${lat},${lng}`;
+        } catch (err) { locationStr = ' | 無法取得位置'; }
+
+        const fullStr = timeStr + locationStr;
+        document.getElementById('loading-text').textContent = '打卡中...';
+        document.getElementById('loading-overlay').classList.add('show');
+        try {
+            await fetch(SCRIPT_URL, { method: "POST", mode: "no-cors", headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ mode: 'clockIn', type: type, month: month, day: day, time: fullStr }) });
+            if (type === 'in') { clockInTime = timeStr; document.getElementById('clock-in-display').textContent = timeStr; showSuccess('上班打卡成功！', `打卡時間：${timeStr}`); }
+            else { clockOutTime = timeStr; document.getElementById('clock-out-display').textContent = timeStr; showSuccess('下班打卡成功！', `打卡時間：${timeStr}`); }
+        } catch (err) { alert("❌ 打卡失敗：" + err.message); }
+        finally {
+            document.getElementById('loading-text').textContent = '載入清單中...';
+            document.getElementById('loading-overlay').classList.remove('show');
+        }
+    }
+
+    // ==========================================
+    // 品項新增
+    // ==========================================
+    function addNewItem(containerId, prefix) {
+        const container = document.getElementById(containerId);
+        const itemCount = container.children.length + 1;
+        const plantStatusOptions = '<option value="" disabled selected>請選擇</option>' + (lists.plantStatus.length > 0 ? lists.plantStatus.map(s => `<option value="${s}">${s}</option>`).join('') : '');
+        const potSizeOptions = '<option value="" disabled selected>請選擇</option>' + (lists.potSize.length > 0 ? lists.potSize.map(s => `<option value="${s}">${s}</option>`).join('') : '');
+        const div = document.createElement('div');
+        div.className = 'item-row';
+        div.innerHTML = `
+            <div class="item-header">
+                <span>#${itemCount} 品項</span>
+                ${itemCount > 1 ? `<button class="remove-btn" onclick="this.closest('.item-row').remove();calcTotal()">移除</button>` : ''}
+            </div>
+            <div class="form-group">
+                <label>植物種類 <span style="color:red">*</span></label>
+                <input type="text" class="clickable-input" name="${prefix}plantType" placeholder="點擊選擇植物..." readonly onclick="openPlantPicker(this)">
+            </div>
+            <div class="form-group" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                <div><label>植物狀態 <span style="color:red">*</span></label><select name="${prefix}plantStatus">${plantStatusOptions}</select></div>
+                <div><label>水泥盆/其他 <span style="color:red">*</span></label><select name="${prefix}potSize">${potSizeOptions}</select></div>
+            </div>
+            <div class="form-group">
+                <label>品項價格 <span style="color:red">*</span></label>
+                <div class="price-input-group">
+                    <input type="number" class="clickable-input" name="${prefix}itemPrice" value="" placeholder="點擊輸入" readonly onclick="openKeypad(this)">
+                </div>
+            </div>
+        `;
+        container.appendChild(div);
+    }
+
+    function calcTotal() {
+        let total = 0;
+        document.getElementsByName('itemPrice').forEach(i => { total += parseInt(i.value) || 0; });
+        document.getElementById('totalDisplay').innerText = total;
+        document.getElementById('freight-warning').style.display = (total > 0 && total < 2000) ? 'block' : 'none';
+        return total;
+    }
+
+    // ==========================================
+    // 編輯訂單
+    // ==========================================
     async function loadOrderForEdit() {
         const orderId = document.getElementById('editOrderId').value.trim();
         if (!orderId) { alert("請輸入訂單編號！"); return; }
@@ -890,9 +1228,8 @@
             document.getElementById('edit-order-badge').textContent = '編輯中：' + orderId;
             document.getElementById('edit-order-form').style.display = 'block';
             window.scrollTo(0, 0);
-        } catch (err) {
-            alert("❌ 載入失敗：" + err.message);
-        } finally {
+        } catch (err) { alert("❌ 載入失敗：" + err.message); }
+        finally {
             document.getElementById('loading-text').textContent = '載入清單中...';
             document.getElementById('loading-overlay').classList.remove('show');
         }
@@ -916,6 +1253,9 @@
         openPasswordModal();
     }
 
+    // ==========================================
+    // 新訂單
+    // ==========================================
     function submitOrder() {
         let isValid = true;
         document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
@@ -947,68 +1287,27 @@
         if (mode === 'new') {
             const items = [];
             document.querySelectorAll('#items-container .item-row').forEach(row => {
-                items.push({
-                    plantType: row.querySelector('[name="plantType"]').value,
-                    plantStatus: row.querySelector('[name="plantStatus"]').value,
-                    potSize: row.querySelector('[name="potSize"]').value,
-                    price: row.querySelector('[name="itemPrice"]').value
-                });
+                items.push({ plantType: row.querySelector('[name="plantType"]').value, plantStatus: row.querySelector('[name="plantStatus"]').value, potSize: row.querySelector('[name="potSize"]').value, price: row.querySelector('[name="itemPrice"]').value });
             });
-            orderData = {
-                mode: 'new',
-                header: {
-                    date: document.getElementById('orderDate').value,
-                    ig: document.getElementById('buyerIG').value,
-                    region: document.getElementById('region').value,
-                    delivery: document.getElementById('deliveryInfo').value,
-                    payment: document.getElementById('paymentStatus').value,
-                    progress: document.getElementById('orderProgress').value,
-                    box: document.getElementById('boxStatus').value,
-                    note: document.getElementById('note').value
-                },
-                items: items
-            };
+            orderData = { mode: 'new', header: { date: document.getElementById('orderDate').value, ig: document.getElementById('buyerIG').value, region: document.getElementById('region').value, delivery: document.getElementById('deliveryInfo').value, payment: document.getElementById('paymentStatus').value, progress: document.getElementById('orderProgress').value, box: document.getElementById('boxStatus').value, note: document.getElementById('note').value }, items: items };
         } else if (mode === 'edit') {
             const items = [];
             document.querySelectorAll('#edit-items-container .item-row').forEach(row => {
-                items.push({
-                    plantType: row.querySelector('[name="edit-plantType"]').value,
-                    plantStatus: row.querySelector('[name="edit-plantStatus"]').value,
-                    potSize: row.querySelector('[name="edit-potSize"]').value,
-                    price: row.querySelector('[name="edit-itemPrice"]').value
-                });
+                items.push({ plantType: row.querySelector('[name="edit-plantType"]').value, plantStatus: row.querySelector('[name="edit-plantStatus"]').value, potSize: row.querySelector('[name="edit-potSize"]').value, price: row.querySelector('[name="edit-itemPrice"]').value });
             });
-            orderData = {
-                mode: 'editOrder',
-                orderId: currentEditOrderId,
-                header: {
-                    date: document.getElementById('editOrderDate').value,
-                    ig: document.getElementById('editBuyerIG').value,
-                    region: document.getElementById('editRegion').value,
-                    delivery: document.getElementById('editDeliveryInfo').value,
-                    payment: document.getElementById('editPaymentStatus').value,
-                    progress: document.getElementById('editOrderProgress').value,
-                    box: document.getElementById('editBoxStatus').value,
-                    note: document.getElementById('editNote').value
-                },
-                items: items
-            };
+            orderData = { mode: 'editOrder', orderId: currentEditOrderId, header: { date: document.getElementById('editOrderDate').value, ig: document.getElementById('editBuyerIG').value, region: document.getElementById('editRegion').value, delivery: document.getElementById('editDeliveryInfo').value, payment: document.getElementById('editPaymentStatus').value, progress: document.getElementById('editOrderProgress').value, box: document.getElementById('editBoxStatus').value, note: document.getElementById('editNote').value }, items: items };
         }
         try {
-            await fetch(SCRIPT_URL, {
-                method: "POST", mode: "no-cors",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(orderData)
-            });
+            await fetch(SCRIPT_URL, { method: "POST", mode: "no-cors", headers: { "Content-Type": "application/json" }, body: JSON.stringify(orderData) });
             if (mode === 'new') { showSuccess('訂單送出成功！', `訂單日期：${orderData.header.date}`); resetOrderForm(); }
             else if (mode === 'edit') { showSuccess('訂單更新成功！', `訂單編號：${currentEditOrderId}`); resetEditForm(); }
-        } catch (err) {
-            alert("❌ 傳送失敗：" + err.message);
-        } finally {
-            if (mode === 'new') { btn.disabled = false; btn.innerText = "送出訂單"; }
-        }
+        } catch (err) { alert("❌ 傳送失敗：" + err.message); }
+        finally { if (mode === 'new') { btn.disabled = false; btn.innerText = "送出訂單"; } }
     }
 
+    // ==========================================
+    // 密碼、選擇器、鍵盤
+    // ==========================================
     function openPasswordModal() {
         document.getElementById('admin-password').value = '';
         document.getElementById('password-error').style.display = 'none';
@@ -1041,10 +1340,7 @@
     function renderPickerList(items) {
         const container = document.getElementById('plant-list-container');
         container.innerHTML = '';
-        if (!items || items.length === 0) {
-            container.innerHTML = '<div style="padding:20px;text-align:center;color:#999;">沒有找到相關項目</div>';
-            return;
-        }
+        if (!items || items.length === 0) { container.innerHTML = '<div style="padding:20px;text-align:center;color:#999;">沒有找到相關項目</div>'; return; }
         items.forEach(item => {
             const div = document.createElement('div');
             div.className = 'plant-option';
