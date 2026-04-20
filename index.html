@@ -10,7 +10,7 @@
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--bg); color: var(--text); margin: 0; padding: 0; padding-bottom: 80px; }
         .container { max-width: 600px; margin: 0 auto; padding: 20px; }
         .nav-bar { background: var(--primary); padding: 0; display: flex; position: sticky; top: 0; z-index: 500; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
-        .nav-tab { flex: 1; padding: 14px; text-align: center; color: rgba(255,255,255,0.7); font-weight: bold; font-size: 15px; cursor: pointer; border-bottom: 3px solid transparent; transition: 0.2s; }
+        .nav-tab { flex: 1; padding: 14px; text-align: center; color: rgba(255,255,255,0.7); font-weight: bold; font-size: 13px; cursor: pointer; border-bottom: 3px solid transparent; transition: 0.2s; }
         .nav-tab.active { color: white; border-bottom-color: #95d5b2; }
         .page { display: none; }
         .page.active { display: block; }
@@ -187,6 +187,27 @@
         .chart-label { font-size: 11px; color: #888; margin-top: 6px; text-align: center; white-space: nowrap; }
         .chart-total { text-align: center; margin-top: 15px; font-size: 14px; color: #666; }
         .chart-total strong { color: var(--primary); font-size: 18px; }
+        /* 行事曆 */
+        .cal-month-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .cal-month-title { font-size: 18px; font-weight: bold; color: var(--primary); }
+        .cal-nav-btn { background: var(--light-green); border: none; color: var(--primary); font-size: 20px; font-weight: bold; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+        .cal-header { text-align: center; font-size: 12px; font-weight: bold; color: #888; padding: 6px 0; }
+        .cal-day { text-align: center; padding: 8px 4px; border-radius: 8px; font-size: 14px; cursor: pointer; min-height: 40px; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: background 0.15s; }
+        .cal-day:hover { background: var(--light-green); }
+        .cal-day.today { background: var(--primary); color: white; font-weight: bold; }
+        .cal-day.has-event { position: relative; }
+        .cal-day.has-event::after { content: ''; display: block; width: 6px; height: 6px; background: var(--accent); border-radius: 50%; margin: 2px auto 0; }
+        .cal-day.today.has-event::after { background: white; }
+        .cal-day.empty { cursor: default; }
+        .cal-day.other-month { color: #ccc; cursor: default; }
+        .cal-event-list { margin-top: 15px; }
+        .cal-event-item { background: var(--light-green); border: 1px solid #95d5b2; border-radius: 10px; padding: 12px 15px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+        .cal-event-time { font-weight: bold; color: var(--primary); font-size: 15px; min-width: 60px; }
+        .cal-event-name { flex: 1; font-size: 15px; margin: 0 10px; }
+        .cal-event-note { font-size: 12px; color: #888; }
+        .cal-selected-date { background: var(--primary); color: white; border-radius: 8px; padding: 8px 15px; text-align: center; font-weight: bold; margin-bottom: 10px; font-size: 15px; }
+        .cal-add-btn { width: 100%; background: var(--primary); color: white; border: none; padding: 12px; border-radius: 10px; font-weight: bold; font-size: 16px; cursor: pointer; margin-top: 10px; }
     </style>
 </head>
 <body>
@@ -206,6 +227,7 @@
 <div class="nav-bar">
     <div class="nav-tab active" id="nav-order" onclick="switchPage('order')">🌿 新訂單</div>
     <div class="nav-tab" id="nav-workspace" onclick="switchPage('workspace')">⚙️ 工作區</div>
+    <div class="nav-tab" id="nav-calendar" onclick="switchPage('calendar')">📅 預約</div>
 </div>
 
 <!-- 新訂單頁面 -->
@@ -247,7 +269,7 @@
             <div class="app-header-container"><h1 class="main-title">⚙️ 工作區</h1><div class="author-text">選擇功能</div></div>
             <div class="workspace-menu">
                 <div class="menu-card" onclick="switchSub('sub-query')"><div class="menu-card-icon">🔍</div><div class="menu-card-text"><h3>訂單查詢</h3><p>輸入購買人 IG 查詢所有訂單</p></div><div class="menu-card-arrow">›</div></div>
-                <div class="menu-card" onclick="switchSub('sub-overview')"><div class="menu-card-icon">📊</div><div class="menu-card-text"><h3>訂單總覽</h3><p>依進度和地區篩選訂單</p></div><div class="menu-card-arrow">›</div></div>
+                <div class="menu-card" onclick="switchSub('sub-overview')"><div class="menu-card-icon">📊</div><div class="menu-card-text"><h3>訂單總覽</h3><p>依進度、地區、付款篩選</p></div><div class="menu-card-arrow">›</div></div>
                 <div class="menu-card" onclick="switchSub('sub-edit')"><div class="menu-card-icon">✏️</div><div class="menu-card-text"><h3>編輯訂單</h3><p>輸入訂單編號載入並修改</p></div><div class="menu-card-arrow">›</div></div>
                 <div class="menu-card" onclick="switchSub('sub-plant')"><div class="menu-card-icon">🌿</div><div class="menu-card-text"><h3>植物清單</h3><p>新增植物種類</p></div><div class="menu-card-arrow">›</div></div>
                 <div class="menu-card" onclick="switchSub('sub-daily')"><div class="menu-card-icon">📋</div><div class="menu-card-text"><h3>日報填寫</h3><p>填寫今日工作紀錄</p></div><div class="menu-card-arrow">›</div></div>
@@ -280,7 +302,7 @@
             <div class="card" id="overview-input-card">
                 <div class="form-group">
                     <label>訂單進度（可多選）</label>
-                    <div class="multi-select-wrapper" id="progress-wrapper">
+                    <div class="multi-select-wrapper">
                         <div class="multi-select-container" onclick="toggleDropdown('progress-dropdown')">
                             <div class="multi-select-tags" id="progress-tags"></div>
                             <div class="multi-select-placeholder" id="progress-placeholder">點擊選擇進度...</div>
@@ -290,12 +312,22 @@
                 </div>
                 <div class="form-group">
                     <label>地區（可多選）</label>
-                    <div class="multi-select-wrapper" id="region-wrapper">
+                    <div class="multi-select-wrapper">
                         <div class="multi-select-container" onclick="toggleDropdown('region-dropdown')">
                             <div class="multi-select-tags" id="region-tags"></div>
                             <div class="multi-select-placeholder" id="region-placeholder">點擊選擇地區...</div>
                         </div>
                         <div class="multi-select-dropdown" id="region-dropdown"></div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>付款狀況（可多選）</label>
+                    <div class="multi-select-wrapper">
+                        <div class="multi-select-container" onclick="toggleDropdown('payment-dropdown')">
+                            <div class="multi-select-tags" id="payment-tags"></div>
+                            <div class="multi-select-placeholder" id="payment-placeholder">點擊選擇付款狀況...</div>
+                        </div>
+                        <div class="multi-select-dropdown" id="payment-dropdown"></div>
                     </div>
                 </div>
                 <button class="workspace-action-btn" style="margin-top:10px;" onclick="queryOverview()">查詢</button>
@@ -430,6 +462,26 @@
     </div>
 </div>
 
+<!-- 行事曆頁面 -->
+<div class="page" id="page-calendar">
+    <div class="container">
+        <div class="app-header-container"><h1 class="main-title">📅 預約行事曆</h1></div>
+        <div class="card">
+            <div class="cal-month-nav">
+                <button class="cal-nav-btn" onclick="changeCalMonth(-1)">‹</button>
+                <div class="cal-month-title" id="cal-month-title"></div>
+                <button class="cal-nav-btn" onclick="changeCalMonth(1)">›</button>
+            </div>
+            <div class="cal-grid" id="cal-grid"></div>
+        </div>
+        <div class="card" id="cal-day-card" style="display:none;">
+            <div class="cal-selected-date" id="cal-selected-date"></div>
+            <div id="cal-event-list"></div>
+            <button class="cal-add-btn" onclick="openCalAddForm()">＋ 新增預約</button>
+        </div>
+    </div>
+</div>
+
 <!-- Modals -->
 <div class="overlay" id="overlay" onclick="closeAllModals()"></div>
 <div id="password-modal" class="center-modal">
@@ -471,9 +523,30 @@
         <button class="modal-btn btn-confirm" onclick="submitPlantInfo()">送出</button>
     </div>
 </div>
+<!-- 預約新增 Modal -->
+<div id="cal-add-modal" class="plant-info-modal" style="display:none;">
+    <div style="font-size:18px;font-weight:bold;margin-bottom:15px;color:var(--primary);text-align:center;">📅 新增預約</div>
+    <div id="cal-add-date-badge" style="background:var(--light-green);border-radius:8px;padding:8px 12px;font-weight:bold;color:var(--primary);margin-bottom:15px;text-align:center;font-size:15px;"></div>
+    <div class="form-group">
+        <label>時段 <span style="color:red">*</span></label>
+        <select id="cal-time-select"></select>
+    </div>
+    <div class="form-group">
+        <label>姓名 <span style="color:red">*</span></label>
+        <input type="text" id="cal-name-input" placeholder="請輸入姓名">
+    </div>
+    <div class="form-group">
+        <label>備註</label>
+        <textarea id="cal-note-input" rows="2" placeholder="選填"></textarea>
+    </div>
+    <div class="modal-btn-group">
+        <button class="modal-btn btn-cancel" onclick="closeCalAddModal()">取消</button>
+        <button class="modal-btn btn-confirm" onclick="submitCalEvent()">送出</button>
+    </div>
+</div>
 
 <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx5odqVyE0QiVbnFmgANHIFJBCARrF5JSj91odBppmvFCegQ_YOi0k6HHGy8I1tHWqv/exec";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyMq8FxENcBu2uwBWHlUhi9cM50aLq5vQFXjRBgDI1OWQxaD41tZIA2hx3e-W3b-dXD/exec";
 
     let lists = { plants: [], potSize: [], payments: [], progress: [], box: [], plantStatus: [], regions: [], envList: [], waterList: [], lightList: [], pricePlants: [] };
     let isListLoaded = false;
@@ -485,11 +558,30 @@
     let clockOutTime = null;
     let selectedProgress = [];
     let selectedRegions = [];
+    let selectedPayments = [];
+
+    // 行事曆
+    let calYear = new Date().getFullYear();
+    let calMonth = new Date().getMonth();
+    let calSelectedDate = '';
+    let calEvents = [];
 
     const plantAutoFill = {
         '運費': { plantStatus: '已換盆', potSize: '運費優惠' },
         '卡片': { plantStatus: '已換盆', potSize: '卡片+緞帶' }
     };
+
+    // 產生 15 分鐘時段
+    function generateTimeSlots() {
+        const slots = [];
+        for (let h = 0; h < 24; h++) {
+            for (let m = 0; m < 60; m += 15) {
+                slots.push(String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0'));
+            }
+        }
+        return slots;
+    }
+    const timeSlots = generateTimeSlots();
 
     window.onload = async function() {
         document.getElementById('orderDate').valueAsDate = new Date();
@@ -503,12 +595,15 @@
             if (sel) sel.innerHTML = Array.from({length:16}, (_,i) => `<option value="${i}">${i}</option>`).join('');
         });
         updateClockDisplay();
-        // 點選項目外才關閉下拉 — 修正版
+        // 時段選單
+        const timeSel = document.getElementById('cal-time-select');
+        timeSel.innerHTML = timeSlots.map(t => `<option value="${t}">${t}</option>`).join('');
         document.addEventListener('click', function(e) {
             if (!e.target.closest('.multi-select-wrapper') && !e.target.closest('.multi-select-dropdown')) {
                 document.querySelectorAll('.multi-select-dropdown').forEach(d => d.classList.remove('show'));
             }
         });
+        renderCalendar();
     };
 
     function updateClockDisplay() {
@@ -524,6 +619,7 @@
         document.getElementById('page-' + page).classList.add('active');
         document.getElementById('nav-' + page).classList.add('active');
         if (page === 'workspace') switchSub('sub-menu');
+        if (page === 'calendar') { renderCalendar(); loadCalendarEvents(); }
     }
 
     function switchSub(subId) {
@@ -573,21 +669,180 @@
     }
 
     // ==========================================
+    // 行事曆
+    // ==========================================
+    async function loadCalendarEvents() {
+        try {
+            const response = await fetch(SCRIPT_URL + '?action=getCalendar');
+            const data = await response.json();
+            if (!data.error) {
+                calEvents = data.events || [];
+                renderCalendar();
+                if (calSelectedDate) showDayEvents(calSelectedDate);
+            }
+        } catch (err) {}
+    }
+
+    function renderCalendar() {
+        const monthNames = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+        document.getElementById('cal-month-title').textContent = `${calYear}年 ${monthNames[calMonth]}`;
+
+        const firstDay = new Date(calYear, calMonth, 1).getDay();
+        const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+        const today = new Date();
+        const todayStr = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+
+        const eventDates = new Set(calEvents.map(e => e.date));
+
+        const headers = ['日','一','二','三','四','五','六'];
+        let html = headers.map(h => `<div class="cal-header">${h}</div>`).join('');
+
+        for (let i = 0; i < firstDay; i++) {
+            html += `<div class="cal-day empty"></div>`;
+        }
+
+        for (let d = 1; d <= daysInMonth; d++) {
+            const dateStr = `${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+            const isToday = dateStr === todayStr;
+            const hasEvent = eventDates.has(dateStr);
+            const isSelected = dateStr === calSelectedDate;
+            let cls = 'cal-day';
+            if (isToday) cls += ' today';
+            if (hasEvent) cls += ' has-event';
+            if (isSelected && !isToday) cls += '" style="background:#b7e4c7;font-weight:bold;';
+            html += `<div class="${cls}" onclick="selectCalDay('${dateStr}')">${d}</div>`;
+        }
+
+        document.getElementById('cal-grid').innerHTML = html;
+    }
+
+    function changeCalMonth(dir) {
+        calMonth += dir;
+        if (calMonth > 11) { calMonth = 0; calYear++; }
+        if (calMonth < 0) { calMonth = 11; calYear--; }
+        renderCalendar();
+    }
+
+    function selectCalDay(dateStr) {
+        calSelectedDate = dateStr;
+        renderCalendar();
+        showDayEvents(dateStr);
+    }
+
+    function showDayEvents(dateStr) {
+        const parts = dateStr.split('-');
+        const display = `${parts[0]}年${parseInt(parts[1])}月${parseInt(parts[2])}日`;
+        document.getElementById('cal-selected-date').textContent = display;
+        const dayEvents = calEvents.filter(e => e.date === dateStr).sort((a,b) => a.time.localeCompare(b.time));
+        const container = document.getElementById('cal-event-list');
+        if (dayEvents.length === 0) {
+            container.innerHTML = '<div style="text-align:center;color:#999;padding:15px;">尚無預約</div>';
+        } else {
+            container.innerHTML = dayEvents.map(e => `
+                <div class="cal-event-item">
+                    <div class="cal-event-time">${e.time}</div>
+                    <div class="cal-event-name">${e.name}</div>
+                    ${e.note && e.note !== '' ? `<div class="cal-event-note">${e.note}</div>` : ''}
+                </div>
+            `).join('');
+        }
+        document.getElementById('cal-day-card').style.display = 'block';
+        document.getElementById('cal-day-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function openCalAddForm() {
+        if (!calSelectedDate) { alert("請先選擇日期！"); return; }
+        const parts = calSelectedDate.split('-');
+        document.getElementById('cal-add-date-badge').textContent =
+            `${parts[0]}年${parseInt(parts[1])}月${parseInt(parts[2])}日`;
+        document.getElementById('cal-name-input').value = '';
+        document.getElementById('cal-note-input').value = '';
+        document.getElementById('cal-name-input').classList.remove('input-error');
+        document.getElementById('overlay').style.display = 'block';
+        document.getElementById('cal-add-modal').style.display = 'block';
+    }
+
+    function closeCalAddModal() {
+        document.getElementById('overlay').style.display = 'none';
+        document.getElementById('cal-add-modal').style.display = 'none';
+    }
+
+    function submitCalEvent() {
+        const name = document.getElementById('cal-name-input').value.trim();
+        const time = document.getElementById('cal-time-select').value;
+        if (!name) {
+            document.getElementById('cal-name-input').classList.add('input-error');
+            alert("請填寫姓名！"); return;
+        }
+        const note = document.getElementById('cal-note-input').value.trim();
+        closeCalAddModal();
+        pendingAction = async () => {
+            document.getElementById('loading-overlay').classList.add('show');
+            try {
+                await fetch(SCRIPT_URL, {
+                    method: "POST", mode: "no-cors",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ mode: 'addCalendar', date: calSelectedDate, time: time, name: name, note: note })
+                });
+                calEvents.push({ date: calSelectedDate, time: time, name: name, note: note });
+                renderCalendar();
+                showDayEvents(calSelectedDate);
+                showSuccess('預約成功！', `${calSelectedDate} ${time} ${name}`);
+            } catch (err) {
+                alert("❌ 新增失敗：" + err.message);
+            } finally {
+                document.getElementById('loading-overlay').classList.remove('show');
+            }
+        };
+        openPasswordModal();
+    }
+
+    // ==========================================
     // 多選元件
     // ==========================================
     function initMultiSelects() {
         selectedProgress = [];
         selectedRegions = [];
+        selectedPayments = [];
         renderMultiSelect('progress-dropdown', 'progress-tags', 'progress-placeholder', lists.progress, selectedProgress, false);
         renderMultiSelect('region-dropdown', 'region-tags', 'region-placeholder', lists.regions, selectedRegions, false);
+        renderMultiSelect('payment-dropdown', 'payment-tags', 'payment-placeholder', lists.payments, selectedPayments, false);
         document.getElementById('overview-results').innerHTML = '';
+    }
+
+    function getMultiArr(dropdownId) {
+        if (dropdownId === 'progress-dropdown') return selectedProgress;
+        if (dropdownId === 'region-dropdown') return selectedRegions;
+        if (dropdownId === 'payment-dropdown') return selectedPayments;
+        return [];
+    }
+
+    function getMultiOptions(dropdownId) {
+        if (dropdownId === 'progress-dropdown') return lists.progress;
+        if (dropdownId === 'region-dropdown') return lists.regions;
+        if (dropdownId === 'payment-dropdown') return lists.payments;
+        return [];
+    }
+
+    function getMultiTagsId(dropdownId) {
+        if (dropdownId === 'progress-dropdown') return 'progress-tags';
+        if (dropdownId === 'region-dropdown') return 'region-tags';
+        if (dropdownId === 'payment-dropdown') return 'payment-tags';
+        return '';
+    }
+
+    function getMultiPlaceholderId(dropdownId) {
+        if (dropdownId === 'progress-dropdown') return 'progress-placeholder';
+        if (dropdownId === 'region-dropdown') return 'region-placeholder';
+        if (dropdownId === 'payment-dropdown') return 'payment-placeholder';
+        return '';
     }
 
     function renderMultiSelect(dropdownId, tagsId, placeholderId, options, selected, keepOpen) {
         const dropdown = document.getElementById(dropdownId);
         dropdown.innerHTML = options.map(opt => `
             <div class="multi-select-option ${selected.includes(opt) ? 'selected' : ''}"
-                 onclick="toggleOption('${dropdownId}','${tagsId}','${placeholderId}','${opt}')">
+                 onclick="toggleOption('${dropdownId}','${opt}')">
                 ${selected.includes(opt) ? '✓ ' : ''}${opt}
             </div>
         `).join('');
@@ -603,13 +858,12 @@
         dropdown.classList.toggle('show');
     }
 
-    function toggleOption(dropdownId, tagsId, placeholderId, value) {
-        const arr = dropdownId === 'progress-dropdown' ? selectedProgress : selectedRegions;
+    function toggleOption(dropdownId, value) {
+        const arr = getMultiArr(dropdownId);
         const idx = arr.indexOf(value);
         if (idx === -1) arr.push(value);
         else arr.splice(idx, 1);
-        const options = dropdownId === 'progress-dropdown' ? lists.progress : lists.regions;
-        renderMultiSelect(dropdownId, tagsId, placeholderId, options, arr, true);
+        renderMultiSelect(dropdownId, getMultiTagsId(dropdownId), getMultiPlaceholderId(dropdownId), getMultiOptions(dropdownId), arr, true);
     }
 
     function renderTags(tagsId, placeholderId, selected, dropdownId) {
@@ -618,18 +872,17 @@
         tagsEl.innerHTML = selected.map(s => `
             <span class="multi-select-tag">
                 ${s}
-                <span class="multi-select-tag-remove" onclick="event.stopPropagation();removeTag('${dropdownId}','${tagsId}','${placeholderId}','${s}')">×</span>
+                <span class="multi-select-tag-remove" onclick="event.stopPropagation();removeTag('${dropdownId}','${s}')">×</span>
             </span>
         `).join('');
         placeholder.style.display = selected.length > 0 ? 'none' : 'block';
     }
 
-    function removeTag(dropdownId, tagsId, placeholderId, value) {
-        const arr = dropdownId === 'progress-dropdown' ? selectedProgress : selectedRegions;
+    function removeTag(dropdownId, value) {
+        const arr = getMultiArr(dropdownId);
         const idx = arr.indexOf(value);
         if (idx !== -1) arr.splice(idx, 1);
-        const options = dropdownId === 'progress-dropdown' ? lists.progress : lists.regions;
-        renderMultiSelect(dropdownId, tagsId, placeholderId, options, arr, false);
+        renderMultiSelect(dropdownId, getMultiTagsId(dropdownId), getMultiPlaceholderId(dropdownId), getMultiOptions(dropdownId), arr, false);
     }
 
     // ==========================================
@@ -639,7 +892,12 @@
         document.getElementById('loading-text').textContent = '查詢中...';
         document.getElementById('loading-overlay').classList.add('show');
         try {
-            const params = new URLSearchParams({ action: 'queryOrders', progresses: selectedProgress.join(','), regions: selectedRegions.join(',') });
+            const params = new URLSearchParams({
+                action: 'queryOrders',
+                progresses: selectedProgress.join(','),
+                regions: selectedRegions.join(','),
+                payments: selectedPayments.join(',')
+            });
             const response = await fetch(SCRIPT_URL + '?' + params.toString());
             const data = await response.json();
             if (data.error) { alert("查詢失敗：" + data.error); return; }
@@ -666,7 +924,7 @@
                     <div class="order-list-item" onclick="showDetailFromOverview('${o.orderId}')">
                         <div>
                             <div class="order-id">${o.orderId}</div>
-                            <div class="order-meta">${o.date} ｜ ${o.ig||'-'} ｜ ${o.region||'-'} ｜ ${o.progress} ｜ $${o.total}</div>
+                            <div class="order-meta">${o.date} ｜ ${o.ig||'-'} ｜ ${o.region||'-'} ｜ ${o.progress} ｜ ${o.payment} ｜ $${o.total}</div>
                         </div>
                         <div class="order-list-arrow">›</div>
                     </div>
@@ -1251,6 +1509,7 @@
         document.getElementById('plant-picker-modal').style.display = 'none';
         document.getElementById('password-modal').style.display = 'none';
         document.getElementById('plant-info-modal').style.display = 'none';
+        document.getElementById('cal-add-modal').style.display = 'none';
         if (activePriceInput) { activePriceInput = null; calcTotal(); }
         activePlantInput = null;
     }
